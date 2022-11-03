@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.home_screen.HomeScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.map_screen.MapScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.new_plant_screen.NewPlantScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_detail_screen.PlantDetailScreen
@@ -28,6 +29,10 @@ fun NavGraph(
     ){
         composable(Destination.PlantsListScreen.route) {
             PlantsListScreen(navigation)
+        }
+
+        composable(Destination.HomeScreen.route) {
+            HomeScreen(navigation)
         }
 
         composable(Destination.PlantDetailScreen.route + "/{plantId}",

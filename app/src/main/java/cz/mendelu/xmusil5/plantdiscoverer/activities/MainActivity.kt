@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NavGraph(startDestination = Destination.PlantsListScreen.route)
+                    NavGraph(startDestination = Destination.NewPlantScreen.route)
                 }
             }
         }

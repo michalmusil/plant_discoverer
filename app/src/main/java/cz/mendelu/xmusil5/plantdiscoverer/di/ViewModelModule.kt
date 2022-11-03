@@ -1,5 +1,6 @@
 package cz.mendelu.xmusil5.plantdiscoverer.di
 
+import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.home_screen.HomeViewModel
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.map_screen.MapViewModel
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.new_plant_screen.NewPlantViewModel
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_detail_screen.PlantDetailViewModel
@@ -13,6 +14,10 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel{
         PlantsListViewModel(get())
+    }
+
+    viewModel{
+        HomeViewModel(get())
     }
 
     viewModel{

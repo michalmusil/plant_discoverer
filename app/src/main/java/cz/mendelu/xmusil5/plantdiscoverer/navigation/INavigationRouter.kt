@@ -7,6 +7,7 @@ interface INavigationRouter {
     fun returnBack()
 
     fun toPlantsListScreen()
+    fun toHomeScreen()
     fun toNewPlantScreen()
     fun toPlantDetailScreen(plantId: Long)
     fun toPlantEditScreen(plantId: Long)
