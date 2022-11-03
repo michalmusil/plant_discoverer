@@ -1,5 +1,6 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plants_list_screen
 
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
 import org.koin.androidx.compose.getViewModel
@@ -9,5 +10,5 @@ fun PlantsListScreen(
     navigation: INavigationRouter,
     viewModel: PlantsListViewModel = getViewModel()
 ){
-
+    Text(text = "Hello world!!!!!!!")
 }
