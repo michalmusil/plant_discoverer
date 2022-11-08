@@ -9,4 +9,5 @@ sealed class Destination(val route: String){
     object PlantPicturesScreen: Destination("plant_pictures")
     object MapScreen: Destination("map")
     object SettingsScreen: Destination("settings")
+    object CameraScreen: Destination("camera_screen")
 }

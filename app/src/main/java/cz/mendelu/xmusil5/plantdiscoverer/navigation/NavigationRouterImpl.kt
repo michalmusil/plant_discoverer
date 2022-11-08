@@ -42,4 +42,8 @@ class NavigationRouterImpl(private val navController: NavController): INavigatio
     override fun toSettingsScreen() {
         navController.navigate(Destination.SettingsScreen.route)
     }
+
+    override fun toCameraScreen() {
+        navController.navigate(Destination.CameraScreen.route)
+    }
 }

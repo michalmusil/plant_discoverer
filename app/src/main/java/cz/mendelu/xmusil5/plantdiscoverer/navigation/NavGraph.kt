@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.camera_screen.CameraScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.home_screen.HomeScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.map_screen.MapScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.new_plant_screen.NewPlantScreen
@@ -78,6 +79,10 @@ fun NavGraph(
 
         composable(Destination.SettingsScreen.route) {
             SettingsScreen(navigation)
+        }
+
+        composable(Destination.CameraScreen.route) {
+            CameraScreen(navigation)
         }
     }
 }

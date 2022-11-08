@@ -52,7 +52,7 @@ fun PlantsListScreen(
                     .align(Alignment.BottomEnd)
                     .padding(16.dp),
                     onSuccessfullCameraClick = {
-                        // OPEN THE CAMERA
+                        navigation.toCameraScreen()
                     }
                 )
             }

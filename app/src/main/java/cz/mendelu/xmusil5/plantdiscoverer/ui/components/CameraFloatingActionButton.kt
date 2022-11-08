@@ -27,7 +27,7 @@ fun CameraFloatingActionButton(
         onClick = {
             if (MainActivity.cameraPermited){
                 // GO TO OPENING A CAMERA
-                onSuccessfullCameraClick
+                onSuccessfullCameraClick()
             } else{
                 // SHOW SOME KING OF DIALOG
                 print("y")

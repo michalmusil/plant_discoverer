@@ -14,4 +14,5 @@ interface INavigationRouter {
     fun toPlantPicturesScreen(plantId: Long)
     fun toMapScreen()
     fun toSettingsScreen()
+    fun toCameraScreen()
 }
