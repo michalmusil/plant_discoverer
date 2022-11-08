@@ -29,10 +29,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cz.mendelu.xmusil5.plantdiscoverer.R
+import cz.mendelu.xmusil5.plantdiscoverer.activities.MainActivity
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.CameraFloatingActionButton
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
-import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.background
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -46,22 +47,14 @@ fun PlantsListScreen(
         content = {
             Box(modifier = Modifier.fillMaxSize()) {
                 PlantsListScreenContent(navigation = navigation, viewModel = viewModel)
-                FloatingActionButton(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    contentColor = MaterialTheme.colorScheme.onSecondary,
-                    shape = CircleShape,
+                CameraFloatingActionButton(
                     modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(16.dp),
-                    onClick = {
-                        // LAUNCH CAMERA
-                    })
-                {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_camera),
-                        contentDescription = stringResource(id = R.string.floatingActionButton,)
-                    )
-                }
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
+                    onSuccessfullCameraClick = {
+                        // OPEN THE CAMERA
+                    }
+                )
             }
         }    
     )
