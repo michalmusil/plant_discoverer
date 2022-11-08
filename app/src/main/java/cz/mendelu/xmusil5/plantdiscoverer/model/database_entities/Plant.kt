@@ -1,4 +1,4 @@
-package cz.mendelu.xmusil5.plantdiscoverer.database.entities
+package cz.mendelu.xmusil5.plantdiscoverer.model.database_entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -23,4 +23,7 @@ data class Plant(
 
     @ColumnInfo(name = "describtion")
     var describtion: String? = null
+
+    @ColumnInfo(name = "picture")
+    var photo: ByteArray? = null
 }

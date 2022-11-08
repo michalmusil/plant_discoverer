@@ -1,5 +1,5 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.settings_screen
 
-sealed class SettingsUiState(){
-
+sealed class SettingsUiState{
+    class Start(): SettingsUiState()
 }

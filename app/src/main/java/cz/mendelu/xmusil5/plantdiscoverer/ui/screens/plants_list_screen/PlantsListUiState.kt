@@ -1,9 +1,9 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plants_list_screen
 
-import cz.mendelu.xmusil5.plantdiscoverer.database.entities.Plant
+import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 
-sealed class PlantsListUiState(){
+sealed class PlantsListUiState{
     class Start(): PlantsListUiState()
-    class DataLoaded(plants: List<Plant>): PlantsListUiState()
-    class Error(errorId: String): PlantsListUiState()
+    class DataLoaded(val plants: List<Plant>): PlantsListUiState()
+    class Error(val errorId: String): PlantsListUiState()
 }

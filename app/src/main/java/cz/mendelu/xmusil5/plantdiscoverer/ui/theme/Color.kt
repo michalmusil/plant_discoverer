@@ -17,9 +17,9 @@ val disabled = Color(0xA3666666)
 
 // LIGHT
 val primary = Color(0xFF8da3a5)
-val secondary = Color(0xffcc3834)
+val secondary = Color(0xFFDD4564)
 val textOnPrimary = Color(0xff1c1c1c)
-val textOnSecondary = Color(0xff1c1c1c)
+val textOnSecondary = Color(0xFFFFFBFE)
 
 val background = Color(0xFFFFFBFE)
 val surface = Color(0xFFFFFBFE)

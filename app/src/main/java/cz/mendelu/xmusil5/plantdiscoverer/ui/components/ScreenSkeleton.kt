@@ -29,7 +29,7 @@ fun ScreenSkeleton(
     onBackClick: () -> Unit = {},
     scaffoldState: ScaffoldState = rememberScaffoldState()) {
 
-    val sc = Scaffold(
+    Scaffold(
         scaffoldState = scaffoldState,
         drawerGesturesEnabled = false,
         topBar = {
@@ -82,6 +82,12 @@ fun ScreenSkeleton(
                 })
         }
     ) {
-        content()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ){
+            content()
+        }
     }
 }

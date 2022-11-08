@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import cz.mendelu.xmusil5.plantdiscoverer.database.daos.PlantsDao
-import cz.mendelu.xmusil5.plantdiscoverer.database.entities.Plant
+import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 
 @Database(entities = [Plant::class], version = 1, exportSchema = false)
 abstract class PlantDiscovererDatabase : RoomDatabase() {

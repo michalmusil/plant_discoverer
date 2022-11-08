@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import cz.mendelu.xmusil5.plantdiscoverer.database.entities.Plant
+import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import kotlinx.coroutines.flow.Flow
 
 @Dao

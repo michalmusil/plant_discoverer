@@ -1,7 +1,7 @@
 package cz.mendelu.xmusil5.plantdiscoverer.database.repositories
 
 import cz.mendelu.xmusil5.plantdiscoverer.database.daos.PlantsDao
-import cz.mendelu.xmusil5.plantdiscoverer.database.entities.Plant
+import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import kotlinx.coroutines.flow.Flow
 
 class PlantDbRepositoryLocal(private val plantsDao: PlantsDao): IPlantsDbRepository {

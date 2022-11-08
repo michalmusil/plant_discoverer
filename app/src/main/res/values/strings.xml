@@ -6,11 +6,20 @@
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
 
+    <!-- Elements -->
+    <string name="floatingActionButton">Floating action button</string>
+
     <!-- Screens -->
     <string name="plants">Plants</string>
     <string name="home">Home</string>
     <string name="map">Map</string>
     <string name="settings">Settings</string>
+    
+    <!-- Settings screen -->
+    <string name="appLanguage">App language</string>
+    <string name="dateTimeFormat">Datetime format</string>
+    <string name="useQuickAddition">Use quick addition</string>
+    <string name="useQuickAdditionDescribtion">Assumes the ML argorithm is right and adds plant right after taking a photo</string>
 
 
 
