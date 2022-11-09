@@ -1,5 +1,6 @@
 package cz.mendelu.xmusil5.plantdiscoverer.navigation
 
+import android.net.Uri
 import androidx.navigation.NavController
 
 class NavigationRouterImpl(private val navController: NavController): INavigationRouter {
@@ -19,8 +20,8 @@ class NavigationRouterImpl(private val navController: NavController): INavigatio
         navController.navigate(Destination.PlantsListScreen.route)
     }
 
-    override fun toNewPlantScreen() {
-        navController.navigate(Destination.NewPlantScreen.route)
+    override fun toNewPlantScreen(takenPhotoUri: String) {
+        navController.navigate("${Destination.NewPlantScreen.route}?takenPhotoUri=${takenPhotoUri}")
     }
 
     override fun toPlantDetailScreen(plantId: Long) {

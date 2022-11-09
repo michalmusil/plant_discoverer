@@ -58,8 +58,14 @@ fun NavGraph(
             PlantEditScreen(navigation = navigation, plantId = plantId!!)
         }
 
-        composable(Destination.NewPlantScreen.route) {
-            NewPlantScreen(navigation)
+        composable(Destination.NewPlantScreen.route + "?takenPhotoUri={takenPhotoUri}",
+            arguments = listOf(
+                navArgument("takenPhotoUri"){
+                    type = NavType.StringType
+                }
+            )) {
+            val takenPhotoUri = it.arguments?.getString("takenPhotoUri")
+            NewPlantScreen(navigation = navigation, takenPhotoUri = takenPhotoUri!!)
         }
 
         composable(Destination.PlantPicturesScreen.route + "/{plantId}",
