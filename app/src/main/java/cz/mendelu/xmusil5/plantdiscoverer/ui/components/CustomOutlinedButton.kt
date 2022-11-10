@@ -21,7 +21,8 @@ fun CustomOutlinedButton(
     text: String,
     backgroundColor: Color,
     textColor: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ){
     OutlinedButton(
         content = {
@@ -34,9 +35,7 @@ fun CustomOutlinedButton(
         },
         shape = RoundedCornerShape(25.dp),
         colors = ButtonDefaults.outlinedButtonColors(backgroundColor),
-        modifier = Modifier
-            .height(50.dp)
-            .width(120.dp),
-        onClick = onClick
+        onClick = onClick,
+        modifier = modifier
     )
 }

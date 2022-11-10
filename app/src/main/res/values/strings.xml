@@ -10,8 +10,6 @@
 
     <!-- Errors -->
     <string name="somethingWentWrong">Something went wrong</string>
-    <string name="nameTooShort">Name too short</string>
-    <string name="imageQueryTooShort">Image query too short</string>
 
     <!-- Elements -->
     <string name="plantImage">Plant image</string>
@@ -29,6 +27,14 @@
     <string name="dateTimeFormat">Datetime format</string>
     <string name="useQuickAddition">Use quick addition</string>
     <string name="useQuickAdditionDescribtion">Assumes the ML argorithm is right and adds plant right after taking a photo</string>
+
+    <!-- New plant screen -->
+    <string name="machineLearning">Machine learning</string>
+    <string name="confidence">Confidence</string>
+    <string name="couldntReckognizePhoto">Could not reckognize plant species</string>
+    <string name="nameTooShort">Name can\'t be empty</string>
+    <string name="imageQueryTooShort">Image query can\'t be empty</string>
+
 
 
     <!-- Plants -->

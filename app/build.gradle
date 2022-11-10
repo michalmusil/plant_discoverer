@@ -119,4 +119,7 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
     implementation "androidx.camera:camera-view:1.0.0-alpha27"
 
+    // MLkit
+    implementation "com.google.mlkit:image-labeling:17.0.7"
+
 }

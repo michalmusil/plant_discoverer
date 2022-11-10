@@ -10,15 +10,21 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.mlkit.vision.label.ImageLabeler
+import com.google.mlkit.vision.label.ImageLabelerOptionsBase
+import com.google.mlkit.vision.label.ImageLabeling
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.database.repositories.IPlantsDbRepository
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
+import cz.mendelu.xmusil5.plantdiscoverer.utils.ImageReckognizer
 import kotlinx.coroutines.launch
 import java.io.File
 
 class NewPlantViewModel(private val plantsDbRepository: IPlantsDbRepository): ViewModel() {
 
     val newPlantUiState: MutableState<NewPlantUiState> = mutableStateOf(NewPlantUiState.Start())
+    val imageReckognizer = ImageReckognizer()
 
     fun getImageFromUri(context: Context, uriString: String){
         try {
@@ -37,6 +43,16 @@ class NewPlantViewModel(private val plantsDbRepository: IPlantsDbRepository): Vi
         } catch (ex: java.lang.Exception){
             newPlantUiState.value = NewPlantUiState.Error(R.string.somethingWentWrong)
         }
+    }
+
+    fun reckognizePhoto(photo: Bitmap){
+        imageReckognizer.processImage(photo, onFinishedListener = {
+            if (it != null){
+                newPlantUiState.value = NewPlantUiState.ImageReckognized(photo, it)
+            } else {
+                newPlantUiState.value = NewPlantUiState.ImageReckognitionFailed(photo)
+            }
+        })
     }
 
     fun saveNewPlant(plant: Plant){

@@ -1,35 +1,29 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.new_plant_screen
 
 import android.graphics.Bitmap
-import android.net.Uri
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.scrollable
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.mlkit.vision.label.ImageLabel
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
@@ -38,8 +32,6 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.grayCommon
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
-import org.koin.androidx.compose.viewModel
-import java.util.Calendar
 
 @Composable
 fun NewPlantScreen(
@@ -66,6 +58,12 @@ fun NewPlantScreenContent(
     viewModel: NewPlantViewModel,
     takenPhotoUri: String
 ){
+    val context = LocalContext.current
+
+    val photo = rememberSaveable{
+        mutableStateOf(BitmapFactory.decodeResource(context.resources, R.drawable.ic_error))
+    }
+
     viewModel.newPlantUiState.value.let {
         when(it){
             is NewPlantUiState.Start -> {
@@ -76,7 +74,16 @@ fun NewPlantScreenContent(
                 LoadingScreen()
             }
             is NewPlantUiState.PhotoLoaded -> {
-                NewPlantForm(photo = it.photo, navigation = navigation, viewModel = viewModel)
+                photo.value = it.photo
+                LaunchedEffect(it){
+                    viewModel.reckognizePhoto(photo.value)
+                }
+            }
+            is NewPlantUiState.ImageReckognized -> {
+                NewPlantForm(navigation = navigation, viewModel = viewModel, photo = photo.value, imageLabel = it.label)
+            }
+            is NewPlantUiState.ImageReckognitionFailed -> {
+                NewPlantForm(navigation = navigation, viewModel = viewModel, photo = photo.value, imageLabel = null)
             }
             is NewPlantUiState.NewPlantSaved -> {
                 LaunchedEffect(it){
@@ -94,7 +101,8 @@ fun NewPlantScreenContent(
 fun NewPlantForm(
     navigation: INavigationRouter,
     viewModel: NewPlantViewModel,
-    photo: Bitmap
+    photo: Bitmap,
+    imageLabel: ImageLabel?
 ){
     val context = LocalContext.current
 
@@ -111,20 +119,25 @@ fun NewPlantForm(
         mutableStateOf("")
     }
 
+    LaunchedEffect(context){
+        if (imageLabel != null){
+            name.value = imageLabel.text
+            imageQuery.value = imageLabel.text
+        }
+    }
 
     // FORM VALIDATION
     val nameError = rememberSaveable{
-        mutableStateOf(context.getString(R.string.nameTooShort))
+        mutableStateOf(false)
     }
     val imageQueryError = rememberSaveable{
-        mutableStateOf(context.getString(R.string.imageQueryTooShort))
+        mutableStateOf(false)
     }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .padding(top = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
 
@@ -132,6 +145,7 @@ fun NewPlantForm(
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
+                .padding(top = 16.dp)
         ) {
             Image(
                 bitmap = photo.asImageBitmap(),
@@ -143,7 +157,9 @@ fun NewPlantForm(
                     .clip(RoundedCornerShape(20.dp))
             )
         }
-
+        
+        // IMAGE RECKOGNITION
+        ImageReckognitionResults(imageLabel = imageLabel)
 
         // FORM ITEMS
         Row(
@@ -154,43 +170,40 @@ fun NewPlantForm(
         ) {
             Column(
                horizontalAlignment = Alignment.CenterHorizontally,
-               modifier = Modifier.fillMaxWidth()
+               modifier = Modifier
+                   .fillMaxWidth()
            ) {
                //TEXT FIELDS
                CustomTextField(
                    labelTitle = stringResource(id = R.string.name),
                    value = name,
-                   errorMessage = nameError,
+                   maxChars = 50,
+                   isError = nameError.value,
+                   errorMessage = stringResource(id = R.string.nameTooShort),
                    onTextChanged = {
-                        if (it.isEmpty()){
-                            nameError.value = context.getString(R.string.nameTooShort)
-                        } else{
-                            nameError.value = ""
-                        }
+                       nameError.value = it.isBlank()
                    }
                )
                CustomTextField(
                    labelTitle = stringResource(id = R.string.queryString),
                    value = imageQuery,
-                   errorMessage = imageQueryError,
+                   maxChars = 50,
+                   isError = imageQueryError.value,
+                   errorMessage = stringResource(id = R.string.imageQueryTooShort),
                    onTextChanged = {
-                       if (it.isEmpty()){
-                           imageQueryError.value = context.getString(R.string.imageQueryTooShort)
-                       } else{
-                           imageQueryError.value = ""
-                       }
+                       imageQueryError.value = it.isBlank()
                    }
                )
                 CustomTextField(
                     labelTitle = stringResource(id = R.string.description),
                     value = description,
-                    singleLine = false
+                    singleLine = false,
                 )
                
 
                // BUTTONS
                Row(
-                   horizontalArrangement = Arrangement.SpaceEvenly,
+                   horizontalArrangement = Arrangement.SpaceBetween,
                    modifier = Modifier
                        .fillMaxWidth()
                        .padding(vertical = 20.dp)
@@ -199,6 +212,9 @@ fun NewPlantForm(
                        text = stringResource(id = R.string.discard),
                        backgroundColor = grayCommon,
                        textColor = MaterialTheme.colorScheme.onSecondary,
+                       modifier = Modifier
+                           .weight(1f)
+                           .padding(horizontal = 5.dp),
                        onClick = {
                            navigation.returnBack()
                        }
@@ -207,29 +223,84 @@ fun NewPlantForm(
                        text = stringResource(id = R.string.save),
                        backgroundColor = MaterialTheme.colorScheme.secondary,
                        textColor = MaterialTheme.colorScheme.onSecondary,
+                       modifier = Modifier
+                           .weight(1f)
+                           .padding(horizontal = 5.dp),
                        onClick = {
+                           nameError.value = name.value.isBlank()
+                           imageQueryError.value = imageQuery.value.isBlank()
                             if (
-                                nameError.value.isEmpty() &&
-                                imageQueryError.value.isEmpty()
+                                !nameError.value
+                                && !imageQueryError.value
                             ){
+                                val confidence = if (imageLabel != null) (imageLabel.confidence*100).toInt() else 0
+                                val originalMatch = if (imageLabel != null) imageLabel.text else "-"
                                 val newPlant = Plant(
                                     name = name.value,
                                     dateDiscovered = DateUtils.getCurrentUnixTime(),
-                                    originalMatch = name.value,
-                                    originalCertainty = 60,
+                                    originalMatch = originalMatch,
+                                    originalCertainty = confidence,
                                     imageQuery = imageQuery.value,
                                 )
                                 newPlant.describtion = description.value
                                 newPlant.photo = PictureUtils.fromBitmapToByteArray(photo)
 
                                 viewModel.saveNewPlant(newPlant)
-                            } else{
-                                // TODO - ELSE DISPLAY SOME KIND OF ERROR
                             }
                        }
                    )
                }
            }
+        }
+    }
+}
+
+
+@Composable
+fun ImageReckognitionResults(imageLabel: ImageLabel?){
+    val borderColor = if (imageLabel != null) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.error
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 15.dp)
+            .border(2.dp, borderColor, RoundedCornerShape(15.dp))
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Start, 
+            verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_machinelearning),
+                contentDescription = stringResource(id = R.string.machineLearning),
+                Modifier
+                    .padding(5.dp)
+                    .padding(start = 15.dp)
+                    .width(50.dp)
+                    .aspectRatio(1f)
+            )
+            
+            Spacer(modifier = Modifier.width(20.dp))
+            
+            Column (verticalArrangement = Arrangement.Center) {
+                if (imageLabel != null) {
+                    Text(
+                        text = imageLabel.text,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    val percentage = String.format("%.0f", (imageLabel.confidence * 100))
+                    Text(
+                        text = "${stringResource(id = R.string.confidence)}: ${percentage}%",
+                        fontSize = 12.sp,
+                        color = grayCommon
+                    )
+                } else {
+                    Text(
+                        text = stringResource(id = R.string.couldntReckognizePhoto),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
         }
     }
 }

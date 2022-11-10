@@ -15,10 +15,11 @@ val Pink40 = Color(0xFF7D5260)
 // OTHERS
 val disabled = Color(0xA3666666)
 val grayCommon = Color(0xA3888888)
+val errorColor = Color(0xFFD80000)
 
 // LIGHT
 val primary = Color(0xFF8da3a5)
-val secondary = Color(0xFFDD4564)
+val secondary = Color(0xFF1C97A2)
 val textOnPrimary = Color(0xff1c1c1c)
 val textOnSecondary = Color(0xFFFFFBFE)
 
