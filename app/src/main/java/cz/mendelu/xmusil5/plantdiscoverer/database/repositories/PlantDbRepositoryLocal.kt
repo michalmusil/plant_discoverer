@@ -13,8 +13,8 @@ class PlantDbRepositoryLocal(private val plantsDao: PlantsDao): IPlantsDbReposit
         return plantsDao.getById(plantId)
     }
 
-    override suspend fun insert(plant: Plant) {
-        plantsDao.insert(plant)
+    override suspend fun insert(plant: Plant): Long {
+        return plantsDao.insert(plant)
     }
 
     override suspend fun update(plant: Plant) {

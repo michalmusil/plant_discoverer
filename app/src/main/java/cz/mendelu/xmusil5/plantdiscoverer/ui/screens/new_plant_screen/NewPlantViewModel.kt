@@ -9,8 +9,11 @@ import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.database.repositories.IPlantsDbRepository
+import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
+import kotlinx.coroutines.launch
 import java.io.File
 
 class NewPlantViewModel(private val plantsDbRepository: IPlantsDbRepository): ViewModel() {
@@ -34,6 +37,14 @@ class NewPlantViewModel(private val plantsDbRepository: IPlantsDbRepository): Vi
         } catch (ex: java.lang.Exception){
             newPlantUiState.value = NewPlantUiState.Error(R.string.somethingWentWrong)
         }
+    }
 
+    fun saveNewPlant(plant: Plant){
+        var resultingId: Long = -1L
+        viewModelScope.launch {
+            resultingId = plantsDbRepository.insert(plant)
+        }.invokeOnCompletion {
+            newPlantUiState.value = NewPlantUiState.NewPlantSaved(resultingId)
+        }
     }
 }

@@ -21,21 +21,8 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.PlantDiscovererTheme
 
 class MainActivity : ComponentActivity() {
 
-    companion object{
-        var cameraPermited = false
-    }
-
-    val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        cameraPermited = isGranted
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        requestCameraPermission()
 
         setContent {
             PlantDiscovererTheme {
@@ -47,27 +34,6 @@ class MainActivity : ComponentActivity() {
                     NavGraph(startDestination = Destination.PlantsListScreen.route)
                 }
             }
-        }
-    }
-
-    private fun requestCameraPermission() {
-        when {
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                cameraPermited = true
-            }
-
-            ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                Manifest.permission.CAMERA
-            ) -> {
-                // TODO - SHOW DIALOG EXPLAINING WHY CAMERA IS NEEDED
-                print("nemam radost")
-            }
-
-            else -> requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 

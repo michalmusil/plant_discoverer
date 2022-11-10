@@ -19,8 +19,12 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -33,7 +37,10 @@ import cz.mendelu.xmusil5.plantdiscoverer.activities.MainActivity
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.CameraFloatingActionButton
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ErrorScreen
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
+import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -49,8 +56,8 @@ fun PlantsListScreen(
                 PlantsListScreenContent(navigation = navigation, viewModel = viewModel)
                 CameraFloatingActionButton(
                     modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp),
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp),
                     onSuccessfullCameraClick = {
                         navigation.toCameraScreen()
                     }
@@ -70,6 +77,7 @@ fun PlantsListScreenContent(
     viewModel.plantsListUiState.value.let { state ->
         when(state){
             is PlantsListUiState.Start -> {
+                LoadingScreen()
                 LaunchedEffect(state){
                     viewModel.loadPlants()
                 }
@@ -79,7 +87,7 @@ fun PlantsListScreenContent(
                 PlantsGridList(navigation = navigation, plants = plants)
             }
             is PlantsListUiState.Error -> {
-                // Show error screen
+                ErrorScreen(text = stringResource(id = state.errorId))
             }
         }
     }
@@ -111,6 +119,7 @@ fun PlantGridListItem(
     plant: Plant,
     onItemClick: (Plant) -> Unit
 ){
+    val photoBitmap = PictureUtils.fromByteArrayToBitmap(plant.photo)
     Box(
         modifier = Modifier
             .width(120.dp)
@@ -121,10 +130,13 @@ fun PlantGridListItem(
             }
     ){
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
+            bitmap = photoBitmap?.asImageBitmap() ?: ImageBitmap.imageResource(id = R.drawable.ic_error),
             contentDescription = "desc",
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .align(Alignment.Center)
+                .fillMaxWidth()
+                .aspectRatio(1f)
                 .padding(5.dp)
                 .clip(RoundedCornerShape(8.dp)))
         Text(

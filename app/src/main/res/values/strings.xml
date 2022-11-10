@@ -5,9 +5,13 @@
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
 
     <!-- Errors -->
     <string name="somethingWentWrong">Something went wrong</string>
+    <string name="nameTooShort">Name too short</string>
+    <string name="imageQueryTooShort">Image query too short</string>
 
     <!-- Elements -->
     <string name="plantImage">Plant image</string>
@@ -26,6 +30,15 @@
     <string name="useQuickAddition">Use quick addition</string>
     <string name="useQuickAdditionDescribtion">Assumes the ML argorithm is right and adds plant right after taking a photo</string>
 
+
+    <!-- Plants -->
+    <string name="name">Plant name</string>
+    <string name="dateDiscovered">Date discovered</string>
+    <string name="queryString">Query string</string>
+    <string name="originalMatch">Original match</string>
+    <string name="description">Description</string>
+    <string name="originalCertainty">Original certainty</string>
+    <string name="photo">Photo</string>
 
 
 </resources>

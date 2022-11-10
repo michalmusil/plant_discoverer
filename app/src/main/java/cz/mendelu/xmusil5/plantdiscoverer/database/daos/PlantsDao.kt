@@ -17,7 +17,7 @@ interface PlantsDao {
     suspend fun getById(plantId: Long): Plant
 
     @Insert
-    suspend fun insert(plant: Plant)
+    suspend fun insert(plant: Plant): Long
     @Update
     suspend fun update(plant: Plant)
     @Delete
