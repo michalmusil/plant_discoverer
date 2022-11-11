@@ -1,13 +1,15 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.new_plant_screen
 
+import android.Manifest
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.location.Location
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -18,11 +20,16 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.mlkit.vision.label.ImageLabel
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
@@ -52,16 +59,42 @@ fun NewPlantScreen(
     )
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun NewPlantScreenContent(
     navigation: INavigationRouter,
     viewModel: NewPlantViewModel,
     takenPhotoUri: String
 ){
-    val context = LocalContext.current
+    val locationPermissionState = rememberMultiplePermissionsState(
+        permissions =
+            listOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION)
 
-    val photo = rememberSaveable{
-        mutableStateOf(BitmapFactory.decodeResource(context.resources, R.drawable.ic_error))
+    )
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(key1 = lifecycleOwner, effect = {
+        val observer = LifecycleEventObserver{ _, event ->
+            if (event == Lifecycle.Event.ON_START) {
+                locationPermissionState.launchMultiplePermissionRequest()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    })
+
+    val currentLocation = rememberSaveable {
+        mutableStateOf<Location?>(null)
+    }
+
+    if (locationPermissionState.allPermissionsGranted){
+        viewModel.getCurrentUserLocation(LocalContext.current) {
+            currentLocation.value = it
+        }
     }
 
     viewModel.newPlantUiState.value.let {
@@ -74,16 +107,15 @@ fun NewPlantScreenContent(
                 LoadingScreen()
             }
             is NewPlantUiState.PhotoLoaded -> {
-                photo.value = it.photo
                 LaunchedEffect(it){
-                    viewModel.reckognizePhoto(photo.value)
+                    viewModel.reckognizePhoto(it.photo)
                 }
             }
             is NewPlantUiState.ImageReckognized -> {
-                NewPlantForm(navigation = navigation, viewModel = viewModel, photo = photo.value, imageLabel = it.label)
+                NewPlantForm(navigation = navigation, viewModel = viewModel, photo = it.photo, imageLabel = it.label, location = currentLocation.value)
             }
             is NewPlantUiState.ImageReckognitionFailed -> {
-                NewPlantForm(navigation = navigation, viewModel = viewModel, photo = photo.value, imageLabel = null)
+                NewPlantForm(navigation = navigation, viewModel = viewModel, photo = it.photo, imageLabel = null, location = currentLocation.value)
             }
             is NewPlantUiState.NewPlantSaved -> {
                 LaunchedEffect(it){
@@ -102,7 +134,8 @@ fun NewPlantForm(
     navigation: INavigationRouter,
     viewModel: NewPlantViewModel,
     photo: Bitmap,
-    imageLabel: ImageLabel?
+    imageLabel: ImageLabel?,
+    location: Location?
 ){
     val context = LocalContext.current
 
@@ -244,6 +277,8 @@ fun NewPlantForm(
                                 )
                                 newPlant.describtion = description.value
                                 newPlant.photo = PictureUtils.fromBitmapToByteArray(photo)
+                                newPlant.latitude = location?.latitude
+                                newPlant.longitude = location?.longitude
 
                                 viewModel.saveNewPlant(newPlant)
                             }

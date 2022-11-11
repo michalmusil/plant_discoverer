@@ -122,4 +122,6 @@ dependencies {
     // MLkit
     implementation "com.google.mlkit:image-labeling:17.0.7"
 
+    // Location
+    implementation "com.google.android.gms:play-services-location:21.0.1"
 }

@@ -27,9 +27,9 @@ data class Plant(
     @ColumnInfo(name = "picture")
     var photo: ByteArray? = null
 
-    @ColumnInfo(name = "describtion")
+    @ColumnInfo(name = "latitude")
     var latitude: Double? = null
 
-    @ColumnInfo(name = "describtion")
+    @ColumnInfo(name = "longitude")
     var longitude: Double? = null
 }
