@@ -49,7 +49,7 @@ fun PlantsListScreen(
     viewModel: PlantsListViewModel = getViewModel()
 ){
     ScreenSkeleton(
-        topBarText = "Discovered plants",
+        topBarText = stringResource(id = R.string.plantsList),
         navigation = navigation,
         content = {
             Box(modifier = Modifier.fillMaxSize()) {

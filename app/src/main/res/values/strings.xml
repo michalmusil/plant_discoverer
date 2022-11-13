@@ -10,17 +10,20 @@
 
     <!-- Errors -->
     <string name="somethingWentWrong">Something went wrong</string>
+    <string name="locationForbidden">Location services have been denied. To use location-based features, you can enable them in your phone\'s settings</string>
 
     <!-- Elements -->
     <string name="plantImage">Plant image</string>
     <string name="floatingActionButton">Floating action button</string>
 
     <!-- Screens -->
-    <string name="plants">Plants</string>
+    <string name="plantsList">Plants</string>
     <string name="home">Home</string>
     <string name="map">Map</string>
     <string name="settings">Settings</string>
     <string name="camera">Camera</string>
+    <string name="newPlant">New plant</string>
+    <string name="editPlant">Edit plant</string>
     
     <!-- Settings screen -->
     <string name="appLanguage">App language</string>
@@ -34,6 +37,8 @@
     <string name="couldntReckognizePhoto">Could not reckognize plant species</string>
     <string name="nameTooShort">Name can\'t be empty</string>
     <string name="imageQueryTooShort">Image query can\'t be empty</string>
+
+
 
 
 

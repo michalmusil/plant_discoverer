@@ -9,6 +9,10 @@ class PlantDbRepositoryLocal(private val plantsDao: PlantsDao): IPlantsDbReposit
         return plantsDao.getAll()
     }
 
+    override fun getAllWithLocation(): Flow<List<Plant>> {
+        return plantsDao.getAllWithLocation()
+    }
+
     override suspend fun getById(plantId: Long): Plant {
         return plantsDao.getById(plantId)
     }

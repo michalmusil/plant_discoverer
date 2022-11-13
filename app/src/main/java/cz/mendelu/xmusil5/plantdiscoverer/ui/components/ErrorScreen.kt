@@ -16,7 +16,10 @@ import androidx.compose.ui.unit.sp
 import cz.mendelu.xmusil5.plantdiscoverer.R
 
 @Composable
-fun ErrorScreen(text: String?){
+fun ErrorScreen(
+    text: String?,
+    imageResourceId: Int = R.drawable.ic_error
+){
     Column(modifier = Modifier
         .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -28,12 +31,12 @@ fun ErrorScreen(text: String?){
 
 
             Image(
-                painter = painterResource(R.drawable.ic_error),
+                painter = painterResource(imageResourceId),
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 30.dp)
+                    .padding(horizontal = 90.dp)
             )
 
             text?.let {
@@ -42,7 +45,9 @@ fun ErrorScreen(text: String?){
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
-                    fontSize = 30.sp
+                    fontSize = 20.sp,
+                    modifier = Modifier
+                        .padding(top = 20.dp)
                 )
             }
         }

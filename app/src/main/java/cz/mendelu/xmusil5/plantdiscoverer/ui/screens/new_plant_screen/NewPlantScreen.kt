@@ -47,7 +47,7 @@ fun NewPlantScreen(
     takenPhotoUri: String
 ){
     ScreenSkeleton(
-        topBarText = "New plant",
+        topBarText = stringResource(id = R.string.newPlant),
         navigation = navigation,
         showBackArrow = true,
         onBackClick = {
@@ -77,7 +77,7 @@ fun NewPlantScreenContent(
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(key1 = lifecycleOwner, effect = {
         val observer = LifecycleEventObserver{ _, event ->
-            if (event == Lifecycle.Event.ON_START) {
+            if (event == Lifecycle.Event.ON_START && !locationPermissionState.allPermissionsGranted) {
                 locationPermissionState.launchMultiplePermissionRequest()
             }
         }

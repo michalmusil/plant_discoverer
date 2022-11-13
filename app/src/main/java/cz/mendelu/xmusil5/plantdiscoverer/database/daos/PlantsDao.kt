@@ -13,6 +13,9 @@ interface PlantsDao {
     @Query("SELECT * FROM plants")
     fun getAll(): Flow<List<Plant>>
 
+    @Query("SELECT * FROM plants WHERE latitude NOT NULL AND longitude NOT NULL")
+    fun getAllWithLocation(): Flow<List<Plant>>
+
     @Query("SELECT * FROM plants WHERE id = :plantId")
     suspend fun getById(plantId: Long): Plant
 
