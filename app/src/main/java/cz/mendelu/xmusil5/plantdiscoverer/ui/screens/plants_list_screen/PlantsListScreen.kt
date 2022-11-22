@@ -108,7 +108,7 @@ fun PlantsGridList(
                 PlantGridListItem(
                     plant = plant,
                     onItemClick = {
-                        navigation.toPlantDetailScreen(plant.id!!)
+                        //navigation.toPlantDetailScreen(plant.id!!)
                     })
             }
         })

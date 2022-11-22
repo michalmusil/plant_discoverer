@@ -107,11 +107,14 @@ fun MapScreenContent(
                 } else {
                     LoadingScreen()
                     LaunchedEffect(it){
-                        viewModel.loadPlantsWithLocation()
-                        viewModel.getCurrentUserLocation(context){
-                            currentLocation.value = it
-                        }
+                        viewModel.getCurrentUserLocation(context)
                     }
+                }
+            }
+            is MapUiState.LocationResults -> {
+                LaunchedEffect(it){
+                    currentLocation.value = it.location
+                    viewModel.loadPlantsWithLocation()
                 }
             }
             is MapUiState.PlantsLoaded -> {
@@ -121,6 +124,9 @@ fun MapScreenContent(
             }
             is MapUiState.PermissionsDenied -> {
                 ErrorScreen(text = stringResource(id = R.string.locationForbidden), imageResourceId = R.drawable.ic_location_forbidden)
+            }
+            is MapUiState.Error -> {
+                ErrorScreen(text = stringResource(id = it.errorCode))
             }
         }
     }
