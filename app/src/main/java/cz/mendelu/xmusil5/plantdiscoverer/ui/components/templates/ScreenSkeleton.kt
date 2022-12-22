@@ -18,6 +18,8 @@ import androidx.navigation.NavController
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.Destination
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.BottomNavItem
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.BottomNavigationBar
 
 @Composable
 fun ScreenSkeleton(

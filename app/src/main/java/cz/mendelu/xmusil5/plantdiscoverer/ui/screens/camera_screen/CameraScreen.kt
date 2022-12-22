@@ -31,10 +31,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import cz.mendelu.xmusil5.plantdiscoverer.R
-import cz.mendelu.xmusil5.plantdiscoverer.navigation.Destination
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.BottomNavItem
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.BottomNavigationBar
 import cz.mendelu.xmusil5.plantdiscoverer.utils.getCameraProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

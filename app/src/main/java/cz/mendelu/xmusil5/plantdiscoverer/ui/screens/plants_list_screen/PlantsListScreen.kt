@@ -40,6 +40,8 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.components.CameraFloatingActionButt
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ErrorScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.list_items.PlantGridListItem
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.list_items.PlantGridListItemLarge
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
 
@@ -105,53 +107,12 @@ fun PlantsGridList(
             .padding(horizontal = 16.dp),
         content = {
             items(plants) { plant ->
-                PlantGridListItem(
+                PlantGridListItemLarge(
                     plant = plant,
                     onItemClick = {
-                        //navigation.toPlantDetailScreen(plant.id!!)
+                        navigation.toPlantDetailScreen(plant.id!!)
                     })
             }
         })
 }
 
-@Composable
-fun PlantGridListItem(
-    plant: Plant,
-    onItemClick: (Plant) -> Unit
-){
-    val photoBitmap = PictureUtils.fromByteArrayToBitmap(plant.photo)
-    Box(
-        modifier = Modifier
-            .width(120.dp)
-            .height(120.dp)
-            .padding(3.dp)
-            .clickable {
-                onItemClick(plant)
-            }
-    ){
-        Image(
-            bitmap = photoBitmap?.asImageBitmap() ?: ImageBitmap.imageResource(id = R.drawable.ic_error),
-            contentDescription = "desc",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth()
-                .aspectRatio(1f)
-                .padding(5.dp)
-                .clip(RoundedCornerShape(8.dp)))
-        Text(
-            text = plant.name,
-            fontSize = 16.sp,
-            maxLines = 1,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSecondary,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .clip(RoundedCornerShape(9.dp))
-                .background(color = MaterialTheme.colorScheme.secondary, shape = RectangleShape)
-                .padding(horizontal = 5.dp),
-            overflow = TextOverflow.Ellipsis
-
-        )
-    }
-}

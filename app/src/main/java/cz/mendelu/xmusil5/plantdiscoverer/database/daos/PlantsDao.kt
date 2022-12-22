@@ -17,7 +17,7 @@ interface PlantsDao {
     fun getAllWithLocation(): Flow<List<Plant>>
 
     @Query("SELECT * FROM plants WHERE id = :plantId")
-    suspend fun getById(plantId: Long): Plant
+    suspend fun getById(plantId: Long): Plant?
 
     @Insert
     suspend fun insert(plant: Plant): Long

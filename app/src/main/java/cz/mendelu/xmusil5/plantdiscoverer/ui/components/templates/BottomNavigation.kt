@@ -1,4 +1,4 @@
-package cz.mendelu.xmusil5.plantdiscoverer.ui.components
+package cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column

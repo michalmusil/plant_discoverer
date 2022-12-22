@@ -19,24 +19,29 @@ import androidx.core.view.ViewCompat
 private val DarkColorScheme = darkColorScheme(
     primary = primaryDark,
     secondary = secondaryDark,
+    tertiary = tertiaryDark,
 
     background = backgroundDark,
     surface = surfaceDark,
     onPrimary = textOnPrimaryDark,
     onSecondary = textOnSecondaryDark,
+    onTertiary = textOnTertiaryDark,
     onBackground = textOnPrimaryDark,
     onSurface = textOnPrimaryDark,
     error = errorColor
 )
 
+
 private val LightColorScheme = lightColorScheme(
     primary = primary,
     secondary = secondary,
+    tertiary = tertiary,
 
     background = background,
     surface = surface,
     onPrimary = textOnPrimary,
     onSecondary = textOnSecondary,
+    onTertiary = textOnTertiary,
     onBackground = textOnPrimary,
     onSurface = textOnPrimary,
     error = errorColor

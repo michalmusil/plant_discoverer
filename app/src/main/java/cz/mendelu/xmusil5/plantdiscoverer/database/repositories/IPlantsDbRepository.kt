@@ -8,7 +8,7 @@ interface IPlantsDbRepository {
 
     fun getAllWithLocation(): Flow<List<Plant>>
 
-    suspend fun getById(plantId: Long): Plant
+    suspend fun getById(plantId: Long): Plant?
 
     suspend fun insert(plant: Plant): Long
     suspend fun update(plant: Plant)

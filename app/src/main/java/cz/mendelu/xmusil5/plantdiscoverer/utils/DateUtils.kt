@@ -22,7 +22,7 @@ object DateUtils {
     fun getDateString(unixTime: Long): String{
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = unixTime
-        val format: SimpleDateFormat;
+        val format: SimpleDateFormat
         if (LanguageUtils.isLanguageCzech()){
             format = SimpleDateFormat(DATE_FORMAT_CS, Locale.GERMAN)
         } else {
