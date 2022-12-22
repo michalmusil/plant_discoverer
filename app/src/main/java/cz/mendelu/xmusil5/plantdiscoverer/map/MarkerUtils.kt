@@ -7,6 +7,9 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import androidx.core.graphics.drawable.toDrawable
+import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.shape.CornerFamily
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
@@ -17,12 +20,12 @@ object MarkerUtils {
         val layout = if (makeLarge) R.layout.plant_marker_large else R.layout.plant_marker
         val markerView = LayoutInflater.from(context).inflate(layout, null)
 
-        val markerImage = markerView.findViewById<ImageView>(R.id.marker_image)
+        val markerImage = markerView.findViewById<ShapeableImageView>(R.id.marker_image)
         val markerBackground = markerView.findViewById<ImageView>(R.id.marker_background)
 
         val plantPhoto = PictureUtils.fromByteArrayToBitmap(plant.photo)
         plantPhoto?.let {
-            markerImage.setImageBitmap(it)
+            markerImage.setImageDrawable(it.toDrawable(context.resources))
         }
 
         markerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
