@@ -11,23 +11,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
-import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.grayLight
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun PlantGridListItemLarge(
@@ -76,7 +71,7 @@ fun PlantGridListItemLarge(
                     lineHeight = 18.sp
                 )
                 Text(
-                    text = plant.describtion ?: "",
+                    text = plant.description ?: "",
                     fontSize = 12.sp,
                     maxLines = 3,
                     textAlign = TextAlign.Center,

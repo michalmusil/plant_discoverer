@@ -81,10 +81,25 @@ fun MapScreenContent(
     )
 
     val lifecycleOwner = LocalLifecycleOwner.current
+
+    // Observer for launching permission request
     DisposableEffect(key1 = lifecycleOwner, effect = {
         val observer = LifecycleEventObserver{ _, event ->
             if (event == Lifecycle.Event.ON_START && !locationPermissionState.allPermissionsGranted) {
                 locationPermissionState.launchMultiplePermissionRequest()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    })
+
+    //Observer for launching map view when permissions get accepted
+    DisposableEffect(key1 = lifecycleOwner, effect = {
+        val observer = LifecycleEventObserver{_, event ->
+            if (viewModel.mapUiState.value is MapUiState.PermissionsDenied && event == Lifecycle.Event.ON_RESUME && locationPermissionState.allPermissionsGranted) {
+                viewModel.mapUiState.value = MapUiState.Start()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)

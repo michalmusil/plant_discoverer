@@ -24,8 +24,8 @@ data class Plant(
     @ColumnInfo(name = "id")
     var id: Long? = null
 
-    @ColumnInfo(name = "describtion")
-    var describtion: String? = null
+    @ColumnInfo(name = "description")
+    var description: String? = null
 
     @ColumnInfo(name = "picture")
     var photo: ByteArray? = null

@@ -275,7 +275,7 @@ fun NewPlantForm(
                                     originalCertainty = confidence,
                                     imageQuery = imageQuery.value,
                                 )
-                                newPlant.describtion = description.value
+                                newPlant.description = description.value
                                 newPlant.photo = PictureUtils.fromBitmapToByteArray(photo)
                                 newPlant.latitude = location?.latitude
                                 newPlant.longitude = location?.longitude

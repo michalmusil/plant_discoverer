@@ -140,7 +140,7 @@ fun PlantDetailForm(
                 iconId = R.drawable.ic_calendar)
             CustomDetailRow(
                 title = stringResource(id = R.string.description),
-                text = plant.describtion ?: "",
+                text = plant.description ?: "",
                 iconId = R.drawable.ic_note)
         }
     }
