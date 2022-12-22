@@ -37,7 +37,7 @@ val viewModelModule = module {
     }
 
     viewModel{
-        NewPlantViewModel(get())
+        NewPlantViewModel(get(), get())
     }
 
     viewModel{

@@ -31,6 +31,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.mlkit.vision.label.ImageLabel
+import com.google.mlkit.vision.objects.DetectedObject
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
@@ -112,10 +113,10 @@ fun NewPlantScreenContent(
                 }
             }
             is NewPlantUiState.ImageReckognized -> {
-                NewPlantForm(navigation = navigation, viewModel = viewModel, photo = it.photo, imageLabel = it.label, location = currentLocation.value)
+                NewPlantForm(navigation = navigation, viewModel = viewModel, photo = it.photo, detectedObject = it.detectedObject, location = currentLocation.value)
             }
             is NewPlantUiState.ImageReckognitionFailed -> {
-                NewPlantForm(navigation = navigation, viewModel = viewModel, photo = it.photo, imageLabel = null, location = currentLocation.value)
+                NewPlantForm(navigation = navigation, viewModel = viewModel, photo = it.photo, detectedObject = null, location = currentLocation.value)
             }
             is NewPlantUiState.NewPlantSaved -> {
                 LaunchedEffect(it){
@@ -134,10 +135,12 @@ fun NewPlantForm(
     navigation: INavigationRouter,
     viewModel: NewPlantViewModel,
     photo: Bitmap,
-    imageLabel: ImageLabel?,
+    detectedObject: DetectedObject?,
     location: Location?
 ){
     val context = LocalContext.current
+    val detectedObjectName = detectedObject?.labels?.firstOrNull()?.text ?: "-"
+    val detectedObjectConficence = detectedObject?.labels?.firstOrNull()?.confidence ?: 0F
 
     val name = rememberSaveable {
         mutableStateOf("")
@@ -153,9 +156,9 @@ fun NewPlantForm(
     }
 
     LaunchedEffect(context){
-        if (imageLabel != null){
-            name.value = imageLabel.text
-            imageQuery.value = imageLabel.text
+        if (detectedObject != null){
+            name.value = detectedObjectName
+            imageQuery.value = detectedObjectName
         }
     }
 
@@ -192,7 +195,7 @@ fun NewPlantForm(
         }
         
         // IMAGE RECKOGNITION
-        ImageReckognitionResults(imageLabel = imageLabel)
+        ImageReckognitionResults(detectedObject = detectedObject)
 
         // FORM ITEMS
         Row(
@@ -266,13 +269,13 @@ fun NewPlantForm(
                                 !nameError.value
                                 && !imageQueryError.value
                             ){
-                                val confidence = if (imageLabel != null) (imageLabel.confidence*100).toInt() else 0
-                                val originalMatch = if (imageLabel != null) imageLabel.text else "-"
+                                val confidence = detectedObjectConficence
+                                val originalMatch = detectedObjectName
                                 val newPlant = Plant(
                                     name = name.value,
                                     dateDiscovered = DateUtils.getCurrentUnixTime(),
                                     originalMatch = originalMatch,
-                                    originalCertainty = confidence,
+                                    originalCertainty = confidence.toInt(),
                                     imageQuery = imageQuery.value,
                                 )
                                 newPlant.description = description.value
@@ -292,8 +295,8 @@ fun NewPlantForm(
 
 
 @Composable
-fun ImageReckognitionResults(imageLabel: ImageLabel?){
-    val borderColor = if (imageLabel != null) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.error
+fun ImageReckognitionResults(detectedObject: DetectedObject?){
+    val borderColor = if (detectedObject != null) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.error
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -316,13 +319,13 @@ fun ImageReckognitionResults(imageLabel: ImageLabel?){
             Spacer(modifier = Modifier.width(20.dp))
             
             Column (verticalArrangement = Arrangement.Center) {
-                if (imageLabel != null) {
+                if (detectedObject != null) {
                     Text(
-                        text = imageLabel.text,
+                        text = detectedObject.labels.firstOrNull()?.text ?: "",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    val percentage = String.format("%.0f", (imageLabel.confidence * 100))
+                    val percentage = String.format("%.0f", ((detectedObject.labels.firstOrNull()?.confidence?: 0F) * 100))
                     Text(
                         text = "${stringResource(id = R.string.confidence)}: ${percentage}%",
                         fontSize = 12.sp,

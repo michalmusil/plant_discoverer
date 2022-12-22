@@ -121,6 +121,8 @@ dependencies {
 
     // MLkit
     implementation "com.google.mlkit:image-labeling:17.0.7"
+    implementation 'com.google.mlkit:object-detection-custom:17.0.0'
+    implementation 'com.google.mlkit:object-detection:17.0.0'
 
     // Location
     implementation "com.google.android.gms:play-services-location:21.0.1"

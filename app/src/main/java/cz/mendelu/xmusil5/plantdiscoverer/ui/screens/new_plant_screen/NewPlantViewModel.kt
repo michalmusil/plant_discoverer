@@ -26,10 +26,10 @@ import java.io.File
 
 class NewPlantViewModel(
     private val plantsDbRepository: IPlantsDbRepository,
+    private val imageReckognizer: ImageReckognizer
     ): ViewModel() {
 
     val newPlantUiState: MutableState<NewPlantUiState> = mutableStateOf(NewPlantUiState.Start())
-    val imageReckognizer = ImageReckognizer()
 
     fun getImageFromUri(context: Context, uriString: String){
         try {
@@ -52,8 +52,8 @@ class NewPlantViewModel(
 
     fun reckognizePhoto(photo: Bitmap){
         imageReckognizer.processImage(photo, onFinishedListener = {
-            if (it != null){
-                newPlantUiState.value = NewPlantUiState.ImageReckognized(photo, it)
+            if (!it.isEmpty()){
+                newPlantUiState.value = NewPlantUiState.ImageReckognized(photo, it.first())
             } else {
                 newPlantUiState.value = NewPlantUiState.ImageReckognitionFailed(photo)
             }
