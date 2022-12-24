@@ -14,7 +14,7 @@ import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions
 
 class ImageReckognizer(
     private val mlModelPath: String,
-    private val acceptedReckognitionConfidence: Float = 0.5f
+    private val acceptedReckognitionConfidence: Float = 0.1f
 ) {
 
     private val model = LocalModel.Builder()

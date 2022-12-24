@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cz.mendelu.xmusil5.plantdiscoverer.R
@@ -21,6 +22,7 @@ fun CustomOutlinedButton(
     text: String,
     backgroundColor: Color,
     textColor: Color,
+    textSize: TextUnit = 22.sp,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
@@ -30,7 +32,7 @@ fun CustomOutlinedButton(
                 text = text,
                 color = textColor,
                 fontWeight = FontWeight.Bold,
-                fontSize = 22.sp
+                fontSize = textSize
             )
         },
         shape = RoundedCornerShape(25.dp),

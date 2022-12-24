@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.mlkit.vision.label.ImageLabel
@@ -92,7 +93,7 @@ fun NewPlantScreenContent(
         mutableStateOf<Location?>(null)
     }
 
-    if (locationPermissionState.allPermissionsGranted){
+    if (locationPermissionState.allPermissionsGranted && currentLocation.value == null){
         viewModel.getCurrentUserLocation(LocalContext.current) {
             currentLocation.value = it
         }
@@ -184,7 +185,7 @@ fun NewPlantForm(
                 .padding(top = 16.dp)
         ) {
             Image(
-                bitmap = photo.asImageBitmap(),
+                painter = rememberAsyncImagePainter(photo),
                 contentDescription = stringResource(id = R.string.plantImage),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -269,7 +270,7 @@ fun NewPlantForm(
                                 !nameError.value
                                 && !imageQueryError.value
                             ){
-                                val confidence = detectedObjectConficence
+                                val confidence = detectedObjectConficence * 100
                                 val originalMatch = detectedObjectName
                                 val newPlant = Plant(
                                     name = name.value,

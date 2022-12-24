@@ -66,7 +66,8 @@ fun CustomDetailRow(
                 Text(
                     text = text,
                     fontSize = 12.sp,
-                    color = androidx.compose.ui.graphics.Color.Black
+                    color = androidx.compose.ui.graphics.Color.Black,
+                    lineHeight = 17.sp
                 )
             }
         }
@@ -135,6 +136,7 @@ fun CustomDetailRowWithAdditionalLabel(
                     text = additionalLabel,
                     fontSize = 14.sp,
                     color = androidx.compose.ui.graphics.Color.Black,
+                    lineHeight = 17.sp
                 )
             }
         }

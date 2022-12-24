@@ -1,25 +1,35 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.map_screen
 
 import android.Manifest
+import android.content.Context
 import android.location.Location
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.animation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -37,9 +47,12 @@ import cz.mendelu.xmusil5.plantdiscoverer.map.PlantDiscovererMapRenderer
 import cz.mendelu.xmusil5.plantdiscoverer.map.PlantMarker
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.CustomOutlinedButton
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ErrorScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
+import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.grayCommon
+import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -135,7 +148,7 @@ fun MapScreenContent(
             is MapUiState.PlantsLoaded -> {
                 plants.clear()
                 plants.addAll(it.plants)
-                PlantsMap(plants = plants, currentLocation = currentLocation.value)
+                PlantsMap(plants = plants, currentLocation = currentLocation.value, navigation = navigation)
             }
             is MapUiState.PermissionsDenied -> {
                 ErrorScreen(text = stringResource(id = R.string.locationForbidden), imageResourceId = R.drawable.ic_location_forbidden)
@@ -151,7 +164,8 @@ fun MapScreenContent(
 @Composable
 fun PlantsMap(
     plants: List<Plant>,
-    currentLocation: Location?
+    currentLocation: Location?,
+    navigation: INavigationRouter
 ){
 
     val mapUiSettings by remember { mutableStateOf(
@@ -166,6 +180,10 @@ fun PlantsMap(
                 currentLocation?.longitude ?:  0.0), 9f)
     }
 
+    val showPopup = rememberSaveable {
+        mutableStateOf(false)
+    }
+
     val context = LocalContext.current
     var clusterManager by remember {
         mutableStateOf<ClusterManager<Plant>?>(null)
@@ -173,7 +191,7 @@ fun PlantsMap(
     var clusterRenderer by remember {
         mutableStateOf<PlantDiscovererMapRenderer?>(null)
     }
-    var lastClickedMarker by remember {
+    var lastClickedMarker = remember {
         mutableStateOf<PlantMarker?>(null)
     }
 
@@ -201,23 +219,17 @@ fun PlantsMap(
                     algorithm = GridBasedAlgorithm()
 
                     renderer.setOnClusterItemClickListener { item ->
-                        // If there was a marker user clicked before, its
-                        lastClickedMarker?.let {
-                            it.marker.setIcon(
-                                BitmapDescriptorFactory.fromBitmap(
-                                    MarkerUtils.createCustomMarkerFromLayout(context, it.plant, false)
-                                )
-                            )
-                            lastClickedMarker = null
-                        }
+                        // If there was a marker user clicked before, its not highlighted anymore
+                        unHighlightMarker(context, lastClickedMarker)
 
                         // Now the clicked marker state is saved
-                        lastClickedMarker = PlantMarker(item, clusterRenderer?.getMarker(item)!!)
-                        lastClickedMarker?.marker?.setIcon(
+                        lastClickedMarker.value = PlantMarker(item, clusterRenderer?.getMarker(item)!!)
+                        lastClickedMarker.value?.marker?.setIcon(
                             BitmapDescriptorFactory.fromBitmap(
                                 MarkerUtils.createCustomMarkerFromLayout(context, item!!, true)
                             )
                         )
+                        showPopup.value = true
                         true
                     }
                 }
@@ -231,5 +243,122 @@ fun PlantsMap(
                 }
             }
         }
+
+        if (showPopup.value && lastClickedMarker.value != null){
+            PlantMapPopup(plant = lastClickedMarker.value!!.plant, navigation = navigation){
+                showPopup.value = false
+                unHighlightMarker(context, lastClickedMarker)
+            }
+        }
     }
 }
+
+@Composable
+fun PlantMapPopup(
+    plant: Plant,
+    navigation: INavigationRouter,
+    onDismiss: () -> Unit
+){
+    var editable by remember { mutableStateOf(true) }
+
+    Popup(
+        alignment = Alignment.BottomCenter,
+        onDismissRequest = { onDismiss() }
+    ) {
+        AnimatedVisibility(
+            visible = editable,
+            enter = fadeIn(),
+            exit = fadeOut()
+
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(170.dp)
+                    .padding(16.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.background,
+                        shape = RoundedCornerShape(12.dp)
+                    )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(10.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            bitmap = PictureUtils.fromByteArrayToBitmap(plant.photo)
+                                ?.asImageBitmap()
+                                ?: ImageBitmap.imageResource(id = R.drawable.ic_error),
+                            contentDescription = plant.name,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .height(65.dp)
+                                .aspectRatio(1f)
+                                .padding(4.dp)
+                                .clip(CircleShape)
+                        )
+                        Text(
+                            text = plant.name,
+                            fontSize = 20.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier
+                                .padding(start = 12.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        CustomOutlinedButton(
+                            text = stringResource(id = R.string.editPlant),
+                            backgroundColor = grayCommon,
+                            textColor = MaterialTheme.colorScheme.onSecondary,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 5.dp),
+                            textSize = 14.sp,
+                            onClick = {
+                                navigation.toPlantEditScreen(plant.id!!)
+                            }
+                        )
+                        CustomOutlinedButton(
+                            text = stringResource(id = R.string.plantDetail),
+                            backgroundColor = MaterialTheme.colorScheme.secondary,
+                            textColor = MaterialTheme.colorScheme.onSecondary,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 5.dp),
+                            textSize = 14.sp,
+                            onClick = {
+                                navigation.toPlantDetailScreen(plant.id!!)
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+private fun unHighlightMarker(
+    context: Context,
+    lastClickedMarker: MutableState<PlantMarker?>
+){
+    lastClickedMarker.value?.let {
+        it.marker.setIcon(
+            BitmapDescriptorFactory.fromBitmap(
+                MarkerUtils.createCustomMarkerFromLayout(context, it.plant, false)
+            )
+        )
+        lastClickedMarker.value = null
+    }
+}
+

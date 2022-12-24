@@ -47,7 +47,7 @@ fun PlantGridListItemLarge(
         ) {
             Image(
                 bitmap = photoBitmap?.asImageBitmap() ?: ImageBitmap.imageResource(id = R.drawable.ic_error),
-                contentDescription = "desc",
+                contentDescription = plant.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
