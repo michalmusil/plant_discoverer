@@ -3,6 +3,7 @@ package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.new_plant_screen
 import android.Manifest
 import android.graphics.Bitmap
 import android.location.Location
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape

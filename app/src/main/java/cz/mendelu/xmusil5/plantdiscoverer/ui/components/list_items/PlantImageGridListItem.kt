@@ -1,5 +1,6 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.components.list_items
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -15,7 +16,7 @@ import coil.request.ImageRequest
 import cz.mendelu.xmusil5.plantdiscoverer.R
 
 @Composable
-fun PlantImageGridListItem(imageAddress: String){
+fun PlantImageGridListItem(imageAddress: String, onClick: () -> Unit){
     val context = LocalContext.current
 
     Box(
@@ -23,6 +24,9 @@ fun PlantImageGridListItem(imageAddress: String){
             .width(145.dp)
             .aspectRatio(1f)
             .padding(5.dp)
+            .clickable {
+                onClick()
+            }
     ){
         AsyncImage(
             model = ImageRequest.Builder(context)

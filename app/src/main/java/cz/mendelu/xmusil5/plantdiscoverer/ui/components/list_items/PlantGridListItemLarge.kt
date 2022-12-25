@@ -64,7 +64,7 @@ fun PlantGridListItemLarge(
                     text = plant.name,
                     fontSize = 14.sp,
                     maxLines = 2,
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Start,
                     color = MaterialTheme.colorScheme.onTertiary,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Bold,
@@ -74,7 +74,7 @@ fun PlantGridListItemLarge(
                     text = plant.description ?: "",
                     fontSize = 12.sp,
                     maxLines = 3,
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Start,
                     color = MaterialTheme.colorScheme.onTertiary,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Light

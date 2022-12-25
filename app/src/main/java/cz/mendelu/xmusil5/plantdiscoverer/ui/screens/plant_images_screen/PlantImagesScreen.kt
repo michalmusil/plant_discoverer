@@ -1,15 +1,27 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_images_screen
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.communication.CommunicationResult
 import cz.mendelu.xmusil5.plantdiscoverer.model.api_models.UnsplashImage
@@ -21,7 +33,6 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.components.list_items.PlantImageGri
 import cz.mendelu.xmusil5.plantdiscoverer.utils.onLastReached
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
-import org.koin.androidx.compose.viewModel
 
 @Composable
 fun PlantImagesScreen(
@@ -91,6 +102,14 @@ fun PlantImagesList(
 
     val coroutineScope = rememberCoroutineScope()
 
+    val showImageDetailPopup = remember {
+        mutableStateOf(false)
+    }
+
+    val clickedImageUrl = remember{
+        mutableStateOf<String?>(null)
+    }
+
     LazyVerticalGrid(
         state = gridListState,
         columns = GridCells.Adaptive(145.dp),
@@ -99,7 +118,12 @@ fun PlantImagesList(
             .padding(horizontal = 16.dp),
     ){
         items(images){ image ->
-            PlantImageGridListItem(imageAddress = image.imageUrls.regular)
+            PlantImageGridListItem(imageAddress = image.imageUrls.regular, onClick = {
+                if (!showImageDetailPopup.value) {
+                    clickedImageUrl.value = image.imageUrls.regular
+                    showImageDetailPopup.value = true
+                }
+            })
         }
     }
 
@@ -109,6 +133,59 @@ fun PlantImagesList(
             if (newImages is CommunicationResult.Success) {
                 imagePage.value += 1
                 images.addAll(newImages.data.results)
+            }
+        }
+    }
+
+    ImageInDetailPopup(
+        imageUrl = clickedImageUrl.value,
+        showImagePopup = showImageDetailPopup,
+        onDismiss = {
+            showImageDetailPopup.value = false
+            clickedImageUrl.value = null
+        }
+    )
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun ImageInDetailPopup(
+    imageUrl: String?,
+    showImagePopup: MutableState<Boolean>,
+    onDismiss: () -> Unit
+){
+    val context = LocalContext.current
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val screenHeight = LocalConfiguration.current.screenHeightDp
+
+    Popup(
+        alignment = Alignment.Center,
+        onDismissRequest = onDismiss
+    ) {
+        AnimatedVisibility(
+            visible = showImagePopup.value,
+            enter = scaleIn(),
+            exit = scaleOut()
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .padding(16.dp)
+            ){
+                imageUrl?.let {
+                    AsyncImage(
+                        model = ImageRequest.Builder(context)
+                            .data(imageUrl)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = stringResource(R.string.plantImage),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                            .clip(RoundedCornerShape(12.dp))
+                    )
+                }
             }
         }
     }

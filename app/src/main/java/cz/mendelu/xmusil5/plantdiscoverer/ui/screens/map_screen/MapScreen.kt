@@ -244,31 +244,30 @@ fun PlantsMap(
             }
         }
 
-        if (showPopup.value && lastClickedMarker.value != null){
-            PlantMapPopup(plant = lastClickedMarker.value!!.plant, navigation = navigation){
-                showPopup.value = false
-                unHighlightMarker(context, lastClickedMarker)
-            }
+        PlantMapPopup(plant = lastClickedMarker.value?.plant, navigation = navigation, showPopup){
+            showPopup.value = false
+            unHighlightMarker(context, lastClickedMarker)
         }
+
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PlantMapPopup(
-    plant: Plant,
+    plant: Plant?,
     navigation: INavigationRouter,
+    showPopupState: MutableState<Boolean>,
     onDismiss: () -> Unit
 ){
-    var editable by remember { mutableStateOf(true) }
-
     Popup(
         alignment = Alignment.BottomCenter,
         onDismissRequest = { onDismiss() }
     ) {
         AnimatedVisibility(
-            visible = editable,
-            enter = fadeIn(),
-            exit = fadeOut()
+            visible = showPopupState.value,
+            enter = scaleIn(),
+            exit = scaleOut()
 
         ) {
             Box(
@@ -281,66 +280,70 @@ fun PlantMapPopup(
                         shape = RoundedCornerShape(12.dp)
                     )
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(10.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
+                plant?.let {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(10.dp)
                     ) {
-                        Image(
-                            bitmap = PictureUtils.fromByteArrayToBitmap(plant.photo)
-                                ?.asImageBitmap()
-                                ?: ImageBitmap.imageResource(id = R.drawable.ic_error),
-                            contentDescription = plant.name,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .height(65.dp)
-                                .aspectRatio(1f)
-                                .padding(4.dp)
-                                .clip(CircleShape)
-                        )
-                        Text(
-                            text = plant.name,
-                            fontSize = 20.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier
-                                .padding(start = 12.dp)
-                        )
-                    }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                bitmap = PictureUtils.fromByteArrayToBitmap(plant.photo)
+                                    ?.asImageBitmap()
+                                    ?: ImageBitmap.imageResource(id = R.drawable.ic_error),
+                                contentDescription = plant.name,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .height(65.dp)
+                                    .aspectRatio(1f)
+                                    .padding(4.dp)
+                                    .clip(CircleShape)
+                            )
+                            Text(
+                                text = plant.name,
+                                fontSize = 20.sp,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier
+                                    .padding(start = 12.dp)
+                            )
+                        }
 
-                    Spacer(modifier = Modifier.weight(1f))
+                        Spacer(modifier = Modifier.weight(1f))
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        CustomOutlinedButton(
-                            text = stringResource(id = R.string.editPlant),
-                            backgroundColor = grayCommon,
-                            textColor = MaterialTheme.colorScheme.onSecondary,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = 5.dp),
-                            textSize = 14.sp,
-                            onClick = {
-                                navigation.toPlantEditScreen(plant.id!!)
-                            }
-                        )
-                        CustomOutlinedButton(
-                            text = stringResource(id = R.string.plantDetail),
-                            backgroundColor = MaterialTheme.colorScheme.secondary,
-                            textColor = MaterialTheme.colorScheme.onSecondary,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = 5.dp),
-                            textSize = 14.sp,
-                            onClick = {
-                                navigation.toPlantDetailScreen(plant.id!!)
-                            }
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            CustomOutlinedButton(
+                                text = stringResource(id = R.string.editPlant),
+                                backgroundColor = grayCommon,
+                                textColor = MaterialTheme.colorScheme.onSecondary,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(horizontal = 5.dp),
+                                textSize = 14.sp,
+                                onClick = {
+                                    navigation.toPlantEditScreen(plant.id!!)
+                                    onDismiss()
+                                }
+                            )
+                            CustomOutlinedButton(
+                                text = stringResource(id = R.string.plantDetail),
+                                backgroundColor = MaterialTheme.colorScheme.secondary,
+                                textColor = MaterialTheme.colorScheme.onSecondary,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(horizontal = 5.dp),
+                                textSize = 14.sp,
+                                onClick = {
+                                    navigation.toPlantDetailScreen(plant.id!!)
+                                    onDismiss()
+                                }
+                            )
+                        }
                     }
                 }
             }

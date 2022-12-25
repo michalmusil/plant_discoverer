@@ -199,8 +199,7 @@ fun CustomDetailRowWithAdditionalButton(
                 }
             }
             Column (
-                modifier = Modifier
-                    .padding(top = 17.dp),
+                modifier = Modifier,
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.End
             ) {
