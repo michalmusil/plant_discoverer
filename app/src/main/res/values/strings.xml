@@ -47,6 +47,7 @@
     <!-- Plants -->
     <string name="name">Plant name</string>
     <string name="dateDiscovered">Date discovered</string>
+    <string name="placeDiscovered">Place discovered</string>
     <string name="queryString">Query string</string>
     <string name="originalMatch">Original match</string>
     <string name="description">Description</string>

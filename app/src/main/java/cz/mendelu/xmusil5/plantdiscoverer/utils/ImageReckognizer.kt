@@ -29,12 +29,20 @@ class ImageReckognizer(
 
     private val imageDetector = ObjectDetection.getClient(singleImageOptions)
 
-    fun processImage(imageBitmap: Bitmap, onFinishedListener: (List<DetectedObject>) -> Unit) {
+    fun processImage(imageBitmap: Bitmap, onFinishedListener: (DetectedObject?) -> Unit) {
         val input = InputImage.fromBitmap(imageBitmap, 0)
         imageDetector.process(input).addOnSuccessListener {
-            onFinishedListener(it)
+            val detected = it.firstOrNull()
+            detected?.let{
+                detected.labels.forEach {
+                    if (it.text == "None"){
+                        detected.labels.remove(it)
+                    }
+                }
+            }
+            onFinishedListener(detected)
         }.addOnFailureListener{
-            onFinishedListener(listOf())
+            onFinishedListener(null)
         }
     }
 }

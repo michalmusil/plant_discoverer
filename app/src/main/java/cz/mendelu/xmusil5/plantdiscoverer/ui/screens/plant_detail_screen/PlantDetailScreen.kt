@@ -1,5 +1,6 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_detail_screen
 
+import android.location.Geocoder
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -12,13 +13,17 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
@@ -28,6 +33,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.components.CustomDetailRowWithAddit
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ErrorScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
+import cz.mendelu.xmusil5.plantdiscoverer.utils.LanguageUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
 
@@ -93,6 +99,18 @@ fun PlantDetailForm(
     navigation: INavigationRouter,
     plant: Plant
 ){
+    val locationString = remember{
+        mutableStateOf("-")
+    }
+    val geocoder = Geocoder(LocalContext.current, java.util.Locale.getDefault())
+    if (plant.latitude != null && plant.longitude != null){
+        geocoder.getFromLocation(plant.latitude!!, plant.longitude!!, 1) {
+            it.firstOrNull()?.let {
+                locationString.value = "${it.subAdminArea}, ${it.countryCode}"
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -130,6 +148,11 @@ fun PlantDetailForm(
                 text = plant.originalMatch,
                 additionalLabel = "${plant.originalCertainty}%",
                 iconId = R.drawable.ic_machinelearning
+            )
+            CustomDetailRow(
+                title = stringResource(id = R.string.placeDiscovered),
+                text = locationString.value,
+                iconId = R.drawable.ic_globe
             )
             CustomDetailRow(title = stringResource(id = R.string.queryString),
                 text = plant.imageQuery,

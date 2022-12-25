@@ -52,8 +52,8 @@ class NewPlantViewModel(
 
     fun reckognizePhoto(photo: Bitmap){
         imageReckognizer.processImage(photo, onFinishedListener = {
-            if (!it.isEmpty()){
-                newPlantUiState.value = NewPlantUiState.ImageReckognized(photo, it.first())
+            if (it != null && it.labels.isNotEmpty()){
+                newPlantUiState.value = NewPlantUiState.ImageReckognized(photo, it)
             } else {
                 newPlantUiState.value = NewPlantUiState.ImageReckognitionFailed(photo)
             }
