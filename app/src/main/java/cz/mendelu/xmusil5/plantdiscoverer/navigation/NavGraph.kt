@@ -14,7 +14,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.map_screen.MapScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.new_plant_screen.NewPlantScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_detail_screen.PlantDetailScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_edit_screen.PlantEditScreen
-import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_pictures_screen.PlantPicturesScreen
+import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_images_screen.PlantImagesScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plants_list_screen.PlantsListScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.settings_screen.SettingsScreen
 
@@ -68,15 +68,14 @@ fun NavGraph(
             NewPlantScreen(navigation = navigation, takenPhotoUri = takenPhotoUri!!)
         }
 
-        composable(Destination.PlantPicturesScreen.route + "/{plantId}",
+        composable(Destination.PlantImagesScreen.route + "/{query}",
             arguments = listOf(
-                navArgument("plantId"){
-                    type = NavType.LongType
-                    defaultValue = 0L
+                navArgument("query"){
+                    type = NavType.StringType
                 }
             )) {
-            val plantId = it.arguments?.getLong("plantId")
-            PlantPicturesScreen(navigation = navigation, plantId = plantId!!)
+            val query = it.arguments?.getString("query")
+            PlantImagesScreen(navigation = navigation, query = query!!)
         }
 
         composable(Destination.MapScreen.route) {

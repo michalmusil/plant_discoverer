@@ -28,10 +28,7 @@ import androidx.compose.ui.unit.dp
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.CustomDetailRow
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.CustomDetailRowWithAdditionalLabel
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ErrorScreen
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.*
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.LanguageUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
@@ -52,7 +49,7 @@ fun PlantDetailScreen(
         },
         actions = {
             IconButton(onClick = {
-                // TODO show delete dialog
+                // TODO
             }) {
                 Icon(
                     imageVector = Icons.Default.Edit,
@@ -154,9 +151,13 @@ fun PlantDetailForm(
                 text = locationString.value,
                 iconId = R.drawable.ic_globe
             )
-            CustomDetailRow(title = stringResource(id = R.string.queryString),
+            CustomDetailRowWithAdditionalButton(title = stringResource(id = R.string.queryString),
                 text = plant.imageQuery,
-                iconId = R.drawable.ic_query)
+                iconId = R.drawable.ic_query,
+                additionalButtonIconId = R.drawable.ic_query,
+                onButtonClick = {
+                    navigation.toPlantImagesScreen(plant.imageQuery)
+                })
             CustomDetailRow(
                 title = stringResource(id = R.string.dateDiscovered),
                 text = DateUtils.getDateString(plant.dateDiscovered),

@@ -6,7 +6,7 @@ sealed class Destination(val route: String){
     object NewPlantScreen: Destination("new_plant")
     object PlantEditScreen: Destination("plant_edit")
     object PlantDetailScreen: Destination("plant_detail")
-    object PlantPicturesScreen: Destination("plant_pictures")
+    object PlantImagesScreen: Destination("plant_images")
     object MapScreen: Destination("map")
     object SettingsScreen: Destination("settings")
     object CameraScreen: Destination("camera_screen")

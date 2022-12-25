@@ -1,5 +1,6 @@
 package cz.mendelu.xmusil5.plantdiscoverer.communication
 
+import cz.mendelu.xmusil5.plantdiscoverer.model.api_models.ImagesRequestResult
 import cz.mendelu.xmusil5.plantdiscoverer.model.api_models.UnsplashImage
 import retrofit2.Response
 import retrofit2.http.GET
@@ -11,7 +12,7 @@ import retrofit2.http.Query
 interface UnsplashApi {
 
     companion object{
-        private var accessKey: String = ""
+        private var accessKey: String = "YdRRIZYajleXjGWSowHSiBd5Ho87HE3waYxax09amIc"
     }
 
     @Headers("Content-Type: application/json")
@@ -20,5 +21,5 @@ interface UnsplashApi {
         @Query("query") query: String,
         @Query("page") page: Int = 1,
         @Header("Authorization") authorization: String = "Client-ID ${accessKey}"
-    ): Response<List<UnsplashImage>>
+    ): Response<ImagesRequestResult>
 }

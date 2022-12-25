@@ -6,6 +6,7 @@
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
     <string name="save">Save</string>
+    <string name="search">Search</string>
     <string name="discard">Discard</string>
 
     <!-- Errors -->
@@ -26,6 +27,7 @@
     <string name="newPlant">New plant</string>
     <string name="plantDetail">Plant detail</string>
     <string name="editPlant">Edit plant</string>
+    <string name="plantImages">Images</string>
     
     <!-- Settings screen -->
     <string name="appLanguage">App language</string>
