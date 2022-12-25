@@ -34,7 +34,7 @@ fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         .add(KotlinJsonAdapterFactory())
         .build()
 
-    return Retrofit.Builder().baseUrl("PASTE THE COMMUNICATION ROOT HERE LATER")
+    return Retrofit.Builder().baseUrl("https://api.unsplash.com/")
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
