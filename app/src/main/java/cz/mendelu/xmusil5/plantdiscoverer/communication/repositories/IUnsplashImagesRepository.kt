@@ -7,5 +7,5 @@ import cz.mendelu.xmusil5.plantdiscoverer.model.api_models.UnsplashImage
 
 interface IUnsplashImagesRepository: IBaseRemoteRepository {
 
-    suspend fun fetchImages(query: String): CommunicationResult<ImagesRequestResult>
+    suspend fun fetchImages(query: String, page: Int): CommunicationResult<ImagesRequestResult>
 }

@@ -20,7 +20,7 @@ fun PlantImageGridListItem(imageAddress: String){
 
     Box(
         modifier = Modifier
-            .width(200.dp)
+            .width(145.dp)
             .aspectRatio(1f)
             .padding(5.dp)
     ){

@@ -7,7 +7,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.model.api_models.UnsplashImage
 
 class UnsplashImageRepository(private val unsplashApi: UnsplashApi): IUnsplashImagesRepository {
 
-    override suspend fun fetchImages(query: String): CommunicationResult<ImagesRequestResult> {
-        return processResponse(unsplashApi.searchImages(query))
+    override suspend fun fetchImages(query: String, page: Int): CommunicationResult<ImagesRequestResult> {
+        return processResponse(unsplashApi.searchImages(query, page))
     }
 }

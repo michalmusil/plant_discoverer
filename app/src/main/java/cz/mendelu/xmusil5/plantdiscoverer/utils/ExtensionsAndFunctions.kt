@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.runtime.*
 import androidx.core.content.ContextCompat
 import cz.mendelu.xmusil5.plantdiscoverer.activities.MainActivity
 import kotlin.coroutines.resume
@@ -23,4 +25,21 @@ fun checkCameraPermission(context: Context): Boolean{
         return true
     }
     return false
+}
+
+@Composable
+fun LazyGridState.onLastReached(loadMore: () -> Unit){
+    val shouldLoad = remember{
+        derivedStateOf {
+            val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull() ?: return@derivedStateOf true
+
+            lastVisibleItem.index == layoutInfo.totalItemsCount - 1
+        }
+    }
+    LaunchedEffect(shouldLoad){
+        snapshotFlow { shouldLoad.value }
+            .collect {
+                if (it) { loadMore() }
+            }
+    }
 }
