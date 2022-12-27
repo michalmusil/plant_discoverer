@@ -40,7 +40,7 @@ fun CustomDetailRow(
                 .clip(RoundedCornerShape(9.dp))
                 .background(MaterialTheme.colorScheme.tertiary)
                 .padding(horizontal = 7.dp)
-                .padding(top = 3.dp)
+                .padding(vertical = 3.dp)
         ) {
             Image(
                 imageVector = ImageVector.vectorResource(id = iconId),
@@ -96,7 +96,7 @@ fun CustomDetailRowWithAdditionalLabel(
                 .clip(RoundedCornerShape(9.dp))
                 .background(MaterialTheme.colorScheme.tertiary)
                 .padding(horizontal = 7.dp)
-                .padding(top = 3.dp)
+                .padding(vertical = 3.dp)
         ) {
             Row {
                 Image(
@@ -166,7 +166,7 @@ fun CustomDetailRowWithAdditionalButton(
                 .clip(RoundedCornerShape(9.dp))
                 .background(MaterialTheme.colorScheme.tertiary)
                 .padding(horizontal = 7.dp)
-                .padding(top = 3.dp)
+                .padding(vertical = 3.dp)
         ) {
             Row {
                 Image(

@@ -155,8 +155,6 @@ fun ImageInDetailPopup(
     onDismiss: () -> Unit
 ){
     val context = LocalContext.current
-    val screenWidth = LocalConfiguration.current.screenWidthDp
-    val screenHeight = LocalConfiguration.current.screenHeightDp
 
     Popup(
         alignment = Alignment.Center,

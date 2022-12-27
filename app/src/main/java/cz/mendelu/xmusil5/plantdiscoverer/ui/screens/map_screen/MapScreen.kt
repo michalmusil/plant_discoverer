@@ -273,7 +273,7 @@ fun PlantMapPopup(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(170.dp)
+                    .height(190.dp)
                     .padding(16.dp)
                     .background(
                         color = MaterialTheme.colorScheme.background,
@@ -301,14 +301,27 @@ fun PlantMapPopup(
                                     .padding(4.dp)
                                     .clip(CircleShape)
                             )
-                            Text(
-                                text = plant.name,
-                                fontSize = 20.sp,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
+                            Column(
                                 modifier = Modifier
-                                    .padding(start = 12.dp)
-                            )
+                                    .padding(start = 12.dp, top = 5.dp)
+                            ) {
+                                Text(
+                                    text = plant.name,
+                                    fontSize = 20.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                plant.description?.let {
+                                    Text(
+                                        text = it,
+                                        fontSize = 12.sp,
+                                        maxLines = 3,
+                                        overflow = TextOverflow.Ellipsis,
+                                        lineHeight = 17.sp
+                                    )
+                                }
+                            }
+
                         }
 
                         Spacer(modifier = Modifier.weight(1f))

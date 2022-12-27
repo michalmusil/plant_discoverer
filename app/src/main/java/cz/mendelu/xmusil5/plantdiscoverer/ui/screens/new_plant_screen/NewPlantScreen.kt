@@ -6,13 +6,12 @@ import android.location.Location
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +37,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.*
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.list_items.ImageLabelListItem
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.grayCommon
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
@@ -140,9 +140,12 @@ fun NewPlantForm(
     detectedObject: DetectedObject?,
     location: Location?
 ){
-    val context = LocalContext.current
     val detectedObjectName = detectedObject?.labels?.firstOrNull()?.text ?: "-"
     val detectedObjectConficence = detectedObject?.labels?.firstOrNull()?.confidence ?: 0F
+
+    val selectedDetectedObjectLabel = remember{
+        mutableStateOf<DetectedObject.Label?>(detectedObject?.labels?.firstOrNull())
+    }
 
     val name = rememberSaveable {
         mutableStateOf("")
@@ -157,7 +160,7 @@ fun NewPlantForm(
         mutableStateOf("")
     }
 
-    LaunchedEffect(context){
+    LaunchedEffect(detectedObject){
         if (detectedObject != null){
             name.value = detectedObjectName
             imageQuery.value = detectedObjectName
@@ -197,7 +200,10 @@ fun NewPlantForm(
         }
         
         // IMAGE RECKOGNITION
-        ImageReckognitionResults(detectedObject = detectedObject)
+        if (detectedObject != null && detectedObject.labels.isNotEmpty()){
+            ImageReckognitionResults2(labels = detectedObject.labels, selectedLabel = selectedDetectedObjectLabel)
+        }
+
 
         // FORM ITEMS
         Row(
@@ -339,6 +345,27 @@ fun ImageReckognitionResults(detectedObject: DetectedObject?){
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ImageReckognitionResults2(
+    labels: List<DetectedObject.Label>,
+    selectedLabel: MutableState<DetectedObject.Label?>
+){
+    LazyRow(
+        modifier = Modifier
+            .padding(vertical = 4.dp)
+    ) {
+        items(labels){ item ->
+            ImageLabelListItem(label = item, selectedLabel = selectedLabel) {
+                if (selectedLabel.value == item){
+                    selectedLabel.value = null
+                } else {
+                    selectedLabel.value = item
                 }
             }
         }
