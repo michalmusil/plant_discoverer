@@ -3,12 +3,12 @@ package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.new_plant_screen
 import android.Manifest
 import android.graphics.Bitmap
 import android.location.Location
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -16,7 +16,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -31,7 +30,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.mlkit.vision.label.ImageLabel
 import com.google.mlkit.vision.objects.DetectedObject
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
@@ -141,7 +139,7 @@ fun NewPlantForm(
     location: Location?
 ){
     val selectedDetectedObjectLabel = remember{
-        mutableStateOf<DetectedObject.Label?>(detectedObject?.labels?.firstOrNull())
+        mutableStateOf<DetectedObject.Label?>(null)
     }
 
     val name = rememberSaveable {
@@ -155,13 +153,6 @@ fun NewPlantForm(
     }
     val description = rememberSaveable {
         mutableStateOf("")
-    }
-
-    LaunchedEffect(detectedObject){
-        if (detectedObject != null && detectedObject.labels.firstOrNull() != null){
-            name.value = detectedObject.labels.firstOrNull()!!.text
-            imageQuery.value = detectedObject.labels.firstOrNull()!!.text
-        }
     }
 
     // FORM VALIDATION
@@ -195,10 +186,15 @@ fun NewPlantForm(
                     .clip(RoundedCornerShape(20.dp))
             )
         }
+
+        Divider(
+            modifier = Modifier
+                .padding(vertical = 15.dp)
+        )
         
         // IMAGE RECKOGNITION
         if (detectedObject != null && detectedObject.labels.isNotEmpty()){
-            ImageReckognitionResults2(
+            ImageReckognitionResults(
                 labels = detectedObject.labels,
                 selectedLabel = selectedDetectedObjectLabel,
                 onNewLabelSelected = {
@@ -206,15 +202,20 @@ fun NewPlantForm(
                     imageQuery.value = it.text
                 }
             )
+        } else {
+            NoMLMatches()
         }
 
+        Divider(
+            modifier = Modifier
+                .padding(vertical = 15.dp)
+        )
 
         // FORM ITEMS
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 30.dp)
         ) {
             Column(
                horizontalAlignment = Alignment.CenterHorizontally,
@@ -307,73 +308,75 @@ fun NewPlantForm(
 
 
 @Composable
-fun ImageReckognitionResults(detectedObject: DetectedObject?){
-    val borderColor = if (detectedObject != null) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.error
-    Box(
+fun NoMLMatches(){
+    Row(
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 15.dp)
-            .border(2.dp, borderColor, RoundedCornerShape(15.dp))
     ) {
-        Row(
-            horizontalArrangement = Arrangement.Start, 
-            verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                imageVector = ImageVector.vectorResource(id = R.drawable.ic_machinelearning),
-                contentDescription = stringResource(id = R.string.machineLearning),
-                Modifier
-                    .padding(5.dp)
-                    .padding(start = 15.dp)
-                    .width(50.dp)
-                    .aspectRatio(1f)
+        Image(
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_machinelearning),
+            contentDescription = stringResource(id = R.string.machineLearning),
+            Modifier
+                .padding(5.dp)
+                .padding(start = 15.dp)
+                .width(50.dp)
+                .aspectRatio(1f)
+        )
+
+        Spacer(modifier = Modifier.width(20.dp))
+
+        Column (verticalArrangement = Arrangement.Center) {
+            Text(
+                text = stringResource(id = R.string.couldntReckognizePhoto),
+                fontSize = 15.sp
             )
-            
-            Spacer(modifier = Modifier.width(20.dp))
-            
-            Column (verticalArrangement = Arrangement.Center) {
-                if (detectedObject != null) {
-                    Text(
-                        text = detectedObject.labels.firstOrNull()?.text ?: "",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    val percentage = String.format("%.0f", ((detectedObject.labels.firstOrNull()?.confidence?: 0F) * 100))
-                    Text(
-                        text = "${stringResource(id = R.string.confidence)}: ${percentage}%",
-                        fontSize = 12.sp,
-                        color = grayCommon
-                    )
-                } else {
-                    Text(
-                        text = stringResource(id = R.string.couldntReckognizePhoto),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
         }
     }
 }
 
 @Composable
-fun ImageReckognitionResults2(
+fun ImageReckognitionResults(
     labels: List<DetectedObject.Label>,
     selectedLabel: MutableState<DetectedObject.Label?>,
     onNewLabelSelected: (label: DetectedObject.Label) -> Unit
 ){
-    LazyRow(
-        modifier = Modifier
-            .padding(vertical = 4.dp)
-    ) {
-        items(labels){ item ->
-            ImageLabelListItem(label = item, selectedLabel = selectedLabel) {
-                if (selectedLabel.value == item){
-                    selectedLabel.value = null
-                } else {
-                    selectedLabel.value = item
-                    onNewLabelSelected(item)
+    Row{
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+        ) {
+            Image(
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_machinelearning),
+                contentDescription = stringResource(id = R.string.machineLearning),
+                Modifier
+                    .width(40.dp)
+                    .aspectRatio(1f)
+            )
+            Text(
+                text = stringResource(id = R.string.suggestions),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Light
+
+            )
+        }
+        LazyRow(
+            modifier = Modifier
+                .padding(start = 5.dp)
+        ){
+            items(labels){ item ->
+                ImageLabelListItem(label = item, selectedLabel = selectedLabel) {
+                    if (selectedLabel.value == item){
+                        selectedLabel.value = null
+                    } else {
+                        selectedLabel.value = item
+                        onNewLabelSelected(item)
+                    }
                 }
             }
         }
     }
+
 }

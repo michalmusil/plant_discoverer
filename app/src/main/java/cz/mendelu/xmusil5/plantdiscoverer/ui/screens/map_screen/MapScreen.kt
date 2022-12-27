@@ -170,7 +170,6 @@ fun PlantsMap(
     currentLocation: Location?,
     navigation: INavigationRouter
 ){
-    val defaultZoom = 9f
     val coroutineScope = LocalLifecycleOwner.current.lifecycleScope
 
     val mapUiSettings by remember { mutableStateOf(
@@ -182,7 +181,7 @@ fun PlantsMap(
         position = CameraPosition.fromLatLngZoom(
             LatLng(
             currentLocation?.latitude ?: 0.0,
-                currentLocation?.longitude ?:  0.0), defaultZoom)
+                currentLocation?.longitude ?:  0.0), 9f)
     }
 
     val showPopup = rememberSaveable {
@@ -226,7 +225,7 @@ fun PlantsMap(
                         // Move camera to position
                         coroutineScope.launch {
                             cameraPositionState.animate(
-                                update = CameraUpdateFactory.newCameraPosition(CameraPosition(item.position, defaultZoom, 0f, 0f)),
+                                update = CameraUpdateFactory.newCameraPosition(CameraPosition(item.position, 12f, 0f, 0f)),
                                 durationMs = 500
                             )
                         }

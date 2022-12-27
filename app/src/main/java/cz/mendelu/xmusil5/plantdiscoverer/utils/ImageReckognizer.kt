@@ -36,7 +36,9 @@ class ImageReckognizer(
             detected?.let{
                 detected.labels.forEach {
                     if (it.text == "None"){
-                        detected.labels.add(DetectedObject.Label("Aloe vera tinctura", 0.33f, 2))
+                        // FOR TESTING
+                        //detected.labels.add(DetectedObject.Label("Aloe vera tinctura", 0.33f, 2))
+                        detected.labels.remove(it)
                     }
                 }
             }

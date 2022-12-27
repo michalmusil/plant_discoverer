@@ -37,6 +37,7 @@
 
     <!-- New plant screen -->
     <string name="machineLearning">Machine learning</string>
+    <string name="suggestions">Suggestions</string>
     <string name="confidence">Confidence</string>
     <string name="couldntReckognizePhoto">Could not reckognize plant species</string>
     <string name="nameTooShort">Name can\'t be empty</string>
