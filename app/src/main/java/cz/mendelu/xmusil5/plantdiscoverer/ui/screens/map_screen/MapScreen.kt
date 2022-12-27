@@ -32,8 +32,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -53,6 +55,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.grayCommon
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -167,6 +170,8 @@ fun PlantsMap(
     currentLocation: Location?,
     navigation: INavigationRouter
 ){
+    val defaultZoom = 9f
+    val coroutineScope = LocalLifecycleOwner.current.lifecycleScope
 
     val mapUiSettings by remember { mutableStateOf(
         MapUiSettings(
@@ -177,7 +182,7 @@ fun PlantsMap(
         position = CameraPosition.fromLatLngZoom(
             LatLng(
             currentLocation?.latitude ?: 0.0,
-                currentLocation?.longitude ?:  0.0), 9f)
+                currentLocation?.longitude ?:  0.0), defaultZoom)
     }
 
     val showPopup = rememberSaveable {
@@ -216,9 +221,15 @@ fun PlantsMap(
 
                 clusterManager?.apply {
                     renderer = clusterRenderer
-                    algorithm = GridBasedAlgorithm()
 
                     renderer.setOnClusterItemClickListener { item ->
+                        // Move camera to position
+                        coroutineScope.launch {
+                            cameraPositionState.animate(
+                                update = CameraUpdateFactory.newCameraPosition(CameraPosition(item.position, defaultZoom, 0f, 0f)),
+                                durationMs = 500
+                            )
+                        }
                         // If there was a marker user clicked before, its not highlighted anymore
                         unHighlightMarker(context, lastClickedMarker)
 

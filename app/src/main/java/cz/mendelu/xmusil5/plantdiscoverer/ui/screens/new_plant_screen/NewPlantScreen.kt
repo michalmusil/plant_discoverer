@@ -140,9 +140,6 @@ fun NewPlantForm(
     detectedObject: DetectedObject?,
     location: Location?
 ){
-    val detectedObjectName = detectedObject?.labels?.firstOrNull()?.text ?: "-"
-    val detectedObjectConficence = detectedObject?.labels?.firstOrNull()?.confidence ?: 0F
-
     val selectedDetectedObjectLabel = remember{
         mutableStateOf<DetectedObject.Label?>(detectedObject?.labels?.firstOrNull())
     }
@@ -161,9 +158,9 @@ fun NewPlantForm(
     }
 
     LaunchedEffect(detectedObject){
-        if (detectedObject != null){
-            name.value = detectedObjectName
-            imageQuery.value = detectedObjectName
+        if (detectedObject != null && detectedObject.labels.firstOrNull() != null){
+            name.value = detectedObject.labels.firstOrNull()!!.text
+            imageQuery.value = detectedObject.labels.firstOrNull()!!.text
         }
     }
 
@@ -201,7 +198,14 @@ fun NewPlantForm(
         
         // IMAGE RECKOGNITION
         if (detectedObject != null && detectedObject.labels.isNotEmpty()){
-            ImageReckognitionResults2(labels = detectedObject.labels, selectedLabel = selectedDetectedObjectLabel)
+            ImageReckognitionResults2(
+                labels = detectedObject.labels,
+                selectedLabel = selectedDetectedObjectLabel,
+                onNewLabelSelected = {
+                    name.value = it.text
+                    imageQuery.value = it.text
+                }
+            )
         }
 
 
@@ -277,8 +281,8 @@ fun NewPlantForm(
                                 !nameError.value
                                 && !imageQueryError.value
                             ){
-                                val confidence = detectedObjectConficence * 100
-                                val originalMatch = detectedObjectName
+                                val confidence = (selectedDetectedObjectLabel.value?.confidence ?: 0f)*100
+                                val originalMatch = selectedDetectedObjectLabel.value?.text ?: "-"
                                 val newPlant = Plant(
                                     name = name.value,
                                     dateDiscovered = DateUtils.getCurrentUnixTime(),
@@ -354,7 +358,8 @@ fun ImageReckognitionResults(detectedObject: DetectedObject?){
 @Composable
 fun ImageReckognitionResults2(
     labels: List<DetectedObject.Label>,
-    selectedLabel: MutableState<DetectedObject.Label?>
+    selectedLabel: MutableState<DetectedObject.Label?>,
+    onNewLabelSelected: (label: DetectedObject.Label) -> Unit
 ){
     LazyRow(
         modifier = Modifier
@@ -366,6 +371,7 @@ fun ImageReckognitionResults2(
                     selectedLabel.value = null
                 } else {
                     selectedLabel.value = item
+                    onNewLabelSelected(item)
                 }
             }
         }
