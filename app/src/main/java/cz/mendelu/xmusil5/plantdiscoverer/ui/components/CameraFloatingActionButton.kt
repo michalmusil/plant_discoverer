@@ -1,7 +1,6 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.components
 
 import android.Manifest
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -10,17 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import cz.mendelu.xmusil5.plantdiscoverer.R
-import cz.mendelu.xmusil5.plantdiscoverer.activities.MainActivity
-import cz.mendelu.xmusil5.plantdiscoverer.utils.checkCameraPermission
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

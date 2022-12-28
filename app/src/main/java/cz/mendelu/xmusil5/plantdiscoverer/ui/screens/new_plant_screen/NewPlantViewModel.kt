@@ -73,7 +73,9 @@ class NewPlantViewModel(
         val locationClient = LocationServices.getFusedLocationProviderClient(context)
         locationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
             .addOnSuccessListener {
-            onSuccess(it)
-        }
+                it?.let{
+                    onSuccess(it)
+                }
+            }
     }
 }

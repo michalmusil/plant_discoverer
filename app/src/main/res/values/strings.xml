@@ -12,7 +12,8 @@
     <!-- Errors -->
     <string name="somethingWentWrong">Something went wrong</string>
     <string name="plantNotFound">Plant not found</string>
-    <string name="locationForbidden">Location services have been denied. To use location-based features, you can enable them in your phone\'s settings</string>
+    <string name="noInternet">You are not connected to any network.</string>
+    <string name="locationForbidden">Location services are not available. Make sure location is on and Plant Discoverer has location permissions granted.</string>
 
     <!-- Elements -->
     <string name="plantImage">Plant image</string>

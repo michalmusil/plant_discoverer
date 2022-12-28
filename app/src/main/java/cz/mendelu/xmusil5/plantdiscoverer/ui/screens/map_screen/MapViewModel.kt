@@ -27,7 +27,11 @@ class MapViewModel(private val plantsDbRepository: IPlantsDbRepository): ViewMod
         val locationClient = LocationServices.getFusedLocationProviderClient(context)
         locationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
             .addOnSuccessListener {
-                mapUiState.value = MapUiState.LocationResults(it)
+                if (it != null){
+                    mapUiState.value = MapUiState.LocationResults(it)
+                } else {
+                    mapUiState.value = MapUiState.PermissionsDenied()
+                }
             }
             .addOnFailureListener {
                 mapUiState.value = MapUiState.Error(R.string.somethingWentWrong)

@@ -55,6 +55,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.grayCommon
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
+import cz.mendelu.xmusil5.plantdiscoverer.utils.isGpsOn
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
@@ -133,7 +134,7 @@ fun MapScreenContent(
     viewModel.mapUiState.value.let {
         when (it) {
             is MapUiState.Start -> {
-                if (!locationPermissionState.allPermissionsGranted){
+                if (!locationPermissionState.allPermissionsGranted || !isGpsOn(context)){
                     viewModel.mapUiState.value = MapUiState.PermissionsDenied()
                 } else {
                     LoadingScreen()

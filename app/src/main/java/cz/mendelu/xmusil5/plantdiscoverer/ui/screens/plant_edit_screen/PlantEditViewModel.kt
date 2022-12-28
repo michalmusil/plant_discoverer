@@ -4,4 +4,5 @@ import androidx.lifecycle.ViewModel
 import cz.mendelu.xmusil5.plantdiscoverer.database.repositories.IPlantsDbRepository
 
 class PlantEditViewModel(private val plantsDbRepository: IPlantsDbRepository): ViewModel() {
+    
 }

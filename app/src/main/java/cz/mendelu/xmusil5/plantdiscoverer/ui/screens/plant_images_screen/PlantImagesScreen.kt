@@ -30,6 +30,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ErrorScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.list_items.PlantImageGridListItem
+import cz.mendelu.xmusil5.plantdiscoverer.utils.isConnectedToInternet
 import cz.mendelu.xmusil5.plantdiscoverer.utils.onLastReached
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
@@ -64,10 +65,17 @@ fun PlantImagesScreenContent(
     viewModel.plantPicturesUiState.value.let {
         when (it) {
             is PlantImagesUiState.Start -> {
-                LaunchedEffect(it) {
-                    viewModel.fetchImages(query, startingImagePage)
+                if (isConnectedToInternet(LocalContext.current)) {
+                    LaunchedEffect(it) {
+                        viewModel.fetchImages(query, startingImagePage)
+                    }
+                    LoadingScreen()
+                } else {
+                    ErrorScreen(
+                        text = stringResource(id = R.string.noInternet),
+                        imageResourceId = R.drawable.ic_no_wifi
+                    )
                 }
-                LoadingScreen()
             }
             is PlantImagesUiState.ImagesLoaded -> {
                 PlantImagesList(imagesList = it.images, query, startingImagePage, viewModel)
