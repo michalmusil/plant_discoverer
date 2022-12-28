@@ -1,10 +1,34 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_edit_screen
 
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import cz.mendelu.xmusil5.plantdiscoverer.R
+import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.*
+import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.grayCommon
+import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
+import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
 
 
@@ -15,14 +39,164 @@ fun PlantEditScreen(
     viewModel: PlantEditViewModel = getViewModel()
 ){
     ScreenSkeleton(
-        topBarText = "Edit plant",
+        topBarText = stringResource(id = R.string.editPlant),
         navigation = navigation,
         showBackArrow = true,
         onBackClick = {
-            print("Clicked back")
+            navigation.returnBack()
         },
         content = {
-            Text(text = "Hello world", fontSize = 24.sp)
+            PlantEditScreenContent(
+                plantId = plantId,
+                navigation = navigation,
+                viewModel = viewModel
+            )
         }
     )
+}
+
+@Composable
+fun PlantEditScreenContent(
+    plantId: Long,
+    navigation: INavigationRouter,
+    viewModel: PlantEditViewModel
+){
+    viewModel.plantEditUiState.value.let {
+        when (it) {
+            is PlantEditUiState.Start -> {
+                LaunchedEffect(it){
+                    viewModel.loadPlant(plantId)
+                }
+                LoadingScreen()
+            }
+            is PlantEditUiState.PlantLoaded -> {
+                PlantEditForm(plant = it.plant, viewModel = viewModel, navigation = navigation)
+            }
+            is PlantEditUiState.ChangesSaved -> {
+                LaunchedEffect(it){
+                    navigation.returnBack()
+                }
+            }
+            is PlantEditUiState.Error -> {
+                ErrorScreen(
+                    text = stringResource(id = it.errorCode)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun PlantEditForm(
+    plant: Plant,
+    viewModel: PlantEditViewModel,
+    navigation: INavigationRouter
+){
+    val plantPhoto = PictureUtils.fromByteArrayToBitmap(plant.photo)
+
+    val name = rememberSaveable {
+        mutableStateOf(plant.name)
+    }
+    val imageQuery = rememberSaveable {
+        mutableStateOf(plant.imageQuery)
+    }
+    val description = rememberSaveable {
+        mutableStateOf(plant.description ?: "")
+    }
+
+    // FORM VALIDATION
+    val nameError = rememberSaveable{
+        mutableStateOf(false)
+    }
+    val imageQueryError = rememberSaveable{
+        mutableStateOf(false)
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Image(
+            painter = rememberAsyncImagePainter(
+                plantPhoto ?: BitmapFactory.decodeResource(LocalContext.current.resources, R.drawable.ic_error)
+            ),
+            contentDescription = stringResource(id = R.string.plantImage),
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .clip(RoundedCornerShape(20.dp))
+        )
+
+        //TEXT FIELDS
+        CustomTextField(
+            labelTitle = stringResource(id = R.string.name),
+            value = name,
+            maxChars = 50,
+            isError = nameError.value,
+            errorMessage = stringResource(id = R.string.nameTooShort),
+            onTextChanged = {
+                nameError.value = it.isBlank()
+            }
+        )
+        CustomTextField(
+            labelTitle = stringResource(id = R.string.queryString),
+            value = imageQuery,
+            maxChars = 50,
+            isError = imageQueryError.value,
+            errorMessage = stringResource(id = R.string.imageQueryTooShort),
+            onTextChanged = {
+                imageQueryError.value = it.isBlank()
+            }
+        )
+        CustomTextField(
+            labelTitle = stringResource(id = R.string.description),
+            value = description,
+            singleLine = false,
+        )
+
+
+        // BUTTONS
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 20.dp)
+        ) {
+            CustomOutlinedButton(
+                text = stringResource(id = R.string.cancel),
+                backgroundColor = grayCommon,
+                textColor = MaterialTheme.colorScheme.onSecondary,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 5.dp),
+                onClick = {
+                    navigation.returnBack()
+                }
+            )
+            CustomOutlinedButton(
+                text = stringResource(id = R.string.save),
+                backgroundColor = MaterialTheme.colorScheme.secondary,
+                textColor = MaterialTheme.colorScheme.onSecondary,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 5.dp),
+                onClick = {
+                    nameError.value = name.value.isBlank()
+                    imageQueryError.value = imageQuery.value.isBlank()
+                    if (
+                        !nameError.value &&
+                        !imageQueryError.value
+                    ){
+                        plant.name = name.value
+                        plant.imageQuery = imageQuery.value
+                        plant.description = description.value
+                        viewModel.saveChangesToPlant(plant)
+                    }
+                }
+            )
+        }
+    }
 }

@@ -164,6 +164,7 @@ fun NewPlantForm(
     }
 
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
@@ -191,7 +192,7 @@ fun NewPlantForm(
             modifier = Modifier
                 .padding(vertical = 15.dp)
         )
-        
+
         // IMAGE RECKOGNITION
         if (detectedObject != null && detectedObject.labels.isNotEmpty()){
             ImageReckognitionResults(
@@ -211,97 +212,84 @@ fun NewPlantForm(
                 .padding(vertical = 15.dp)
         )
 
-        // FORM ITEMS
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Column(
-               horizontalAlignment = Alignment.CenterHorizontally,
-               modifier = Modifier
-                   .fillMaxWidth()
-           ) {
-               //TEXT FIELDS
-               CustomTextField(
-                   labelTitle = stringResource(id = R.string.name),
-                   value = name,
-                   maxChars = 50,
-                   isError = nameError.value,
-                   errorMessage = stringResource(id = R.string.nameTooShort),
-                   onTextChanged = {
-                       nameError.value = it.isBlank()
-                   }
-               )
-               CustomTextField(
-                   labelTitle = stringResource(id = R.string.queryString),
-                   value = imageQuery,
-                   maxChars = 50,
-                   isError = imageQueryError.value,
-                   errorMessage = stringResource(id = R.string.imageQueryTooShort),
-                   onTextChanged = {
-                       imageQueryError.value = it.isBlank()
-                   }
-               )
-                CustomTextField(
-                    labelTitle = stringResource(id = R.string.description),
-                    value = description,
-                    singleLine = false,
-                )
-               
-
-               // BUTTONS
-               Row(
-                   horizontalArrangement = Arrangement.SpaceBetween,
-                   modifier = Modifier
-                       .fillMaxWidth()
-                       .padding(vertical = 20.dp)
-               ) {
-                   CustomOutlinedButton(
-                       text = stringResource(id = R.string.discard),
-                       backgroundColor = grayCommon,
-                       textColor = MaterialTheme.colorScheme.onSecondary,
-                       modifier = Modifier
-                           .weight(1f)
-                           .padding(horizontal = 5.dp),
-                       onClick = {
-                           navigation.returnBack()
-                       }
-                   )
-                   CustomOutlinedButton(
-                       text = stringResource(id = R.string.save),
-                       backgroundColor = MaterialTheme.colorScheme.secondary,
-                       textColor = MaterialTheme.colorScheme.onSecondary,
-                       modifier = Modifier
-                           .weight(1f)
-                           .padding(horizontal = 5.dp),
-                       onClick = {
-                           nameError.value = name.value.isBlank()
-                           imageQueryError.value = imageQuery.value.isBlank()
-                            if (
-                                !nameError.value
-                                && !imageQueryError.value
-                            ){
-                                val confidence = (selectedDetectedObjectLabel.value?.confidence ?: 0f)*100
-                                val originalMatch = selectedDetectedObjectLabel.value?.text ?: "-"
-                                val newPlant = Plant(
-                                    name = name.value,
-                                    dateDiscovered = DateUtils.getCurrentUnixTime(),
-                                    originalMatch = originalMatch,
-                                    originalCertainty = confidence.toInt(),
-                                    imageQuery = imageQuery.value,
-                                )
-                                newPlant.description = description.value
-                                newPlant.photo = PictureUtils.fromBitmapToByteArray(photo)
-                                newPlant.latitude = location?.latitude
-                                newPlant.longitude = location?.longitude
-
-                                viewModel.saveNewPlant(newPlant)
-                            }
-                       }
-                   )
-               }
+        //TEXT FIELDS
+        CustomTextField(
+           labelTitle = stringResource(id = R.string.name),
+           value = name,
+           maxChars = 50,
+           isError = nameError.value,
+           errorMessage = stringResource(id = R.string.nameTooShort),
+           onTextChanged = {
+               nameError.value = it.isBlank()
            }
+        )
+        CustomTextField(
+           labelTitle = stringResource(id = R.string.queryString),
+           value = imageQuery,
+           maxChars = 50,
+           isError = imageQueryError.value,
+           errorMessage = stringResource(id = R.string.imageQueryTooShort),
+           onTextChanged = {
+               imageQueryError.value = it.isBlank()
+           }
+        )
+        CustomTextField(
+            labelTitle = stringResource(id = R.string.description),
+            value = description,
+            singleLine = false,
+        )
+
+
+        // BUTTONS
+        Row(
+           horizontalArrangement = Arrangement.SpaceBetween,
+           modifier = Modifier
+               .fillMaxWidth()
+               .padding(vertical = 20.dp)
+        ) {
+           CustomOutlinedButton(
+               text = stringResource(id = R.string.discard),
+               backgroundColor = grayCommon,
+               textColor = MaterialTheme.colorScheme.onSecondary,
+               modifier = Modifier
+                   .weight(1f)
+                   .padding(horizontal = 5.dp),
+               onClick = {
+                   navigation.returnBack()
+               }
+           )
+           CustomOutlinedButton(
+               text = stringResource(id = R.string.save),
+               backgroundColor = MaterialTheme.colorScheme.secondary,
+               textColor = MaterialTheme.colorScheme.onSecondary,
+               modifier = Modifier
+                   .weight(1f)
+                   .padding(horizontal = 5.dp),
+               onClick = {
+                   nameError.value = name.value.isBlank()
+                   imageQueryError.value = imageQuery.value.isBlank()
+                    if (
+                        !nameError.value
+                        && !imageQueryError.value
+                    ){
+                        val confidence = (selectedDetectedObjectLabel.value?.confidence ?: 0f)*100
+                        val originalMatch = selectedDetectedObjectLabel.value?.text ?: "-"
+                        val newPlant = Plant(
+                            name = name.value,
+                            dateDiscovered = DateUtils.getCurrentUnixTime(),
+                            originalMatch = originalMatch,
+                            originalCertainty = confidence.toInt(),
+                            imageQuery = imageQuery.value,
+                        )
+                        newPlant.description = description.value
+                        newPlant.photo = PictureUtils.fromBitmapToByteArray(photo)
+                        newPlant.latitude = location?.latitude
+                        newPlant.longitude = location?.longitude
+
+                        viewModel.saveNewPlant(newPlant)
+                    }
+               }
+           )
         }
     }
 }
@@ -342,7 +330,10 @@ fun ImageReckognitionResults(
     selectedLabel: MutableState<DetectedObject.Label?>,
     onNewLabelSelected: (label: DetectedObject.Label) -> Unit
 ){
-    Row{
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier

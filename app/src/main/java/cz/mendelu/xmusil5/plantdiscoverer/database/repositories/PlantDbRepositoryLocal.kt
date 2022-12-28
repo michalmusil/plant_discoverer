@@ -13,7 +13,7 @@ class PlantDbRepositoryLocal(private val plantsDao: PlantsDao): IPlantsDbReposit
         return plantsDao.getAllWithLocation()
     }
 
-    override suspend fun getById(plantId: Long): Plant? {
+    override suspend fun getById(plantId: Long): Flow<Plant?> {
         return plantsDao.getById(plantId)
     }
 

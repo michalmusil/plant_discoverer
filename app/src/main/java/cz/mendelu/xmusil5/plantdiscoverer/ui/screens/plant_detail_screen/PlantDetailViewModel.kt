@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.database.repositories.IPlantsDbRepository
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class PlantDetailViewModel(private val plantsDbRepository: IPlantsDbRepository): ViewModel() {
@@ -15,11 +16,12 @@ class PlantDetailViewModel(private val plantsDbRepository: IPlantsDbRepository):
 
     fun loadPlant(plantId: Long){
         viewModelScope.launch {
-            val foundPlant = plantsDbRepository.getById(plantId)
-            if (foundPlant == null){
-                plantDetailUiState.value = PlantDetailUiState.Error(R.string.plantNotFound)
-            } else {
-                plantDetailUiState.value = PlantDetailUiState.PlantLoaded(foundPlant)
+            plantsDbRepository.getById(plantId).collect{
+                if (it == null){
+                    plantDetailUiState.value = PlantDetailUiState.Error(R.string.plantNotFound)
+                } else {
+                    plantDetailUiState.value = PlantDetailUiState.PlantLoaded(it)
+                }
             }
         }
     }

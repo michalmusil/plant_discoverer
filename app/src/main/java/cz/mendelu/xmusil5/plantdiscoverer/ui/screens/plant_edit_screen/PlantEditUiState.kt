@@ -6,5 +6,5 @@ sealed class PlantEditUiState {
     class Start(): PlantEditUiState()
     class PlantLoaded(val plant: Plant): PlantEditUiState()
     class ChangesSaved(): PlantEditUiState()
-    class Error(): PlantEditUiState()
+    class Error(val errorCode: Int): PlantEditUiState()
 }

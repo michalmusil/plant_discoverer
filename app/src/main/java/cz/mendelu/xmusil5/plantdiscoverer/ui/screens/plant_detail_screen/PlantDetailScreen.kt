@@ -23,14 +23,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.*
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
-import cz.mendelu.xmusil5.plantdiscoverer.utils.LanguageUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
 
@@ -49,7 +47,7 @@ fun PlantDetailScreen(
         },
         actions = {
             IconButton(onClick = {
-                // TODO
+                navigation.toPlantEditScreen(plantId = plantId)
             }) {
                 Icon(
                     imageVector = Icons.Default.Edit,
@@ -99,6 +97,7 @@ fun PlantDetailForm(
     val locationString = remember{
         mutableStateOf("-")
     }
+
     val geocoder = Geocoder(LocalContext.current, java.util.Locale.getDefault())
     if (plant.latitude != null && plant.longitude != null){
         geocoder.getFromLocation(plant.latitude!!, plant.longitude!!, 1) {
