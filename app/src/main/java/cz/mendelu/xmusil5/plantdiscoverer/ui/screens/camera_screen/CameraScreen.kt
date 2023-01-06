@@ -6,6 +6,7 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -22,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
+import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.clear
 import cz.mendelu.xmusil5.plantdiscoverer.utils.getCameraProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -75,76 +78,68 @@ fun CameraScreen(
         preview.setSurfaceProvider(previewView.surfaceProvider)
     }
 
-    Scaffold(
-        drawerGesturesEnabled = false,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentWidth(align = Alignment.CenterHorizontally)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.camera),
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier
-                                .padding(start = 0.dp)
-                                .weight(1.5f)
-                        )
-                    }
-                },
-                navigationIcon ={
-                    IconButton(onClick = { navigation.returnBack() } ) {
-                        androidx.compose.material.Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back),
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                },
-                elevation = 0.dp,
-                backgroundColor = MaterialTheme.colorScheme.primary
-            )
-        }) {
-            Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxSize()) {
-    
-                AndroidView({ previewView }, modifier = Modifier.fillMaxSize())
+    Box(
+        contentAlignment = Alignment.BottomCenter,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
 
-                IconButton(
-                    modifier = Modifier.padding(bottom = 20.dp),
-                    onClick = {
-                        takePhoto(
-                            imageCapture = imageCapture,
-                            outputDirectory = outputDirectory,
-                            executor = executor,
-                            onImageCaptured = {
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    executor.shutdown()
-                                    navigation.toNewPlantScreen(it.toString())
-                                }
-                            },
-                            onError = {
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    executor.shutdown()
-                                    navigation.returnBack()
-                                }
-                            }
-                        )
+        AndroidView({ previewView }, modifier = Modifier.fillMaxSize())
+
+        IconButton(
+            modifier = Modifier
+                .padding(bottom = 20.dp),
+            onClick = {
+                takePhoto(
+                    imageCapture = imageCapture,
+                    outputDirectory = outputDirectory,
+                    executor = executor,
+                    onImageCaptured = {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            executor.shutdown()
+                            navigation.toNewPlantScreen(it.toString())
+                        }
                     },
-                    content = {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_circle),
-                            contentDescription = "Take picture",
-                            tint = Color.White,
-                            modifier = Modifier
-                                .size(70.dp)
-                                .padding(1.dp)
-                        )
+                    onError = {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            executor.shutdown()
+                            navigation.returnBack()
+                        }
                     }
                 )
+            },
+            content = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_circle),
+                    contentDescription = "Take picture",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(70.dp)
+                        .padding(1.dp)
+                )
             }
+        )
+
+        Box(
+            contentAlignment = Alignment.TopStart,
+            modifier = Modifier
+                .fillMaxSize()
+        ){
+            IconButton(onClick = { navigation.returnBack() } ) {
+                androidx.compose.material.Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back),
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .height(40.dp)
+                        .aspectRatio(1f)
+                        .clip(CircleShape)
+                        .background(color = MaterialTheme.colorScheme.background)
+                        .padding(6.dp)
+                )
+            }
+        }
     }
 }
 

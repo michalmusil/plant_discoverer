@@ -57,6 +57,7 @@ fun CustomTextField(
                     cursorColor = MaterialTheme.colorScheme.secondary,
                     errorBorderColor = MaterialTheme.colorScheme.error,
                     errorLabelColor = MaterialTheme.colorScheme.error,
+                    textColor = MaterialTheme.colorScheme.onBackground
                 ),
                 shape = RoundedCornerShape(12.dp),
                 isError = isError,

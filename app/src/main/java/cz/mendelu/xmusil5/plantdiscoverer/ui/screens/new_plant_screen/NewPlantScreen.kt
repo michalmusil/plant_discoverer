@@ -7,6 +7,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material3.MaterialTheme
@@ -309,8 +310,11 @@ fun NoMLMatches(){
             Modifier
                 .padding(5.dp)
                 .padding(start = 15.dp)
-                .width(50.dp)
+                .height(50.dp)
                 .aspectRatio(1f)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary)
+                .padding(5.dp)
         )
 
         Spacer(modifier = Modifier.width(20.dp))
@@ -343,8 +347,11 @@ fun ImageReckognitionResults(
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_machinelearning),
                 contentDescription = stringResource(id = R.string.machineLearning),
                 Modifier
-                    .width(40.dp)
+                    .height(50.dp)
                     .aspectRatio(1f)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .padding(5.dp)
             )
             Text(
                 text = stringResource(id = R.string.suggestions),

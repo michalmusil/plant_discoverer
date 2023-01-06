@@ -36,7 +36,7 @@ fun PlantGridListItemLarge(
             .height(180.dp)
             .padding(5.dp)
             .clip(RoundedCornerShape(10.dp))
-            .background(color = MaterialTheme.colorScheme.tertiary)
+            .background(color = MaterialTheme.colorScheme.surface)
             .clickable {
                 onItemClick(plant)
             }

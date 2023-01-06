@@ -1,5 +1,6 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -86,6 +87,7 @@ fun ScreenSkeleton(
     ) {
         Box(
             modifier = Modifier
+                .background(color = androidx.compose.material3.MaterialTheme.colorScheme.background)
                 .fillMaxSize()
                 .padding(it)
         ){

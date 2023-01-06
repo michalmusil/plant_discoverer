@@ -1,5 +1,6 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.components
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,9 +23,9 @@ fun CustomOutlinedButton(
     text: String,
     backgroundColor: Color,
     textColor: Color,
-    textSize: TextUnit = 22.sp,
+    textSize: TextUnit = 17.sp,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier.fillMaxWidth()
 ){
     OutlinedButton(
         content = {
@@ -35,7 +36,7 @@ fun CustomOutlinedButton(
                 fontSize = textSize
             )
         },
-        shape = RoundedCornerShape(25.dp),
+        shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.outlinedButtonColors(backgroundColor),
         onClick = onClick,
         modifier = modifier

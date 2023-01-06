@@ -38,7 +38,7 @@ fun CustomDetailRow(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(9.dp))
-                .background(MaterialTheme.colorScheme.tertiary)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 7.dp)
                 .padding(vertical = 3.dp)
         ) {
@@ -62,13 +62,13 @@ fun CustomDetailRow(
                 Text(
                     text = title,
                     fontWeight = FontWeight.Bold,
-                    color = accentColor,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 15.sp
                 )
                 Text(
                     text = text,
                     fontSize = 12.sp,
-                    color = androidx.compose.ui.graphics.Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     lineHeight = 17.sp
                 )
             }
@@ -94,7 +94,7 @@ fun CustomDetailRowWithAdditionalLabel(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(9.dp))
-                .background(MaterialTheme.colorScheme.tertiary)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 7.dp)
                 .padding(vertical = 3.dp)
         ) {
@@ -118,13 +118,13 @@ fun CustomDetailRowWithAdditionalLabel(
                     Text(
                         text = title,
                         fontWeight = FontWeight.Bold,
-                        color = accentColor,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 15.sp
                     )
                     Text(
                         text = text,
                         fontSize = 12.sp,
-                        color = androidx.compose.ui.graphics.Color.Black
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -137,7 +137,7 @@ fun CustomDetailRowWithAdditionalLabel(
                 Text(
                     text = additionalLabel,
                     fontSize = 14.sp,
-                    color = androidx.compose.ui.graphics.Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     lineHeight = 17.sp
                 )
             }
@@ -150,7 +150,7 @@ fun CustomDetailRowWithAdditionalButton(
     title: String,
     text: String,
     iconId: Int,
-    additionalButtonIconId: Int,
+    buttonText: String,
     onButtonClick: () -> Unit,
     accentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary
 ){
@@ -158,14 +158,12 @@ fun CustomDetailRowWithAdditionalButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 5.dp)) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top,
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(9.dp))
-                .background(MaterialTheme.colorScheme.tertiary)
-                .padding(horizontal = 7.dp)
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(horizontal = 15.dp)
                 .padding(vertical = 3.dp)
         ) {
             Row {
@@ -175,7 +173,7 @@ fun CustomDetailRowWithAdditionalButton(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .height(55.dp)
-                        .padding(vertical = 8.dp, horizontal = 8.dp)
+                        .padding(vertical = 6.dp)
                         .aspectRatio(1f)
                         .clip(CircleShape)
                         .background(accentColor)
@@ -184,31 +182,35 @@ fun CustomDetailRowWithAdditionalButton(
                 Column(
                     modifier = Modifier
                         .padding(top = 5.dp)
+                        .padding(start = 8.dp)
                 ) {
                     Text(
                         text = title,
                         fontWeight = FontWeight.Bold,
-                        color = accentColor,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 15.sp
                     )
                     Text(
                         text = text,
                         fontSize = 12.sp,
-                        color = androidx.compose.ui.graphics.Color.Black
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
-            Column (
-                modifier = Modifier,
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.End
-            ) {
-                IconButton(onClick = onButtonClick) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(id = additionalButtonIconId),
-                        contentDescription = stringResource(id = R.string.search)
-                    )
-                }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ){
+                CustomOutlinedButton(
+                    text = buttonText,
+                    textSize = 13.sp,
+                    backgroundColor = MaterialTheme.colorScheme.secondary,
+                    textColor = MaterialTheme.colorScheme.onSecondary,
+                    onClick = {
+                        onButtonClick()
+                    })
             }
         }
     }

@@ -139,12 +139,15 @@ fun PlantDetailForm(
             CustomDetailRow(
                 title = stringResource(id = R.string.name),
                 text = plant.name, iconId = R.drawable.ic_plant)
-            CustomDetailRowWithAdditionalLabel(
-                title = stringResource(id = R.string.originalMatch),
-                text = plant.originalMatch,
-                additionalLabel = "${plant.originalCertainty}%",
-                iconId = R.drawable.ic_machinelearning
-            )
+
+            if (plant.originalCertainty > 0) {
+                CustomDetailRowWithAdditionalLabel(
+                    title = stringResource(id = R.string.originalMatch),
+                    text = plant.originalMatch,
+                    additionalLabel = "${plant.originalCertainty}%",
+                    iconId = R.drawable.ic_machinelearning
+                )
+            }
             CustomDetailRow(
                 title = stringResource(id = R.string.placeDiscovered),
                 text = locationString.value,
@@ -153,7 +156,7 @@ fun PlantDetailForm(
             CustomDetailRowWithAdditionalButton(title = stringResource(id = R.string.queryString),
                 text = plant.imageQuery,
                 iconId = R.drawable.ic_query,
-                additionalButtonIconId = R.drawable.ic_query,
+                buttonText = stringResource(id = R.string.search),
                 onButtonClick = {
                     navigation.toPlantImagesScreen(plant.imageQuery)
                 })

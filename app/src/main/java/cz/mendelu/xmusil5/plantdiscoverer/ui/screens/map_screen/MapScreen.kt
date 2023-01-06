@@ -9,10 +9,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -21,11 +23,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,11 +52,14 @@ import cz.mendelu.xmusil5.plantdiscoverer.map.MarkerUtils
 import cz.mendelu.xmusil5.plantdiscoverer.map.PlantDiscovererMapRenderer
 import cz.mendelu.xmusil5.plantdiscoverer.map.PlantMarker
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
+import cz.mendelu.xmusil5.plantdiscoverer.navigation.Destination
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.CustomOutlinedButton
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ErrorScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.BottomNavItem
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.BottomNavigationBar
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.grayCommon
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.isGpsOn
@@ -64,13 +71,31 @@ fun MapScreen(
     navigation: INavigationRouter,
     viewModel: MapViewModel = getViewModel()
 ) {
-    ScreenSkeleton(
-        topBarText = stringResource(id = R.string.map),
-        navigation = navigation,
-        content = {
+
+    Scaffold(
+        drawerGesturesEnabled = false,
+        bottomBar = {
+            BottomNavigationBar(
+                navController = navigation.getNavController(),
+                items = listOf(
+                    BottomNavItem(stringResource(id = R.string.plantsList), ImageVector.vectorResource(id = R.drawable.ic_grid), Destination.PlantsListScreen),
+                    BottomNavItem(stringResource(id = R.string.home), ImageVector.vectorResource(id = R.drawable.ic_hub), Destination.HomeScreen),
+                    BottomNavItem(stringResource(id = R.string.map), ImageVector.vectorResource(id = R.drawable.ic_globe), Destination.MapScreen),
+                    BottomNavItem(stringResource(id = R.string.settings), ImageVector.vectorResource(id = R.drawable.ic_settings), Destination.SettingsScreen)
+                ),
+                onItemClick = {
+                    navigation.getNavController().navigate(it.destination.route)
+                })
+        }
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ){
             MapScreenContent(navigation = navigation, viewModel = viewModel)
         }
-    )
+    }
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
