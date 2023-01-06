@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -118,17 +119,19 @@ fun PlantEditForm(
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Image(
-            painter = rememberAsyncImagePainter(
-                plantPhoto ?: BitmapFactory.decodeResource(LocalContext.current.resources, R.drawable.ic_error)
-            ),
-            contentDescription = stringResource(id = R.string.plantImage),
-            contentScale = ContentScale.Crop,
+        Row(
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-                .clip(RoundedCornerShape(20.dp))
-        )
+                .padding(vertical = 16.dp)
+        ) {
+            PlantCapitalImage(
+                photo = (plantPhoto?.asImageBitmap() ?: BitmapFactory.decodeResource(
+                    LocalContext.current.resources,
+                    R.drawable.ic_error
+                ).asImageBitmap()),
+                contentDescription = stringResource(id = R.string.plantImage),
+            )
+        }
 
         //TEXT FIELDS
         CustomTextField(

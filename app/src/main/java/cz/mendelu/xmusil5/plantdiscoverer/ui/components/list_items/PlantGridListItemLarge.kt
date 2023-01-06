@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -22,7 +24,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
+import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
+import cz.mendelu.xmusil5.plantdiscoverer.utils.customShadow
 
 @Composable
 fun PlantGridListItemLarge(
@@ -30,12 +34,20 @@ fun PlantGridListItemLarge(
     onItemClick: (Plant) -> Unit
 ){
     val photoBitmap = PictureUtils.fromByteArrayToBitmap(plant.photo)
+    val cornerRadius = 10.dp
     Box(
         modifier = Modifier
             .width(120.dp)
-            .height(180.dp)
+            .height(200.dp)
             .padding(5.dp)
-            .clip(RoundedCornerShape(10.dp))
+            .padding(top = 8.dp)
+            .customShadow(color = shadowColor,
+                borderRadius = cornerRadius,
+                spread = 0.dp,
+                blurRadius = 5.dp,
+                offsetY = 2.dp
+            )
+            .clip(RoundedCornerShape(cornerRadius))
             .background(color = MaterialTheme.colorScheme.surface)
             .clickable {
                 onItemClick(plant)
@@ -74,7 +86,8 @@ fun PlantGridListItemLarge(
                 Text(
                     text = plant.description ?: "",
                     fontSize = 12.sp,
-                    maxLines = 3,
+                    maxLines = 2,
+                    lineHeight = 17.sp,
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colorScheme.onTertiary,
                     overflow = TextOverflow.Ellipsis,

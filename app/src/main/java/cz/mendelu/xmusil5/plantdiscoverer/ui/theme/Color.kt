@@ -15,7 +15,7 @@ val Pink40 = Color(0xFF7D5260)
 // OTHERS
 val disabled = Color(0xA3666666)
 val grayCommon = Color(0xA3888888)
-val grayLight = Color(0xA3B6B6B6)
+val shadowColor = Color(0x8F5A5A5A)
 val errorColor = Color(0xFFD80000)
 val clear = Color(0x777777)
 

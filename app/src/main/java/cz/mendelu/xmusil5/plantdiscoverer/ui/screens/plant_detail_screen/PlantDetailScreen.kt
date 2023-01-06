@@ -118,16 +118,10 @@ fun PlantDetailForm(
             modifier = Modifier
                 .padding(top = 16.dp)
         ) {
-            Image(
-                bitmap = PictureUtils.fromByteArrayToBitmap(plant.photo)?.asImageBitmap() ?: ImageBitmap.imageResource(
-                    id = R.drawable.ic_error
-                ),
-                contentDescription = stringResource(id = R.string.plantImage),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(20.dp))
+            PlantCapitalImage(
+                photo = (PictureUtils.fromByteArrayToBitmap(plant.photo)?.asImageBitmap()
+                    ?: ImageBitmap.imageResource(id = R.drawable.ic_error)),
+                contentDescription = stringResource(id = R.string.plantImage)
             )
         }
 

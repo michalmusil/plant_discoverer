@@ -18,6 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.mlkit.vision.objects.DetectedObject
+import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
+import cz.mendelu.xmusil5.plantdiscoverer.utils.customShadow
 
 @Composable
 fun ImageLabelListItem(
@@ -27,12 +29,19 @@ fun ImageLabelListItem(
 ){
     val name = label.text
     val confidence = (label.confidence*100).toInt().toString()
+    val cornerRadius = 16.dp
 
     if (selectedLabel.value == label) {
         Box(
             Modifier
                 .padding(horizontal = 4.dp)
-                .clip(RoundedCornerShape(16.dp))
+                .customShadow(color = shadowColor,
+                    borderRadius = cornerRadius,
+                    spread = 0.dp,
+                    blurRadius = 5.dp,
+                    offsetY = 2.dp
+                )
+                .clip(RoundedCornerShape(cornerRadius))
                 .background(
                     color = MaterialTheme.colorScheme.secondary,
                 )
@@ -61,8 +70,15 @@ fun ImageLabelListItem(
         Box(
             Modifier
                 .padding(horizontal = 4.dp)
+                .customShadow(color = shadowColor,
+                    borderRadius = cornerRadius,
+                    spread = 0.dp,
+                    blurRadius = 5.dp,
+                    offsetY = 2.dp
+                )
                 .clip(RoundedCornerShape(16.dp))
                 .border(2.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(16.dp))
+                .background(color = MaterialTheme.colorScheme.background)
                 .clickable {
                     onClick()
                 }

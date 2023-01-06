@@ -21,6 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cz.mendelu.xmusil5.plantdiscoverer.R
+import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
+import cz.mendelu.xmusil5.plantdiscoverer.utils.customShadow
 
 @Composable
 fun CustomDetailRow(
@@ -29,6 +31,7 @@ fun CustomDetailRow(
     iconId: Int,
     accentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary
 ){
+    val cornerRadius = 9.dp
     Box(modifier = Modifier
         .fillMaxWidth()
         .padding(vertical = 5.dp)) {
@@ -37,7 +40,13 @@ fun CustomDetailRow(
             verticalAlignment = Alignment.Top,
             modifier = Modifier
                 .fillMaxSize()
-                .clip(RoundedCornerShape(9.dp))
+                .customShadow(color = shadowColor,
+                    borderRadius = cornerRadius,
+                    spread = 1.dp,
+                    blurRadius = 5.dp,
+                    offsetY = 2.dp
+                )
+                .clip(RoundedCornerShape(cornerRadius))
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 7.dp)
                 .padding(vertical = 3.dp)
@@ -84,6 +93,7 @@ fun CustomDetailRowWithAdditionalLabel(
     iconId: Int,
     accentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary
 ){
+    val cornerRadius = 9.dp
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -93,7 +103,13 @@ fun CustomDetailRowWithAdditionalLabel(
             verticalAlignment = Alignment.Top,
             modifier = Modifier
                 .fillMaxSize()
-                .clip(RoundedCornerShape(9.dp))
+                .customShadow(color = shadowColor,
+                    borderRadius = cornerRadius,
+                    spread = 1.dp,
+                    blurRadius = 5.dp,
+                    offsetY = 2.dp
+                )
+                .clip(RoundedCornerShape(cornerRadius))
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 7.dp)
                 .padding(vertical = 3.dp)
@@ -154,6 +170,7 @@ fun CustomDetailRowWithAdditionalButton(
     onButtonClick: () -> Unit,
     accentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary
 ){
+    val cornerRadius = 9.dp
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -161,7 +178,13 @@ fun CustomDetailRowWithAdditionalButton(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .clip(RoundedCornerShape(9.dp))
+                .customShadow(color = shadowColor,
+                    borderRadius = cornerRadius,
+                    spread = 1.dp,
+                    blurRadius = 5.dp,
+                    offsetY = 2.dp
+                )
+                .clip(RoundedCornerShape(cornerRadius))
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 15.dp)
                 .padding(vertical = 3.dp)
@@ -202,6 +225,7 @@ fun CustomDetailRowWithAdditionalButton(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(bottom = 5.dp)
             ){
                 CustomOutlinedButton(
                     text = buttonText,

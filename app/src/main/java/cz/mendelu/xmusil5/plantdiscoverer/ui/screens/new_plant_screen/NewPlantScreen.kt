@@ -17,6 +17,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -178,14 +179,8 @@ fun NewPlantForm(
             modifier = Modifier
                 .padding(top = 16.dp)
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(photo),
-                contentDescription = stringResource(id = R.string.plantImage),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(20.dp))
+            PlantCapitalImage(photo = photo.asImageBitmap(),
+                contentDescription = stringResource(id = R.string.plantImage)
             )
         }
 

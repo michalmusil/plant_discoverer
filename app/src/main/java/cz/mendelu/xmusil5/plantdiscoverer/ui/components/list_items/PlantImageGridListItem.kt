@@ -14,11 +14,13 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import cz.mendelu.xmusil5.plantdiscoverer.R
+import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
+import cz.mendelu.xmusil5.plantdiscoverer.utils.customShadow
 
 @Composable
 fun PlantImageGridListItem(imageAddress: String, onClick: () -> Unit){
     val context = LocalContext.current
-
+    val cornerRadius = 8.dp
     Box(
         modifier = Modifier
             .width(145.dp)
@@ -38,6 +40,12 @@ fun PlantImageGridListItem(imageAddress: String, onClick: () -> Unit){
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
+                .customShadow(color = shadowColor,
+                    borderRadius = cornerRadius,
+                    spread = 1.dp,
+                    blurRadius = 5.dp,
+                    offsetY = 2.dp
+                )
                 .clip(RoundedCornerShape(8.dp))
         )
     }

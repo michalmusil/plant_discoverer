@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -30,6 +31,8 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ErrorScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.list_items.PlantImageGridListItem
+import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
+import cz.mendelu.xmusil5.plantdiscoverer.utils.customShadow
 import cz.mendelu.xmusil5.plantdiscoverer.utils.isConnectedToInternet
 import cz.mendelu.xmusil5.plantdiscoverer.utils.onLastReached
 import kotlinx.coroutines.launch
@@ -163,6 +166,7 @@ fun ImageInDetailPopup(
     onDismiss: () -> Unit
 ){
     val context = LocalContext.current
+    val cornerRadius = 12.dp
 
     Popup(
         alignment = Alignment.Center,
@@ -177,6 +181,9 @@ fun ImageInDetailPopup(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .padding(16.dp)
+                    .clickable {
+                        onDismiss()
+                    }
             ){
                 imageUrl?.let {
                     AsyncImage(
@@ -189,7 +196,13 @@ fun ImageInDetailPopup(
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(1f)
-                            .clip(RoundedCornerShape(12.dp))
+                            .customShadow(color = shadowColor,
+                                borderRadius = cornerRadius,
+                                spread = 5.dp,
+                                blurRadius = 10.dp,
+                                offsetY = 3.dp
+                            )
+                            .clip(RoundedCornerShape(cornerRadius))
                     )
                 }
             }

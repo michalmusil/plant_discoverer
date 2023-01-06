@@ -61,7 +61,9 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.BottomNavItem
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.BottomNavigationBar
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.grayCommon
+import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
+import cz.mendelu.xmusil5.plantdiscoverer.utils.customShadow
 import cz.mendelu.xmusil5.plantdiscoverer.utils.isGpsOn
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
@@ -296,6 +298,7 @@ fun PlantMapPopup(
     showPopupState: MutableState<Boolean>,
     onDismiss: () -> Unit
 ){
+    val cornerRadius = 12.dp
     Popup(
         alignment = Alignment.BottomCenter,
         onDismissRequest = { onDismiss() }
@@ -311,9 +314,15 @@ fun PlantMapPopup(
                     .fillMaxWidth()
                     .height(190.dp)
                     .padding(16.dp)
+                    .customShadow(color = shadowColor,
+                        borderRadius = cornerRadius,
+                        spread = 5.dp,
+                        blurRadius = 7.dp,
+                        offsetY = 5.dp
+                    )
                     .background(
                         color = MaterialTheme.colorScheme.background,
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(cornerRadius)
                     )
             ) {
                 plant?.let {
