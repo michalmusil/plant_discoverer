@@ -1,10 +1,8 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_detail_screen
 
 import android.location.Geocoder
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -16,10 +14,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
@@ -118,7 +114,7 @@ fun PlantDetailForm(
             modifier = Modifier
                 .padding(top = 16.dp)
         ) {
-            PlantCapitalImage(
+            BigSquareImage(
                 photo = (PictureUtils.fromByteArrayToBitmap(plant.photo)?.asImageBitmap()
                     ?: ImageBitmap.imageResource(id = R.drawable.ic_error)),
                 contentDescription = stringResource(id = R.string.plantImage)

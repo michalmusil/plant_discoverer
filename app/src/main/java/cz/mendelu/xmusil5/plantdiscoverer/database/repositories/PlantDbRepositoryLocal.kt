@@ -17,6 +17,14 @@ class PlantDbRepositoryLocal(private val plantsDao: PlantsDao): IPlantsDbReposit
         return plantsDao.getById(plantId)
     }
 
+    override fun getLatestDiscoveredPlant(): Flow<Plant?> {
+        return plantsDao.getLatestDiscoveredPlant()
+    }
+
+    override fun getNumberOfDiscoveredPlants(): Flow<Long> {
+        return plantsDao.getNumberOfDiscoveredPlants()
+    }
+
     override suspend fun insert(plant: Plant): Long {
         return plantsDao.insert(plant)
     }

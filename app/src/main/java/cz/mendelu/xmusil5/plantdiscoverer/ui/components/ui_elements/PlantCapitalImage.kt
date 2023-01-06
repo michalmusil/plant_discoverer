@@ -1,6 +1,5 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.components
 
-import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,13 +11,12 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
 import cz.mendelu.xmusil5.plantdiscoverer.utils.customShadow
 
 @Composable
-fun PlantCapitalImage(
+fun BigSquareImage(
     photo: ImageBitmap,
     contentDescription: String,
 ){
@@ -39,3 +37,4 @@ fun PlantCapitalImage(
             .clip(RoundedCornerShape(20.dp))
     )
 }
+

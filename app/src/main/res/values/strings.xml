@@ -44,6 +44,10 @@
     <string name="nameTooShort">Name can\'t be empty</string>
     <string name="imageQueryTooShort">Image query can\'t be empty</string>
 
+    <!-- Home screen -->
+    <string name="totalNumberOfPlants">Total number of plants</string>
+    <string name="lastDateDiscovered">Latest discovery</string>
+
 
 
 

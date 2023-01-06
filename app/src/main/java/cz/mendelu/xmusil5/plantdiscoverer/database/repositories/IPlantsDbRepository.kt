@@ -10,6 +10,10 @@ interface IPlantsDbRepository {
 
     suspend fun getById(plantId: Long): Flow<Plant?>
 
+    fun getLatestDiscoveredPlant(): Flow<Plant?>
+
+    fun getNumberOfDiscoveredPlants(): Flow<Long>
+
     suspend fun insert(plant: Plant): Long
     suspend fun update(plant: Plant)
     suspend fun delete(plant: Plant)
