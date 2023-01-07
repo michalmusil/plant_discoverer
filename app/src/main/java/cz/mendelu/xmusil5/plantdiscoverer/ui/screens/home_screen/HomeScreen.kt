@@ -19,11 +19,13 @@ import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.BigImageWithText
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ErrorScreen
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ui_elements.StatisticsCard
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
+import java.util.Calendar
 
 @Composable
 fun HomeScreen(
@@ -55,8 +57,11 @@ fun HomeScreenContent(
     viewModel.homeUiState.value.let {
         when(it){
             is HomeUiState.Start -> {
+                LoadingScreen()
                 LaunchedEffect(it){
-                    viewModel.fetchStatistics()
+                    viewModel.fetchStatistics(
+                        DateUtils.getCurrentDate().get(Calendar.YEAR)
+                    )
                 }
             }
             is HomeUiState.StatisticsLoaded -> {
