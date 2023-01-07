@@ -8,8 +8,6 @@ import cz.mendelu.xmusil5.plantdiscoverer.database.repositories.IPlantsDbReposit
 import cz.mendelu.xmusil5.plantdiscoverer.model.code_models.Month
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -28,21 +26,23 @@ class HomeViewModel(private val plantsDbRepository: IPlantsDbRepository): ViewMo
                         mostRecentPlant = it
                     }
                 }
-                val monthCounts = transformToMonths(it, year)
+                val monthCounts = getMonthlyStatsForYear(it, year)
+                val activeYears = getActiveYears(it)
 
                 homeUiState.value = HomeUiState.StatisticsLoaded(
                     totalNumOfPlants = numberOfPlants.toLong(),
                     latestPlant = mostRecentPlant,
-                    monthCounts = monthCounts
+                    monthCounts = monthCounts,
+                    acitveYears = activeYears
                 )
             }
         }
     }
 
-    private fun transformToMonths(plants: List<Plant>, year: Int): HashMap<Month, Double>{
-        val monthCounts = hashMapOf<Month, Double>(Month.JANUARY to 0.0, Month.FEBRUARY to 0.0, Month.MARCH to 13.0,
-            Month.APRIL to 12.0, Month.MAY to 6.0, Month.JUNE to 18.0, Month.JULY to 6.0, Month.AUGUST to 0.0,
-            Month.SEPTEMBER to 1.0, Month.OCTOBER to 0.0, Month.NOVEMBER to 4.0, Month.DECEMBER to 2.0)
+    private fun getMonthlyStatsForYear(plants: List<Plant>, year: Int): HashMap<Month, Double>{
+        val monthCounts = hashMapOf<Month, Double>(Month.JANUARY to 0.0, Month.FEBRUARY to 0.0, Month.MARCH to 0.0,
+            Month.APRIL to 0.0, Month.MAY to 0.0, Month.JUNE to 0.0, Month.JULY to 0.0, Month.AUGUST to 0.0,
+            Month.SEPTEMBER to 0.0, Month.OCTOBER to 0.0, Month.NOVEMBER to 0.0, Month.DECEMBER to 0.0)
 
         plants.forEach {
             val calendar = DateUtils.getDate(it.dateDiscovered)
@@ -58,5 +58,37 @@ class HomeViewModel(private val plantsDbRepository: IPlantsDbRepository): ViewMo
         return monthCounts
     }
 
+    // Returns active years descending
+    private fun getActiveYears(plants: List<Plant>): List<Int>{
+        val activeYears = mutableListOf<Int>()
+        plants.forEach {
+            val calendar = DateUtils.getDate(it.dateDiscovered)
+            val year = calendar.get(Calendar.YEAR)
+            if (!activeYears.contains(year)){
+                activeYears.add(year)
+            }
+        }
+        return activeYears.sortedDescending()
+    }
+
+    // FOR TESTING PURPOUSES
+    fun addTestData(){
+        val testItems = listOf(
+            Plant("Aloe xindl", 1615503600000, "Aloe vera", 0, "aa"),
+            Plant("Aloe moe", 1615590000000, "Aloe xera", 0, "not"),
+            Plant("Racsavasf", 1619820000000, "aaa", 0, ""),
+            Plant("2022", 1659909600000, "aaa", 0, "u"),
+            Plant("2022-2", 1659909600000, "aaa", 0, "u"),
+            Plant("2022-3", 1659477600000, "aaa", 0, "u"),
+            Plant("2022-5", 1663538400000, "aaa", 0, "u"),
+            Plant("2022-6", 1663624800000, "aaa", 0, "u"),
+            Plant("2022-7", 1666389600000, "aaa", 0, "u")
+        )
+        viewModelScope.launch {
+            testItems.forEach {
+                plantsDbRepository.insert(it)
+            }
+        }
+    }
 
 }

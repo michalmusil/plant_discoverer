@@ -1,21 +1,23 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.components.ui_elements
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontWeight
 
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,12 +32,16 @@ fun MonthlyColumnChart(
     columnColor: Color = MaterialTheme.colorScheme.primary,
     scaleColor: Color = MaterialTheme.colorScheme.onBackground,
     height: Dp = 300.dp,
-    cornerRadius: Dp = 12.dp
+    cornerRadius: Dp = 12.dp,
+    filterItems: List<String> = listOf(),
+    selectedFilterItem: MutableState<String?> = mutableStateOf(""),
+    onFilterItemClick: (String) -> Unit = {},
 ) {
 
     val screenWidth = LocalConfiguration.current.screenWidthDp.toFloat()
     val columnWidth = (screenWidth*0.046).dp
     val columnSpacing = (screenWidth*0.02).dp
+
     // BarGraph Dimensions
     val barGraphHeight by remember { mutableStateOf(height) }
     val barColumnWidth by remember { mutableStateOf(columnWidth) }
@@ -44,6 +50,7 @@ fun MonthlyColumnChart(
     val scaleYAxisWidth by remember { mutableStateOf(20.dp) }
     val scaleLineWidth by remember { mutableStateOf(2.dp) }
     // Other important values
+    val backgroundColor = MaterialTheme.colorScheme.surface
     val maxValue = data.maxOf {
         it.value
     }
@@ -73,7 +80,7 @@ fun MonthlyColumnChart(
                 offsetY = 2.dp
             )
             .clip(RoundedCornerShape(cornerRadius))
-            .background(MaterialTheme.colorScheme.surface)
+            .background(backgroundColor)
             .padding(10.dp),
         verticalArrangement = Arrangement.Top
     ) {
@@ -82,7 +89,7 @@ fun MonthlyColumnChart(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 15.dp)
+                .padding(bottom = 10.dp)
         ) {
             Text(
                 text = title,
@@ -90,6 +97,58 @@ fun MonthlyColumnChart(
                 color = MaterialTheme.colorScheme.onSurface
             )
         }
+
+        // Filter row
+        if (!filterItems.isEmpty()) {
+
+            LazyRow(
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 30.dp)
+            ) {
+                item {
+                    filterItems.forEach {
+                        Box(
+                            modifier = Modifier
+                                .padding(horizontal = 4.dp)
+                                .customShadow(
+                                    color = shadowColor,
+                                    borderRadius = cornerRadius,
+                                    spread = 0.dp,
+                                    blurRadius = 5.dp,
+                                    offsetY = 2.dp
+                                )
+                                .clip(RoundedCornerShape(cornerRadius))
+                                .background(
+                                    color = if (it == selectedFilterItem.value){ columnColor }
+                                    else { backgroundColor },
+                                )
+                                .border(2.dp, columnColor, RoundedCornerShape(cornerRadius))
+                                .clickable {
+                                    onFilterItemClick(it)
+                                }
+                        ) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(8.dp)
+                            ) {
+                                Text(
+                                    text = it,
+                                    fontSize = 16.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
 
         // Y axis scale and columns row
         Row(

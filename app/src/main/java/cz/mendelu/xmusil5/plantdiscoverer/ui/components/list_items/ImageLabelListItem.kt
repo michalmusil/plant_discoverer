@@ -31,74 +31,40 @@ fun ImageLabelListItem(
     val confidence = (label.confidence*100).toInt().toString()
     val cornerRadius = 16.dp
 
-    if (selectedLabel.value == label) {
-        Box(
-            Modifier
-                .padding(horizontal = 4.dp)
-                .customShadow(color = shadowColor,
-                    borderRadius = cornerRadius,
-                    spread = 0.dp,
-                    blurRadius = 5.dp,
-                    offsetY = 2.dp
-                )
-                .clip(RoundedCornerShape(cornerRadius))
-                .background(
-                    color = MaterialTheme.colorScheme.secondary,
-                )
-                .clickable {
-                    onClick()
-                }
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(8.dp)
-            ) {
-                Text(
-                    text = name,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "${confidence}%",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Light
-                )
+    Box(
+        Modifier
+            .padding(horizontal = 4.dp)
+            .customShadow(color = shadowColor,
+                borderRadius = cornerRadius,
+                spread = 0.dp,
+                blurRadius = 5.dp,
+                offsetY = 2.dp
+            )
+            .clip(RoundedCornerShape(cornerRadius))
+            .background(
+                color = if (label == selectedLabel.value) { MaterialTheme.colorScheme.secondary }
+                else { MaterialTheme.colorScheme.background },
+            )
+            .border(2.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(cornerRadius))
+            .clickable {
+                onClick()
             }
-        }
-    } else {
-        Box(
-            Modifier
-                .padding(horizontal = 4.dp)
-                .customShadow(color = shadowColor,
-                    borderRadius = cornerRadius,
-                    spread = 0.dp,
-                    blurRadius = 5.dp,
-                    offsetY = 2.dp
-                )
-                .clip(RoundedCornerShape(16.dp))
-                .border(2.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(16.dp))
-                .background(color = MaterialTheme.colorScheme.background)
-                .clickable {
-                    onClick()
-                }
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(8.dp)
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(8.dp)
-            ) {
-                Text(
-                    text = name,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "${confidence}%",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Light
-                )
-            }
+            Text(
+                text = name,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "${confidence}%",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Light
+            )
         }
     }
 }

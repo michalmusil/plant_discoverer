@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -59,7 +60,8 @@ fun PlantGridListItemLarge(
                 .fillMaxSize()
         ) {
             Image(
-                bitmap = photoBitmap?.asImageBitmap() ?: ImageBitmap.imageResource(id = R.drawable.ic_error),
+                bitmap = photoBitmap?.asImageBitmap() ?: PictureUtils.getBitmapFromVectorDrawable(
+                    LocalContext.current, R.drawable.ic_error)!!.asImageBitmap(),
                 contentDescription = plant.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

@@ -337,7 +337,8 @@ fun PlantMapPopup(
                             Image(
                                 bitmap = PictureUtils.fromByteArrayToBitmap(plant.photo)
                                     ?.asImageBitmap()
-                                    ?: ImageBitmap.imageResource(id = R.drawable.ic_error),
+                                    ?: PictureUtils.getBitmapFromVectorDrawable(
+                                        LocalContext.current, R.drawable.ic_error)!!.asImageBitmap(),
                                 contentDescription = plant.name,
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier

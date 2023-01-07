@@ -4,13 +4,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -60,11 +58,16 @@ fun HomeScreenContent(
         mutableStateOf<HashMap<Month, Double>>(hashMapOf())
     }
 
+    val activeYears = remember{
+        mutableStateListOf<Int>()
+    }
+
     viewModel.homeUiState.value.let {
         when(it){
             is HomeUiState.Start -> {
                 LoadingScreen()
                 LaunchedEffect(it){
+                    //viewModel.addTestData()
                     viewModel.fetchStatistics(
                         DateUtils.getCurrentDate().get(Calendar.YEAR)
                     )
@@ -74,7 +77,19 @@ fun HomeScreenContent(
                 totalNumberOfPlants.value = it.totalNumOfPlants
                 latestDiscoveredPlant.value = it.latestPlant
                 monthlyValues.value = it.monthCounts
-                HomeDashBoard(navigation, viewModel, totalNumberOfPlants.value, latestDiscoveredPlant.value, monthlyValues.value)
+                activeYears.apply {
+                    clear()
+                    addAll(it.acitveYears)
+                }
+
+                HomeDashBoard(
+                    navigation = navigation,
+                    viewModel = viewModel,
+                    numberOfPlants = totalNumberOfPlants.value,
+                    latestPlant = latestDiscoveredPlant.value,
+                    monthlyValues = monthlyValues.value,
+                    activeYears = activeYears
+                )
             }
             is HomeUiState.Error -> {
                 ErrorScreen(text = stringResource(id = it.errorCode))
@@ -89,7 +104,8 @@ fun HomeDashBoard(
     viewModel: HomeViewModel,
     numberOfPlants: Long,
     latestPlant: Plant?,
-    monthlyValues: HashMap<Month, Double>
+    monthlyValues: HashMap<Month, Double>,
+    activeYears: List<Int>
 ){
     Column(
         modifier = Modifier
@@ -97,15 +113,18 @@ fun HomeDashBoard(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
     ) {
+
+        // Latest discovery photo
         latestPlant?.photo?.let {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 30.dp, top = 16.dp)
+                    .padding(top = 20.dp)
             ) {
                 BigImageWithText(
                     photo = PictureUtils.fromByteArrayToBitmap(it)?.asImageBitmap()
-                        ?: ImageBitmap.imageResource(id = R.drawable.ic_error),
+                        ?: PictureUtils.getBitmapFromVectorDrawable(
+                            LocalContext.current, R.drawable.ic_error)!!.asImageBitmap(),
                     aspectRatio = 1.4f,
                     contentDescription = stringResource(id = R.string.plantImage),
                     titleText = stringResource(id = R.string.latestDiscovery),
@@ -116,9 +135,12 @@ fun HomeDashBoard(
                 )
             }
         }
+
+        // Statistics cards
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
+                .padding(top = 20.dp)
                 .fillMaxWidth()
                 .height(100.dp)
         ) {
@@ -141,6 +163,14 @@ fun HomeDashBoard(
             }
         }
 
+
+        // Monthly discoveries chart with filter
+        val yearFilterList = activeYears.map {
+            it.toString()
+        }
+        val selectedFilterItem = remember {
+            mutableStateOf(yearFilterList.firstOrNull())
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -152,6 +182,18 @@ fun HomeDashBoard(
                 data = monthlyValues,
                 columnColor = MaterialTheme.colorScheme.primary,
                 scaleColor = MaterialTheme.colorScheme.onBackground,
+                filterItems = yearFilterList,
+                selectedFilterItem = selectedFilterItem,
+                onFilterItemClick = {
+                    if (it == selectedFilterItem.value){
+                        selectedFilterItem.value = null
+                    } else {
+                        selectedFilterItem.value = it
+                    }
+                    it.toIntOrNull()?.let {
+                        viewModel.fetchStatistics(it)
+                    }
+                }
             )
 
         }

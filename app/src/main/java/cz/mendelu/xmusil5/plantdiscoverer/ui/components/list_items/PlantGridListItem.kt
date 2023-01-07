@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -40,7 +41,8 @@ fun PlantGridListItem(
             }
     ){
         Image(
-            bitmap = photoBitmap?.asImageBitmap() ?: ImageBitmap.imageResource(id = R.drawable.ic_error),
+            bitmap = photoBitmap?.asImageBitmap() ?: PictureUtils.getBitmapFromVectorDrawable(
+                LocalContext.current, R.drawable.ic_error)!!.asImageBitmap(),
             contentDescription = "desc",
             contentScale = ContentScale.Crop,
             modifier = Modifier
