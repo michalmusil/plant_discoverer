@@ -29,10 +29,11 @@ fun CustomDetailRow(
     title: String,
     text: String,
     iconId: Int,
-    accentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary
+    accentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary,
+    modifier: Modifier = Modifier
 ){
     val cornerRadius = 9.dp
-    Box(modifier = Modifier
+    Box(modifier = modifier
         .fillMaxWidth()
         .padding(vertical = 5.dp)) {
         Row(
@@ -91,11 +92,12 @@ fun CustomDetailRowWithAdditionalLabel(
     text: String,
     additionalLabel: String,
     iconId: Int,
-    accentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary
+    accentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary,
+    modifier: Modifier = Modifier
 ){
     val cornerRadius = 9.dp
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 5.dp)) {
         Row(
@@ -168,11 +170,12 @@ fun CustomDetailRowWithAdditionalButton(
     iconId: Int,
     buttonText: String,
     onButtonClick: () -> Unit,
-    accentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary
+    accentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary,
+    modifier: Modifier = Modifier
 ){
     val cornerRadius = 9.dp
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 5.dp)) {
         Column(

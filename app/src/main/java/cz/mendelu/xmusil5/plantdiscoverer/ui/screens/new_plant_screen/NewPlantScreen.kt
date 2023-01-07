@@ -176,7 +176,7 @@ fun NewPlantForm(
             modifier = Modifier
                 .padding(top = 16.dp)
         ) {
-            BigSquareImage(photo = photo.asImageBitmap(),
+            BigImage(photo = photo.asImageBitmap(),
                 contentDescription = stringResource(id = R.string.plantImage)
             )
         }

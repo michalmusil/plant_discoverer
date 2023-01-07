@@ -9,15 +9,20 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.BigImageWithText
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ErrorScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ui_elements.StatisticsCard
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
+import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -79,6 +84,25 @@ fun HomeDashBoard(
             .verticalScroll(rememberScrollState())
             .padding(vertical = 12.dp, horizontal = 16.dp)
     ) {
+        latestPlant?.photo?.let {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 30.dp, top = 16.dp)
+            ) {
+                BigImageWithText(
+                    photo = PictureUtils.fromByteArrayToBitmap(it)?.asImageBitmap()
+                        ?: ImageBitmap.imageResource(id = R.drawable.ic_error),
+                    aspectRatio = 1.4f,
+                    contentDescription = stringResource(id = R.string.plantImage),
+                    titleText = stringResource(id = R.string.latestDiscovery),
+                    secondaryText = latestPlant.name,
+                    onClick = {
+                        navigation.toPlantDetailScreen(latestPlant.id!!)
+                    }
+                )
+            }
+        }
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier

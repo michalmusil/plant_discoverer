@@ -114,7 +114,7 @@ fun PlantEditForm(
             modifier = Modifier
                 .padding(vertical = 16.dp)
         ) {
-            BigSquareImage(
+            BigImage(
                 photo = (plantPhoto?.asImageBitmap() ?: BitmapFactory.decodeResource(
                     LocalContext.current.resources,
                     R.drawable.ic_error

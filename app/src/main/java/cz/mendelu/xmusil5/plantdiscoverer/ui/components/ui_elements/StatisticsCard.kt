@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
@@ -29,7 +30,7 @@ fun StatisticsCard(
 ){
     val cornerRadius = 12.dp
     val textSize = when{
-        value.length < 4 -> { 28.sp }
+        value.length < 3 -> { 28.sp }
         value.length < 6 -> { 23.sp }
         else -> { 20.sp }
     }
@@ -57,16 +58,20 @@ fun StatisticsCard(
         ) {
             Text(
                 text = label,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Bold,
                 fontFamily = MaterialTheme.typography.labelMedium.fontFamily,
                 textAlign = TextAlign.Center,
-                color = textColor,
-                modifier = Modifier
-                    .padding(bottom = 5.dp)
+                color = textColor
             )
+
             Spacer(modifier = Modifier.weight(1f))
+
             Text(
                 text = value,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
                 fontSize = textSize,
                 textAlign = TextAlign.Center,

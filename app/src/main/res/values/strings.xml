@@ -46,7 +46,8 @@
 
     <!-- Home screen -->
     <string name="totalNumberOfPlants">Total number of plants</string>
-    <string name="lastDateDiscovered">Latest discovery</string>
+    <string name="lastDateDiscovered">Last discovery on</string>
+    <string name="latestDiscovery">Latest discovery</string>
 
 
 

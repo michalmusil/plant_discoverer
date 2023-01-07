@@ -114,7 +114,7 @@ fun PlantDetailForm(
             modifier = Modifier
                 .padding(top = 16.dp)
         ) {
-            BigSquareImage(
+            BigImage(
                 photo = (PictureUtils.fromByteArrayToBitmap(plant.photo)?.asImageBitmap()
                     ?: ImageBitmap.imageResource(id = R.drawable.ic_error)),
                 contentDescription = stringResource(id = R.string.plantImage)
@@ -157,7 +157,10 @@ fun PlantDetailForm(
             CustomDetailRow(
                 title = stringResource(id = R.string.description),
                 text = plant.description ?: "",
-                iconId = R.drawable.ic_note)
+                iconId = R.drawable.ic_note,
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+            )
         }
     }
 }
