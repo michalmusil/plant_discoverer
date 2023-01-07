@@ -8,6 +8,6 @@ sealed class HomeUiState{
     class StatisticsLoaded(
         val totalNumOfPlants: Long,
         val latestPlant: Plant?,
-        val monthCounts: HashMap<Month, Int>): HomeUiState()
+        val monthCounts: HashMap<Month, Double>): HomeUiState()
     class Error(val errorCode: Int): HomeUiState()
 }

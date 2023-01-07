@@ -39,10 +39,10 @@ class HomeViewModel(private val plantsDbRepository: IPlantsDbRepository): ViewMo
         }
     }
 
-    private fun transformToMonths(plants: List<Plant>, year: Int): HashMap<Month, Int>{
-        val monthCounts = hashMapOf<Month, Int>(Month.JANUARY to 0, Month.FEBRUARY to 0, Month.MARCH to 0,
-            Month.APRIL to 0, Month.MAY to 0, Month.JUNE to 0, Month.JULY to 0, Month.AUGUST to 0,
-            Month.SEPTEMBER to 0, Month.OCTOBER to 0, Month.NOVEMBER to 0, Month.DECEMBER to 0)
+    private fun transformToMonths(plants: List<Plant>, year: Int): HashMap<Month, Double>{
+        val monthCounts = hashMapOf<Month, Double>(Month.JANUARY to 0.0, Month.FEBRUARY to 0.0, Month.MARCH to 13.0,
+            Month.APRIL to 12.0, Month.MAY to 6.0, Month.JUNE to 18.0, Month.JULY to 6.0, Month.AUGUST to 0.0,
+            Month.SEPTEMBER to 1.0, Month.OCTOBER to 0.0, Month.NOVEMBER to 4.0, Month.DECEMBER to 2.0)
 
         plants.forEach {
             val calendar = DateUtils.getDate(it.dateDiscovered)

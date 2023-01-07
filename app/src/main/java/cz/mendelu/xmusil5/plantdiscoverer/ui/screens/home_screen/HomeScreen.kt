@@ -15,12 +15,14 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cz.mendelu.xmusil5.plantdiscoverer.R
+import cz.mendelu.xmusil5.plantdiscoverer.model.code_models.Month
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.BigImageWithText
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ErrorScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ui_elements.MonthlyColumnChart
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ui_elements.StatisticsCard
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
@@ -54,6 +56,10 @@ fun HomeScreenContent(
         mutableStateOf<Plant?>(null)
     }
 
+    val monthlyValues = remember {
+        mutableStateOf<HashMap<Month, Double>>(hashMapOf())
+    }
+
     viewModel.homeUiState.value.let {
         when(it){
             is HomeUiState.Start -> {
@@ -67,7 +73,8 @@ fun HomeScreenContent(
             is HomeUiState.StatisticsLoaded -> {
                 totalNumberOfPlants.value = it.totalNumOfPlants
                 latestDiscoveredPlant.value = it.latestPlant
-                HomeDashBoard(navigation, viewModel, totalNumberOfPlants.value, latestDiscoveredPlant.value)
+                monthlyValues.value = it.monthCounts
+                HomeDashBoard(navigation, viewModel, totalNumberOfPlants.value, latestDiscoveredPlant.value, monthlyValues.value)
             }
             is HomeUiState.Error -> {
                 ErrorScreen(text = stringResource(id = it.errorCode))
@@ -81,13 +88,14 @@ fun HomeDashBoard(
     navigation: INavigationRouter,
     viewModel: HomeViewModel,
     numberOfPlants: Long,
-    latestPlant: Plant?
+    latestPlant: Plant?,
+    monthlyValues: HashMap<Month, Double>
 ){
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(vertical = 12.dp, horizontal = 16.dp)
+            .padding(horizontal = 16.dp)
     ) {
         latestPlant?.photo?.let {
             Row(
@@ -131,6 +139,21 @@ fun HomeDashBoard(
                     modifier = Modifier.weight(1f)
                 )
             }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 26.dp)
+        ) {
+
+            MonthlyColumnChart(
+                title = stringResource(id = R.string.monthlyDiscoveries),
+                data = monthlyValues,
+                columnColor = MaterialTheme.colorScheme.primary,
+                scaleColor = MaterialTheme.colorScheme.onBackground,
+            )
+
         }
     }
 }
