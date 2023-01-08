@@ -222,6 +222,8 @@ fun PlantsMap(
     }
 
     val context = LocalContext.current
+    val markerBackgroundColor = MaterialTheme.colorScheme.primary
+
     var clusterManager by remember {
         mutableStateOf<ClusterManager<Plant>?>(null)
     }
@@ -242,13 +244,16 @@ fun PlantsMap(
             uiSettings = mapUiSettings,
             cameraPositionState = cameraPositionState
         ){
-
             MapEffect(plants) { map ->
                 if (clusterManager == null){
                     clusterManager = ClusterManager<Plant>(context, map)
                 }
                 if (clusterRenderer == null){
-                    clusterRenderer = PlantDiscovererMapRenderer(context, map, clusterManager!!)
+                    clusterRenderer = PlantDiscovererMapRenderer(
+                        context = context,
+                        map = map,
+                        clusterManager =  clusterManager!!,
+                        markerBackgroundColor = markerBackgroundColor)
                 }
 
                 clusterManager?.apply {
@@ -263,13 +268,13 @@ fun PlantsMap(
                             )
                         }
                         // If there was a marker user clicked before, its not highlighted anymore
-                        unHighlightMarker(context, lastClickedMarker)
+                        unHighlightMarker(context, lastClickedMarker, markerBackgroundColor)
 
                         // Now the clicked marker state is saved
                         lastClickedMarker.value = PlantMarker(item, clusterRenderer?.getMarker(item)!!)
                         lastClickedMarker.value?.marker?.setIcon(
                             BitmapDescriptorFactory.fromBitmap(
-                                MarkerUtils.createCustomMarkerFromLayout(context, item!!, true)
+                                MarkerUtils.createCustomMarkerFromLayout(context, item!!, true, markerBackgroundColor)
                             )
                         )
                         showPopup.value = true
@@ -289,7 +294,7 @@ fun PlantsMap(
 
         PlantMapPopup(plant = lastClickedMarker.value?.plant, navigation = navigation, showPopup){
             showPopup.value = false
-            unHighlightMarker(context, lastClickedMarker)
+            unHighlightMarker(context, lastClickedMarker, markerBackgroundColor)
         }
 
     }
@@ -418,12 +423,13 @@ fun PlantMapPopup(
 
 private fun unHighlightMarker(
     context: Context,
-    lastClickedMarker: MutableState<PlantMarker?>
+    lastClickedMarker: MutableState<PlantMarker?>,
+    markerBackgroundColor: Color
 ){
     lastClickedMarker.value?.let {
         it.marker.setIcon(
             BitmapDescriptorFactory.fromBitmap(
-                MarkerUtils.createCustomMarkerFromLayout(context, it.plant, false)
+                MarkerUtils.createCustomMarkerFromLayout(context, it.plant, false, markerBackgroundColor)
             )
         )
         lastClickedMarker.value = null
