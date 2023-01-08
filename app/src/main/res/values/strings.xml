@@ -41,9 +41,7 @@
     
     <!-- Settings screen -->
     <string name="appLanguage">App language</string>
-    <string name="dateTimeFormat">Datetime format</string>
-    <string name="useQuickAddition">Use quick addition</string>
-    <string name="useQuickAdditionDescribtion">Assumes the ML argorithm is right and adds plant right after taking a photo</string>
+    <string name="mlMinimalConfidenceTreshold">Minimal confidence for suggestions</string>
 
     <!-- New plant screen -->
     <string name="machineLearning">Machine learning</string>

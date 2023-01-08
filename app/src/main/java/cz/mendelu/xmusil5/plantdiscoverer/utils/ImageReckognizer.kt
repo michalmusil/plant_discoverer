@@ -70,8 +70,11 @@ class ImageReckognizer(
     }
 
     suspend fun setConfidenceTreshold(newTreshold: Float){
-        context.settingsDataStore.edit {
-            it[floatPreferencesKey(Constants.CONFIDENCE_TRESHOLD_KEY)] = newTreshold
+        if (newTreshold in 0.01f..1.0f){
+            context.settingsDataStore.edit {
+                it[floatPreferencesKey(Constants.CONFIDENCE_TRESHOLD_KEY)] = newTreshold
+            }
         }
+        else throw java.lang.IllegalArgumentException("ML treshold must be between 0.01f and 100f")
     }
 }

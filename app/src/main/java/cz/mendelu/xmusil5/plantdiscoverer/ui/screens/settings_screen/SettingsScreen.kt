@@ -1,29 +1,32 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.settings_screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
+import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
 import cz.mendelu.xmusil5.plantdiscoverer.utils.LanguageUtils
 import org.koin.androidx.compose.getViewModel
 import java.util.*
@@ -57,8 +60,15 @@ fun SettingsScreenContent(
     viewModel.settingsUiState.value.let {
         when(it){
             is SettingsUiState.Start -> {
+                LaunchedEffect(it){
+                    viewModel.loadConfidenceTreshold()
+                }
+                LoadingScreen()
+            }
+            is SettingsUiState.DataLoaded -> {
                 SettingsItems(
-                    viewModel = viewModel
+                    viewModel = viewModel,
+                    it.mlConfidenceTreshold
                 )
             }
         }
@@ -67,7 +77,8 @@ fun SettingsScreenContent(
 
 @Composable
 fun SettingsItems(
-    viewModel: SettingsViewModel
+    viewModel: SettingsViewModel,
+    currentConfidenceTreshold: Int
 ){
     Column(
         modifier = Modifier
@@ -80,7 +91,6 @@ fun SettingsItems(
                 LanguageUtils.Language.getByCodeDefaultEnglish(Locale.getDefault().language)
             )
         }
-
         LanguageOptions(
             items = LanguageUtils.Language.values().toList(),
             selectedItem = selectedLanguage,
@@ -90,63 +100,83 @@ fun SettingsItems(
                 }
             }
         )
+
+
         Divider(
             color = MaterialTheme.colorScheme.onBackground,
             thickness = 1.dp,
             modifier = Modifier
                 .padding(vertical = 15.dp)
         )
+
+
+        val currentTreshold = rememberSaveable {
+            mutableStateOf(currentConfidenceTreshold)
+        }
+        TresholdChoice(
+            viewModel = viewModel,
+            currentValue = currentTreshold)
     }
 }
 
 @Composable
-fun SettingsSwitchItem(
-    title: String,
-    value: String,
-    checked: Boolean,
-    onSwitch: (Boolean) -> Unit
+fun TresholdChoice(
+    viewModel: SettingsViewModel,
+    currentValue: MutableState<Int>,
 ){
-    Row(
-        horizontalArrangement = Arrangement.Start,
+    val cornerRadius = 5.dp
+    Column(
         modifier = Modifier
-            .padding(vertical = 5.dp)
             .fillMaxWidth()
     ) {
-        Column(
-            horizontalAlignment = Alignment.Start,
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .weight(2f)
+                .fillMaxWidth()
+                .padding(start = 3.dp)
         ) {
             Text(
-                text = title,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground,
-                fontSize = 18.sp
+                text = stringResource(id = R.string.mlMinimalConfidenceTreshold),
+                style = MaterialTheme.typography.titleSmall
             )
             Text(
-                text = value,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 12.sp
+                text = "${currentValue.value} %",
+                style = MaterialTheme.typography.titleSmall
             )
         }
 
-        val checked = remember{
-            mutableStateOf(checked)
-        }
-
-        Column(
-            horizontalAlignment = Alignment.End,
-            verticalArrangement = Arrangement.Center,
+        Slider(
+            value = currentValue.value.toFloat(),
+            onValueChange = {
+                currentValue.value = it.toInt()
+            },
+            onValueChangeFinished = {
+                viewModel.setNewConfidenceTreshold(currentValue.value)
+            },
+            valueRange = 1f..100f,
+            colors = SliderDefaults.colors(
+                thumbColor = MaterialTheme.colorScheme.primary,
+                activeTrackColor = MaterialTheme.colorScheme.primary,
+                inactiveTickColor = shadowColor
+            ),
+        )
+        Row(
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .weight(1f)
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+                .offset(y = -10.dp)
         ) {
-            Switch(checked = checked.value, onCheckedChange = {
-                checked.value = !checked.value
-                onSwitch(it)
-            })
+            Text(
+                text = "1 %",
+                style = MaterialTheme.typography.labelSmall
+            )
+            Text(
+                text = "100 %",
+                style = MaterialTheme.typography.labelSmall
+            )
         }
-
     }
 }
 
@@ -154,16 +184,16 @@ fun SettingsSwitchItem(
 fun LanguageOptions(
     items: List<LanguageUtils.Language>,
     selectedItem: MutableState<LanguageUtils.Language>,
-    onItemClick: (LanguageUtils.Language) -> Unit,
-    modifier: Modifier = Modifier
+    onItemClick: (LanguageUtils.Language) -> Unit
 ){
 
     Column(
-        modifier = modifier
+        modifier = Modifier
+            .fillMaxWidth()
     ) {
         Text(
             text = stringResource(id = R.string.appLanguage),
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleSmall,
             modifier = Modifier
                 .padding(bottom = 10.dp, start = 3.dp)
 
@@ -177,6 +207,7 @@ fun LanguageOptions(
             onClick = {
                 expanded.value = true
             },
+            shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.outlinedButtonColors(MaterialTheme.colorScheme.surface),
         ) {
             Text(

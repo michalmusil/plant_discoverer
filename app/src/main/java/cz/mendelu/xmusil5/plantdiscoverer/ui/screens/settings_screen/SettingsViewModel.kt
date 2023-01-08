@@ -19,6 +19,12 @@ class SettingsViewModel(
 
     val settingsUiState: MutableState<SettingsUiState> = mutableStateOf(SettingsUiState.Start())
 
+    fun loadConfidenceTreshold(){
+        viewModelScope.launch {
+            val currentTresholdValue = imageReckognizer.getConfidenceTreshold() * 100
+            settingsUiState.value = SettingsUiState.DataLoaded(currentTresholdValue.toInt())
+        }
+    }
 
     fun setAppLanguage(language: LanguageUtils.Language, completion: () -> Unit){
         viewModelScope.launch {
@@ -28,10 +34,11 @@ class SettingsViewModel(
         }
     }
 
-    suspend fun setNewConfidenceTreshold(treshold: Int){
-        if (treshold in 0..100){
+    fun setNewConfidenceTreshold(treshold: Int){
+        if (treshold in 1..100){
+            val tresholdCalculated = treshold.toFloat()/100
             viewModelScope.launch {
-                imageReckognizer.setConfidenceTreshold(treshold.toFloat())
+                imageReckognizer.setConfidenceTreshold(tresholdCalculated)
             }
         }
     }
