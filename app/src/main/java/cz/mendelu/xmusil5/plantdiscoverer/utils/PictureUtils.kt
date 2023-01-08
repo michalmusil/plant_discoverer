@@ -22,9 +22,15 @@ object PictureUtils {
         }
     }
 
-    fun fromByteArrayToBitmap(byteArray: ByteArray?): Bitmap?{
+    fun fromByteArrayToBitmap(byteArray: ByteArray?, compressionQuality: Int? = null): Bitmap?{
         if(byteArray != null) {
             val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+            compressionQuality?.let { quality ->
+                val outputStream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+                val array = outputStream.toByteArray()
+                return BitmapFactory.decodeByteArray(array, 0, array.size)
+            }
             return bitmap
         } else{
             return null

@@ -34,7 +34,7 @@ fun PlantGridListItemLarge(
     plant: Plant,
     onItemClick: (Plant) -> Unit
 ){
-    val photoBitmap = PictureUtils.fromByteArrayToBitmap(plant.photo)
+    val photoBitmap = PictureUtils.fromByteArrayToBitmap(byteArray = plant.photo, compressionQuality = 50)
     val cornerRadius = 10.dp
     Box(
         modifier = Modifier
