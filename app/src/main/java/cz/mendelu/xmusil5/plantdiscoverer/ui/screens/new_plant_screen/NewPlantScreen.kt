@@ -112,15 +112,10 @@ fun NewPlantScreenContent(
                 }
             }
             is NewPlantUiState.ImageReckognized -> {
-                NewPlantForm(navigation = navigation, viewModel = viewModel, photo = it.photo, detectedObject = it.detectedObject, location = currentLocation.value)
+                NewPlantForm(navigation = navigation, viewModel = viewModel, photo = it.photo, detectedObject = it.detectedObject, location = currentLocation)
             }
             is NewPlantUiState.ImageReckognitionFailed -> {
-                NewPlantForm(navigation = navigation, viewModel = viewModel, photo = it.photo, detectedObject = null, location = currentLocation.value)
-            }
-            is NewPlantUiState.NewPlantSaved -> {
-                LaunchedEffect(it){
-                    navigation.toPlantsListScreen()
-                }
+                NewPlantForm(navigation = navigation, viewModel = viewModel, photo = it.photo, detectedObject = null, location = currentLocation)
             }
             is NewPlantUiState.Error -> {
                 ErrorScreen(text = stringResource(id = it.code))
@@ -135,7 +130,7 @@ fun NewPlantForm(
     viewModel: NewPlantViewModel,
     photo: Bitmap,
     detectedObject: DetectedObject?,
-    location: Location?
+    location: MutableState<Location?>
 ){
     val selectedDetectedObjectLabel = remember{
         mutableStateOf<DetectedObject.Label?>(null)
@@ -276,10 +271,12 @@ fun NewPlantForm(
                         )
                         newPlant.description = description.value
                         newPlant.photo = PictureUtils.fromBitmapToByteArray(photo)
-                        newPlant.latitude = location?.latitude
-                        newPlant.longitude = location?.longitude
+                        newPlant.latitude = location.value?.latitude
+                        newPlant.longitude = location.value?.longitude
 
-                        viewModel.saveNewPlant(newPlant)
+                        viewModel.saveNewPlant(newPlant){
+                            navigation.toPlantDetailScreen(it)
+                        }
                     }
                }
            )

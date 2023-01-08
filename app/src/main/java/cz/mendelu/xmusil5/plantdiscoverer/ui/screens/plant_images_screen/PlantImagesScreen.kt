@@ -83,6 +83,13 @@ fun PlantImagesScreenContent(
             is PlantImagesUiState.ImagesLoaded -> {
                 PlantImagesList(imagesList = it.images, query, startingImagePage, viewModel)
             }
+            is PlantImagesUiState.NoImagesFound -> {
+                ErrorScreen(text = "${stringResource(id = R.string.imagesNotFound1)}: \"$query\" ${stringResource(
+                    id = R.string.imagesNotFound2)}",
+                    imageResourceId = R.drawable.ic_query,
+                    paintIcon = true
+                )
+            }
             is PlantImagesUiState.Error -> {
                 ErrorScreen(text = stringResource(id = it.errorCode))
             }
@@ -196,7 +203,8 @@ fun ImageInDetailPopup(
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(1f)
-                            .customShadow(color = shadowColor,
+                            .customShadow(
+                                color = shadowColor,
                                 borderRadius = cornerRadius,
                                 spread = 5.dp,
                                 blurRadius = 10.dp,

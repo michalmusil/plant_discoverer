@@ -60,12 +60,12 @@ class NewPlantViewModel(
         })
     }
 
-    fun saveNewPlant(plant: Plant){
+    fun saveNewPlant(plant: Plant, completion: (Long) -> Unit){
         var resultingId: Long = -1L
         viewModelScope.launch {
             resultingId = plantsDbRepository.insert(plant)
         }.invokeOnCompletion {
-            newPlantUiState.value = NewPlantUiState.NewPlantSaved(resultingId)
+            completion(resultingId)
         }
     }
 

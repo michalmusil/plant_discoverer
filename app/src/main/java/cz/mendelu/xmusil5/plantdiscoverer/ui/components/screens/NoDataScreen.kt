@@ -28,6 +28,7 @@ fun NoDataScreen(){
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 30.dp, vertical = 30.dp)
     ){
         Column(
@@ -46,7 +47,7 @@ fun NoDataScreen(){
             )
             Text(
                 text = stringResource(id = R.string.noDataYet),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center,
             )       

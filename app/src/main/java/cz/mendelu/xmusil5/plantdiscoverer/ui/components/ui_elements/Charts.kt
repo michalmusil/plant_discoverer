@@ -244,6 +244,7 @@ fun MonthlyColumnChart(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(start = scaleYAxisWidth)
                 .height(scaleLineWidth)
                 .background(scaleColor)
         )

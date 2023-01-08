@@ -8,6 +8,5 @@ sealed class NewPlantUiState{
     class PhotoLoaded(val photo: Bitmap): NewPlantUiState()
     class ImageReckognized(val photo: Bitmap, val detectedObject: DetectedObject): NewPlantUiState()
     class ImageReckognitionFailed(val photo: Bitmap): NewPlantUiState()
-    class NewPlantSaved(val newPlantId: Long): NewPlantUiState()
     class Error(val code: Int): NewPlantUiState()
 }

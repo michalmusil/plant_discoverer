@@ -12,10 +12,15 @@
     <string name="takePhoto">Take photo</string>
 
     <!-- Errors -->
+    <string name="errorIcon">Error icon</string>
     <string name="somethingWentWrong">Something went wrong</string>
     <string name="plantNotFound">Plant not found</string>
+
+    <string name="imagesNotFound1">No images for query</string>
+    <string name="imagesNotFound2">have been found.</string>
+
     <string name="noInternet">You are not connected to any network.</string>
-    <string name="locationForbidden">Location services are not available. Make sure location is on and Plant Discoverer has location permissions granted.</string>
+    <string name="locationForbidden">Location services are not available. Make sure location is on and Plant Discoverer has location permissions granted in your phone settings.</string>
     <string name="noDataYet">It seems you have no plants to display. You can add new ones by taking pictures.</string>
     <string name="clickCameraIcon">Click here to get started</string>
 
@@ -62,7 +67,7 @@
     <string name="name">Plant name</string>
     <string name="dateDiscovered">Date discovered</string>
     <string name="placeDiscovered">Place discovered</string>
-    <string name="queryString">Query string</string>
+    <string name="queryString">Query for image search</string>
     <string name="originalMatch">Original match</string>
     <string name="description">Description</string>
     <string name="originalCertainty">Original certainty</string>

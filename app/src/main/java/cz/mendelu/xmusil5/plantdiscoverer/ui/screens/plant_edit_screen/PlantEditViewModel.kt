@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cz.mendelu.xmusil5.plantdiscoverer.database.repositories.IPlantsDbRepository
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import kotlinx.coroutines.launch
@@ -22,11 +23,19 @@ class PlantEditViewModel(private val plantsDbRepository: IPlantsDbRepository): V
         }
     }
 
-    fun saveChangesToPlant(plant: Plant){
+    fun saveChangesToPlant(plant: Plant, completion: () -> Unit){
         viewModelScope.launch {
             plantsDbRepository.update(plant)
         }.invokeOnCompletion {
-            plantEditUiState.value = PlantEditUiState.ChangesSaved()
+            completion()
+        }
+    }
+
+    fun deletePlant(plantId: Long, completion: () -> Unit){
+        viewModelScope.launch {
+            plantsDbRepository.deleteById(plantId)
+        }.invokeOnCompletion {
+            completion()
         }
     }
 }

@@ -108,11 +108,14 @@ fun PlantDetailForm(
         mutableStateOf("-")
     }
 
-    val geocoder = Geocoder(LocalContext.current, java.util.Locale.getDefault())
-    if (plant.latitude != null && plant.longitude != null){
-        geocoder.getFromLocation(plant.latitude!!, plant.longitude!!, 1) {
-            it.firstOrNull()?.let {
-                locationString.value = "${it.subAdminArea}, ${it.countryCode}"
+    val context = LocalContext.current
+    LaunchedEffect(plant){
+        val geocoder = Geocoder(context, java.util.Locale.getDefault())
+        if (plant.latitude != null && plant.longitude != null){
+            geocoder.getFromLocation(plant.latitude!!, plant.longitude!!, 1) {
+                it.firstOrNull()?.let {
+                    locationString.value = "${it.subAdminArea}, ${it.countryCode}"
+                }
             }
         }
     }

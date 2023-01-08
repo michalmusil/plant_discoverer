@@ -19,7 +19,12 @@ class PlantImagesViewModel(private val unsplashImageRepository: IUnsplashImagesR
             val results = unsplashImageRepository.fetchImages(query = query, page = page)
             when (results){
                 is CommunicationResult.Success -> {
-                    plantPicturesUiState.value = PlantImagesUiState.ImagesLoaded(images = results.data.results)
+                    if (results.data.results.size > 0) {
+                        plantPicturesUiState.value =
+                            PlantImagesUiState.ImagesLoaded(images = results.data.results)
+                    } else {
+                        plantPicturesUiState.value = PlantImagesUiState.NoImagesFound()
+                    }
                 }
                 is CommunicationResult.Exception -> {
                     plantPicturesUiState.value = PlantImagesUiState.Error(errorCode = R.string.somethingWentWrong)

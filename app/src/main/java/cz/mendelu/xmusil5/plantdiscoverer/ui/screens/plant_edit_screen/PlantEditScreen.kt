@@ -4,6 +4,8 @@ import android.graphics.BitmapFactory
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,8 +13,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
@@ -35,6 +39,19 @@ fun PlantEditScreen(
         showBackArrow = true,
         onBackClick = {
             navigation.returnBack()
+        },
+        actions = {
+            IconButton(onClick = {
+                viewModel.deletePlant(plantId){
+                    navigation.toPlantsListScreen()
+                }
+            }) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_trash),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         },
         content = {
             PlantEditScreenContent(
@@ -62,11 +79,6 @@ fun PlantEditScreenContent(
             }
             is PlantEditUiState.PlantLoaded -> {
                 PlantEditForm(plant = it.plant, viewModel = viewModel, navigation = navigation)
-            }
-            is PlantEditUiState.ChangesSaved -> {
-                LaunchedEffect(it){
-                    navigation.returnBack()
-                }
             }
             is PlantEditUiState.Error -> {
                 ErrorScreen(
@@ -184,7 +196,9 @@ fun PlantEditForm(
                         plant.name = name.value
                         plant.imageQuery = imageQuery.value
                         plant.description = description.value
-                        viewModel.saveChangesToPlant(plant)
+                        viewModel.saveChangesToPlant(plant){
+                            navigation.returnBack()
+                        }
                     }
                 }
             )
