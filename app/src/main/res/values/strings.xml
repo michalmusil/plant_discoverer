@@ -5,15 +5,19 @@
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
+    <string name="forward">Forward</string>
     <string name="save">Save</string>
     <string name="search">Search</string>
     <string name="discard">Discard</string>
+    <string name="takePhoto">Take photo</string>
 
     <!-- Errors -->
     <string name="somethingWentWrong">Something went wrong</string>
     <string name="plantNotFound">Plant not found</string>
     <string name="noInternet">You are not connected to any network.</string>
     <string name="locationForbidden">Location services are not available. Make sure location is on and Plant Discoverer has location permissions granted.</string>
+    <string name="noDataYet">It seems you have no plants to display. You can add new ones by taking pictures.</string>
+    <string name="clickCameraIcon">Click here to get started</string>
 
     <!-- Elements -->
     <string name="plantImage">Plant image</string>

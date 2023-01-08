@@ -18,6 +18,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.model.code_models.Month
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.*
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.screens.NoDataScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ui_elements.MonthlyColumnChart
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ui_elements.StatisticsCard
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plants_list_screen.PlantsListScreenContent
@@ -99,6 +100,9 @@ fun HomeScreenContent(
                     monthlyValues = monthlyValues.value,
                     activeYears = activeYears
                 )
+            }
+            is HomeUiState.NoData -> {
+                NoDataScreen()
             }
             is HomeUiState.Error -> {
                 ErrorScreen(text = stringResource(id = it.errorCode))

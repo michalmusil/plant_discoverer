@@ -187,7 +187,7 @@ fun MapScreenContent(
                 PlantsMap(plants = plants, currentLocation = currentLocation.value, navigation = navigation)
             }
             is MapUiState.PermissionsDenied -> {
-                ErrorScreen(text = stringResource(id = R.string.locationForbidden), imageResourceId = R.drawable.ic_location_forbidden)
+                ErrorScreen(text = stringResource(id = R.string.locationForbidden), imageResourceId = R.drawable.ic_location)
             }
             is MapUiState.Error -> {
                 ErrorScreen(text = stringResource(id = it.errorCode))

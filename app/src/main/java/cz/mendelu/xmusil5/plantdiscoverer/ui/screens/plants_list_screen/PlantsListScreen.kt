@@ -42,6 +42,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.list_items.PlantGridListItem
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.list_items.PlantGridListItemLarge
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.screens.NoDataScreen
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
 
@@ -83,6 +84,9 @@ fun PlantsListScreenContent(
                 LaunchedEffect(state){
                     viewModel.loadPlants()
                 }
+            }
+            is PlantsListUiState.NoData -> {
+                NoDataScreen()
             }
             is PlantsListUiState.DataLoaded -> {
                 plants.addAll(state.plants)

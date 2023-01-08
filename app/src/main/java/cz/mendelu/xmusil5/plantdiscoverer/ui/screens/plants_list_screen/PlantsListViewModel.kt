@@ -16,7 +16,11 @@ class PlantsListViewModel(private val plantsDbRepository: IPlantsDbRepository): 
     fun loadPlants(){
         viewModelScope.launch {
             plantsDbRepository.getAll().collect{
-                plantsListUiState.value = PlantsListUiState.DataLoaded(it)
+                if (it.size > 0) {
+                    plantsListUiState.value = PlantsListUiState.DataLoaded(it)
+                } else {
+                    plantsListUiState.value = PlantsListUiState.NoData()
+                }
             }
         }
 

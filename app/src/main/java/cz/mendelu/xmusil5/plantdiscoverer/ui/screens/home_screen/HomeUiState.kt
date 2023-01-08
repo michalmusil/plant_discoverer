@@ -10,5 +10,6 @@ sealed class HomeUiState{
         val latestPlant: Plant?,
         val monthCounts: HashMap<Month, Double>,
         val acitveYears: List<Int>): HomeUiState()
+    class NoData(): HomeUiState()
     class Error(val errorCode: Int): HomeUiState()
 }

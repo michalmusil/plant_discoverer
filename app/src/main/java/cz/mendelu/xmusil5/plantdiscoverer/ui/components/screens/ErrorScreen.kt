@@ -38,8 +38,8 @@ fun ErrorScreen(
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 90.dp)
+                    .width(150.dp)
+                    .aspectRatio(1f)
             )
 
             text?.let {

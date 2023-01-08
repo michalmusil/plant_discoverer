@@ -18,6 +18,10 @@ class HomeViewModel(private val plantsDbRepository: IPlantsDbRepository): ViewMo
     fun fetchStatistics(year: Int){
         viewModelScope.launch {
             plantsDbRepository.getAll().collect{
+                if (it.size <= 0){
+                    homeUiState.value = HomeUiState.NoData()
+                    return@collect
+                }
                 val numberOfPlants = it.size
                 var latestDate = 0L
                 var mostRecentPlant: Plant? = null

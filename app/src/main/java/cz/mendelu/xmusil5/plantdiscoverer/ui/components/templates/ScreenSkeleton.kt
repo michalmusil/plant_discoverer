@@ -59,7 +59,7 @@ fun ScreenSkeleton(
                         IconButton(onClick = onBackClick) {
                             Icon(
                                 imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.back),
+                                contentDescription = stringResource(R.string.forward),
                                 tint = MaterialTheme.colorScheme.onPrimary
                             )
                         }
