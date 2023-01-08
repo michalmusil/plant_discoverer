@@ -1,5 +1,6 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_detail_screen
 
+import android.graphics.drawable.VectorDrawable
 import android.location.Geocoder
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,9 +17,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
@@ -42,6 +45,17 @@ fun PlantDetailScreen(
             navigation.returnBack()
         },
         actions = {
+            IconButton(onClick = {
+                viewModel.deletePlant(plantId){
+                    navigation.returnBack()
+                }
+            }) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_trash),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
             IconButton(onClick = {
                 navigation.toPlantEditScreen(plantId = plantId)
             }) {

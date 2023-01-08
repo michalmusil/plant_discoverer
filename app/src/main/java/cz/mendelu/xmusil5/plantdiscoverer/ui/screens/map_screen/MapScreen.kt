@@ -54,10 +54,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.map.PlantMarker
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.Destination
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.CustomOutlinedButton
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ErrorScreen
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.*
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.BottomNavItem
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.BottomNavigationBar
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.grayCommon
@@ -96,6 +93,14 @@ fun MapScreen(
                 .padding(it)
         ){
             MapScreenContent(navigation = navigation, viewModel = viewModel)
+            CameraFloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
+                onSuccessfullCameraClick = {
+                    navigation.toCameraScreen()
+                }
+            )
         }
     }
 }
@@ -314,7 +319,8 @@ fun PlantMapPopup(
                     .fillMaxWidth()
                     .height(190.dp)
                     .padding(16.dp)
-                    .customShadow(color = shadowColor,
+                    .customShadow(
+                        color = shadowColor,
                         borderRadius = cornerRadius,
                         spread = 5.dp,
                         blurRadius = 7.dp,

@@ -33,4 +33,6 @@ interface PlantsDao {
     suspend fun update(plant: Plant)
     @Delete
     suspend fun delete(plant: Plant)
+    @Query("DELETE FROM plants WHERE id = :plantId")
+    suspend fun deleteById(plantId: Long)
 }

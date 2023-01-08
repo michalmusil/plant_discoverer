@@ -19,11 +19,12 @@ class HomeViewModel(private val plantsDbRepository: IPlantsDbRepository): ViewMo
         viewModelScope.launch {
             plantsDbRepository.getAll().collect{
                 val numberOfPlants = it.size
-                val latestDate = 0L
+                var latestDate = 0L
                 var mostRecentPlant: Plant? = null
                 it.forEach {
                     if (it.dateDiscovered > latestDate){
                         mostRecentPlant = it
+                        latestDate = it.dateDiscovered
                     }
                 }
                 val monthCounts = getMonthlyStatsForYear(it, year)
@@ -74,9 +75,9 @@ class HomeViewModel(private val plantsDbRepository: IPlantsDbRepository): ViewMo
     // FOR TESTING PURPOUSES
     fun addTestData(){
         val testItems = listOf(
-            Plant("Aloe xindl", 1615503600000, "Aloe vera", 0, "aa"),
-            Plant("Aloe moe", 1615590000000, "Aloe xera", 0, "not"),
-            Plant("Racsavasf", 1619820000000, "aaa", 0, ""),
+            Plant("Aloe xindl", 1634853600000, "Aloe vera", 0, "aa"),
+            Plant("Aloe moe", 1621634400000, "Aloe xera", 0, "not"),
+            Plant("Racsavasf", 1619820000000, "aaa", 0, "x"),
             Plant("2022", 1659909600000, "aaa", 0, "u"),
             Plant("2022-2", 1659909600000, "aaa", 0, "u"),
             Plant("2022-3", 1659477600000, "aaa", 0, "u"),

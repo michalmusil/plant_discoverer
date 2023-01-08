@@ -1,5 +1,7 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.components.ui_elements
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.font.FontWeight
 
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -24,6 +25,8 @@ import androidx.compose.ui.unit.sp
 import cz.mendelu.xmusil5.plantdiscoverer.model.code_models.Month
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
 import cz.mendelu.xmusil5.plantdiscoverer.utils.customShadow
+import java.text.DecimalFormat
+import kotlin.math.roundToInt
 
 @Composable
 fun MonthlyColumnChart(
@@ -47,24 +50,25 @@ fun MonthlyColumnChart(
     val barColumnWidth by remember { mutableStateOf(columnWidth) }
     val barColumnSpacingWidth by remember { mutableStateOf(columnSpacing) }
     // Scale Dimensions
-    val scaleYAxisWidth by remember { mutableStateOf(20.dp) }
+    val scaleYAxisWidth by remember { mutableStateOf(26.dp) }
     val scaleLineWidth by remember { mutableStateOf(2.dp) }
     // Other important values
     val backgroundColor = MaterialTheme.colorScheme.surface
     val maxValue = data.maxOf {
         it.value
     }
-    val yScaleFontSize = 13.sp
+    val yScaleFontSize = 12.sp
     val xScaleFontSize = 11.sp
 
 
     // Y axis values
-    val topScaleValue = data.maxOf {
+    val df = DecimalFormat("#.#")
+    val topScaleValue = df.format(data.maxOf {
         it.value
-    }.toInt()
-    val secondTopScaleValue = (topScaleValue * 0.75).toInt()
-    val middleScaleValue = (topScaleValue * 0.5).toInt()
-    val bottomScaleValue = (topScaleValue * 0.25).toInt()
+    })
+    val secondTopScaleValue = df.format(topScaleValue.toDouble() * 0.75)
+    val middleScaleValue = df.format(topScaleValue.toDouble() * 0.5)
+    val bottomScaleValue = df.format(topScaleValue.toDouble() * 0.25)
 
     val yAxisValues = mutableListOf(topScaleValue, secondTopScaleValue, middleScaleValue, bottomScaleValue)
 
@@ -165,7 +169,7 @@ fun MonthlyColumnChart(
                     .width(scaleYAxisWidth),
                 verticalArrangement = Arrangement.Top
             ) {
-                yAxisValues.forEach {
+                yAxisValues.forEach { value ->
                     Box(
                         contentAlignment = Alignment.TopCenter,
                         modifier = Modifier
@@ -173,10 +177,11 @@ fun MonthlyColumnChart(
                             .fillMaxWidth()
                     ){
                         Text(
-                            text = it.toString(),
+                            text = value,
                             textAlign = TextAlign.Center,
                             fontSize = yScaleFontSize,
-                            color = scaleColor,
+                            color = if (yAxisValues.count { it == value } > 1) { Color.Transparent }
+                            else { scaleColor },
                             modifier = Modifier
                         )
                     }
@@ -197,14 +202,27 @@ fun MonthlyColumnChart(
                 month?.let {
                     val monthValue = data.get(it)
                     monthValue?.let {
-                        val columnHeight = (barGraphHeight.value*(monthValue/maxValue)).dp
+                        val columnHeight = (barGraphHeight.value*(monthValue/maxValue)).toFloat()
+                        var animationTriggered by remember {
+                            mutableStateOf(false)
+                        }
+                        val animatedHeight by animateFloatAsState(
+                            targetValue = if (animationTriggered) columnHeight else 0f,
+                            animationSpec = tween(
+                                durationMillis = 1000,
+                                delayMillis = 0
+                            )
+                        )
+                        LaunchedEffect(key1 = true) {
+                            animationTriggered = true
+                        }
                         Box(
                             contentAlignment = Alignment.TopCenter,
                             modifier = Modifier
                                 .padding(start = barColumnSpacingWidth)
                                 .clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp))
                                 .width(barColumnWidth)
-                                .height(columnHeight)
+                                .height(animatedHeight.dp)
                                 .background(columnColor)
                         ){
                             Text(

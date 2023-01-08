@@ -5,6 +5,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -16,12 +17,10 @@ import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.code_models.Month
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.BigImageWithText
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ErrorScreen
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
-import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ScreenSkeleton
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.*
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ui_elements.MonthlyColumnChart
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ui_elements.StatisticsCard
+import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plants_list_screen.PlantsListScreenContent
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
@@ -36,7 +35,17 @@ fun HomeScreen(
         topBarText = "Home",
         navigation = navigation,
         content = {
-            HomeScreenContent(navigation = navigation, viewModel = viewModel)
+            Box(modifier = Modifier.fillMaxSize()) {
+                HomeScreenContent(navigation = navigation, viewModel = viewModel)
+                CameraFloatingActionButton(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp),
+                    onSuccessfullCameraClick = {
+                        navigation.toCameraScreen()
+                    }
+                )
+            }
         }
     )
 }

@@ -115,10 +115,8 @@ fun PlantEditForm(
                 .padding(vertical = 16.dp)
         ) {
             BigImage(
-                photo = (plantPhoto?.asImageBitmap() ?: BitmapFactory.decodeResource(
-                    LocalContext.current.resources,
-                    R.drawable.ic_error
-                ).asImageBitmap()),
+                photo = plantPhoto?.asImageBitmap() ?: PictureUtils.getBitmapFromVectorDrawable(
+                    LocalContext.current, R.drawable.ic_error)!!.asImageBitmap(),
                 contentDescription = stringResource(id = R.string.plantImage),
             )
         }

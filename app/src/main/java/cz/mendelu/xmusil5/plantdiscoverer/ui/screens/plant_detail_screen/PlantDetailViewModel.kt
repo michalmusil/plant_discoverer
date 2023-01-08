@@ -25,4 +25,12 @@ class PlantDetailViewModel(private val plantsDbRepository: IPlantsDbRepository):
             }
         }
     }
+
+    fun deletePlant(plantId: Long, completion: () -> Unit){
+        viewModelScope.launch {
+            plantsDbRepository.deleteById(plantId)
+        }.invokeOnCompletion {
+            completion()
+        }
+    }
 }

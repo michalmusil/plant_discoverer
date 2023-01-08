@@ -17,4 +17,5 @@ interface IPlantsDbRepository {
     suspend fun insert(plant: Plant): Long
     suspend fun update(plant: Plant)
     suspend fun delete(plant: Plant)
+    suspend fun deleteById(plantId: Long)
 }

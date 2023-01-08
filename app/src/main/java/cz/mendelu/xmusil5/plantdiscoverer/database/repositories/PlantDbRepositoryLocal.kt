@@ -36,4 +36,8 @@ class PlantDbRepositoryLocal(private val plantsDao: PlantsDao): IPlantsDbReposit
     override suspend fun delete(plant: Plant) {
         plantsDao.delete(plant)
     }
+
+    override suspend fun deleteById(plantId: Long){
+        plantsDao.deleteById(plantId)
+    }
 }
