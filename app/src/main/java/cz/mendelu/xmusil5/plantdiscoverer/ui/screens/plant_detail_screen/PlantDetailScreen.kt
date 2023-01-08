@@ -28,8 +28,10 @@ import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.*
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
+import cz.mendelu.xmusil5.plantdiscoverer.utils.LanguageUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
+import java.util.*
 
 @Composable
 fun PlantDetailScreen(
@@ -104,6 +106,7 @@ fun PlantDetailForm(
     navigation: INavigationRouter,
     plant: Plant
 ){
+    val language = LanguageUtils.Language.getByCodeDefaultEnglish(Locale.getDefault().language)
     val locationString = remember{
         mutableStateOf("-")
     }
@@ -170,7 +173,7 @@ fun PlantDetailForm(
                 })
             CustomDetailRow(
                 title = stringResource(id = R.string.dateDiscovered),
-                text = DateUtils.getDateString(plant.dateDiscovered),
+                text = DateUtils.getDateString(plant.dateDiscovered, language),
                 iconId = R.drawable.ic_calendar)
             CustomDetailRow(
                 title = stringResource(id = R.string.description),

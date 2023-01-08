@@ -18,7 +18,8 @@ class PlantDiscovererApplication: Application() {
             androidLogger(if (BuildConfig.DEBUG) Level.ERROR else Level.NONE)
             androidContext(this@PlantDiscovererApplication)
             modules(listOf(
-                databaseModule, daoModule, repositoryModule, viewModelModule, retrofitModule, mlModule, apiModule
+                databaseModule, daoModule, repositoryModule,
+                viewModelModule, retrofitModule, mlModule, apiModule, utilsModule
             ))
         }
     }

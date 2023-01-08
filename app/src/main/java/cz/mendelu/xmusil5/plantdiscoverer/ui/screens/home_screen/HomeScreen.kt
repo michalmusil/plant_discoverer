@@ -23,9 +23,11 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ui_elements.MonthlyColum
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ui_elements.StatisticsCard
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plants_list_screen.PlantsListScreenContent
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
+import cz.mendelu.xmusil5.plantdiscoverer.utils.LanguageUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
 import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun HomeScreen(
@@ -120,6 +122,8 @@ fun HomeDashBoard(
     monthlyValues: HashMap<Month, Double>,
     activeYears: List<Int>
 ){
+    val language = LanguageUtils.Language.getByCodeDefaultEnglish(Locale.getDefault().language)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -167,7 +171,7 @@ fun HomeDashBoard(
             latestPlant?.let {
                 StatisticsCard(
                     label = stringResource(id = R.string.lastDateDiscovered),
-                    value = DateUtils.getDateString(it.dateDiscovered),
+                    value = DateUtils.getDateString(it.dateDiscovered, language),
                     backgroundColor = MaterialTheme.colorScheme.secondary,
                     textColor = MaterialTheme.colorScheme.onSecondary,
                     onClick = { navigation.toPlantDetailScreen(it.id!!) },

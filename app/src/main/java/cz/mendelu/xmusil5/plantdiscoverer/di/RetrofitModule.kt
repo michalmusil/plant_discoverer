@@ -2,6 +2,7 @@ package cz.mendelu.xmusil5.plantdiscoverer.di
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import cz.mendelu.xmusil5.plantdiscoverer.utils.Constants
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -34,7 +35,7 @@ fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         .add(KotlinJsonAdapterFactory())
         .build()
 
-    return Retrofit.Builder().baseUrl("https://api.unsplash.com/")
+    return Retrofit.Builder().baseUrl(Constants.UNSPLASH_API_ROOT_URL)
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()

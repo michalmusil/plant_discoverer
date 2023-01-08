@@ -6,6 +6,9 @@ import androidx.room.PrimaryKey
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
+import cz.mendelu.xmusil5.plantdiscoverer.utils.LanguageUtils
+import java.util.*
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 @Entity(tableName = "plants")
 data class Plant(
@@ -51,6 +54,7 @@ data class Plant(
     }
 
     override fun getSnippet(): String? {
-        return DateUtils.getDateString(dateDiscovered)
+        val language = LanguageUtils.Language.getByCodeDefaultEnglish(Locale.getDefault().language)
+        return DateUtils.getDateString(dateDiscovered, language)
     }
 }

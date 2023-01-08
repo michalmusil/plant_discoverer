@@ -17,10 +17,16 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 
+val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.SETTINGS_DATA_STORE)
+
+// Returns a camera provider to use in in-app camera port
 suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->
     ProcessCameraProvider.getInstance(this).also { cameraProvider ->
         cameraProvider.addListener({
@@ -29,6 +35,7 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutin
     }
 }
 
+// Determines if phone gps is on
 fun isGpsOn(context: Context): Boolean{
     val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
     locationManager?.let {
@@ -37,6 +44,7 @@ fun isGpsOn(context: Context): Boolean{
     return false
 }
 
+// Determines whether a user is currently connected to internet in any way possible
 fun isConnectedToInternet(context: Context): Boolean {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val network = connectivityManager.activeNetwork ?: return false
@@ -49,6 +57,7 @@ fun isConnectedToInternet(context: Context): Boolean {
     }
 }
 
+// Function for signaling a grid list to load more data when user reaches end
 @Composable
 fun LazyGridState.onLastReached(loadMore: () -> Unit){
     val shouldLoad = remember{
@@ -66,6 +75,8 @@ fun LazyGridState.onLastReached(loadMore: () -> Unit){
     }
 }
 
+
+// Shadow modifier for any composable object
 fun Modifier.customShadow(
     color: Color = Color.Black,
     borderRadius: Dp = 0.dp,
