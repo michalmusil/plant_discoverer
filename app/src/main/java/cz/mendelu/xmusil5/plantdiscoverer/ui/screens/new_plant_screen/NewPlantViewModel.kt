@@ -51,13 +51,15 @@ class NewPlantViewModel(
     }
 
     fun reckognizePhoto(photo: Bitmap){
-        imageReckognizer.processImage(photo, onFinishedListener = {
-            if (it != null && it.labels.isNotEmpty()){
-                newPlantUiState.value = NewPlantUiState.ImageReckognized(photo, it)
-            } else {
-                newPlantUiState.value = NewPlantUiState.ImageReckognitionFailed(photo)
-            }
-        })
+        viewModelScope.launch {
+            imageReckognizer.processImage(photo, onFinishedListener = {
+                if (it != null && it.labels.isNotEmpty()){
+                    newPlantUiState.value = NewPlantUiState.ImageReckognized(photo, it)
+                } else {
+                    newPlantUiState.value = NewPlantUiState.ImageReckognitionFailed(photo)
+                }
+            })
+        }
     }
 
     fun saveNewPlant(plant: Plant, completion: (Long) -> Unit){

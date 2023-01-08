@@ -1,6 +1,10 @@
 package cz.mendelu.xmusil5.plantdiscoverer.utils
 
+import android.content.Context
 import android.graphics.Bitmap
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.google.mlkit.common.model.LocalModel
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.label.ImageLabel
@@ -11,25 +15,33 @@ import com.google.mlkit.vision.objects.DetectedObject
 import com.google.mlkit.vision.objects.ObjectDetection
 import com.google.mlkit.vision.objects.custom.CustomObjectDetectorOptions
 import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions
+import kotlinx.coroutines.flow.first
 
 class ImageReckognizer(
     private val mlModelPath: String,
-    private val acceptedReckognitionConfidence: Float = 0.1f
+    private val context: Context
 ) {
+
+    companion object {
+        val defaultTreshold = 0.01f
+    }
 
     private val model = LocalModel.Builder()
         .setAssetFilePath(mlModelPath)
         .build()
 
-    private val singleImageOptions = CustomObjectDetectorOptions.Builder(model)
-        .setDetectorMode(ObjectDetectorOptions.SINGLE_IMAGE_MODE)
-        .setClassificationConfidenceThreshold(acceptedReckognitionConfidence)
-        .enableClassification()
-        .build()
 
-    private val imageDetector = ObjectDetection.getClient(singleImageOptions)
+    suspend fun processImage(imageBitmap: Bitmap, onFinishedListener: (DetectedObject?) -> Unit) {
+        val confidenceTreshold = getConfidenceTreshold()
 
-    fun processImage(imageBitmap: Bitmap, onFinishedListener: (DetectedObject?) -> Unit) {
+        val singleImageOptions = CustomObjectDetectorOptions.Builder(model)
+            .setDetectorMode(ObjectDetectorOptions.SINGLE_IMAGE_MODE)
+            .setClassificationConfidenceThreshold(confidenceTreshold)
+            .enableClassification()
+            .build()
+
+        val imageDetector = ObjectDetection.getClient(singleImageOptions)
+
         val input = InputImage.fromBitmap(imageBitmap, 0)
         imageDetector.process(input).addOnSuccessListener {
             val detected = it.firstOrNull()
@@ -49,6 +61,17 @@ class ImageReckognizer(
             onFinishedListener(detected)
         }.addOnFailureListener{
             onFinishedListener(null)
+        }
+    }
+
+    suspend fun getConfidenceTreshold(): Float{
+        val preference = context.settingsDataStore.data.first()
+        return preference[floatPreferencesKey(Constants.CONFIDENCE_TRESHOLD_KEY)] ?: defaultTreshold
+    }
+
+    suspend fun setConfidenceTreshold(newTreshold: Float){
+        context.settingsDataStore.edit {
+            it[floatPreferencesKey(Constants.CONFIDENCE_TRESHOLD_KEY)] = newTreshold
         }
     }
 }

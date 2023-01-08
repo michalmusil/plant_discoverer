@@ -1,14 +1,16 @@
 package cz.mendelu.xmusil5.plantdiscoverer.di
 
+import android.content.Context
+import cz.mendelu.xmusil5.plantdiscoverer.utils.Constants
 import cz.mendelu.xmusil5.plantdiscoverer.utils.ImageReckognizer
 import org.koin.dsl.module
 
 val mlModule = module {
     single {
-        provideImageReckognizer()
+        provideImageReckognizer(get())
     }
 }
 
-fun provideImageReckognizer(): ImageReckognizer{
-    return ImageReckognizer("plants_model_V1_3.tflite")
+fun provideImageReckognizer(context: Context): ImageReckognizer{
+    return ImageReckognizer(Constants.ML_MODEL_PATH, context)
 }
