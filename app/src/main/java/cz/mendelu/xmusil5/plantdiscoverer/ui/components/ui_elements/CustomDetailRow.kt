@@ -30,7 +30,8 @@ fun CustomDetailRow(
     text: String,
     iconId: Int,
     accentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    valueModifier: Modifier = Modifier
 ){
     val cornerRadius = 9.dp
     Box(modifier = modifier
@@ -79,7 +80,8 @@ fun CustomDetailRow(
                     text = text,
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurface,
-                    lineHeight = 17.sp
+                    lineHeight = 17.sp,
+                    modifier = valueModifier
                 )
             }
         }
@@ -93,7 +95,8 @@ fun CustomDetailRowWithAdditionalLabel(
     additionalLabel: String,
     iconId: Int,
     accentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    valueModifier: Modifier = Modifier
 ){
     val cornerRadius = 9.dp
     Box(
@@ -142,7 +145,8 @@ fun CustomDetailRowWithAdditionalLabel(
                     Text(
                         text = text,
                         fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = valueModifier
                     )
                 }
             }
@@ -171,7 +175,9 @@ fun CustomDetailRowWithAdditionalButton(
     buttonText: String,
     onButtonClick: () -> Unit,
     accentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    valueModifier: Modifier = Modifier,
+    buttonModifier: Modifier = Modifier
 ){
     val cornerRadius = 9.dp
     Box(
@@ -219,7 +225,8 @@ fun CustomDetailRowWithAdditionalButton(
                     Text(
                         text = text,
                         fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = valueModifier
                     )
                 }
             }
@@ -237,7 +244,9 @@ fun CustomDetailRowWithAdditionalButton(
                     textColor = MaterialTheme.colorScheme.onSecondary,
                     onClick = {
                         onButtonClick()
-                    })
+                    },
+                    modifier = buttonModifier
+                )
             }
         }
     }

@@ -1,6 +1,5 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_detail_screen
 
-import android.graphics.drawable.VectorDrawable
 import android.location.Geocoder
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,11 +15,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -30,10 +28,20 @@ import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.*
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.DeleteDialog
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
-import cz.mendelu.xmusil5.plantdiscoverer.utils.LanguageUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
 import java.util.*
+
+const val TAG_PLANT_DETAIL_PLANT_IMAGE = "plantDetailPlantImage"
+const val TAG_PLANT_DETAIL_NAME = "plantDetailName"
+const val TAG_PLANT_DETAIL_QUERY = "plantDetailQuery"
+const val TAG_PLANT_DETAIL_PLACE = "plantDetailPlace"
+const val TAG_PLANT_DETAIL_DESCRIPTION = "plantDetailDescription"
+const val TAG_PLANT_DETAIL_DATE = "plantDetailDate"
+const val TAG_PLANT_DETAIL_SEARCH_BUTTON = "plantDetailSearchButton"
+
+const val TAG_PLANT_DETAIL_EDIT_BUTTON = "plantDetailEditButton"
+const val TAG_PLANT_DETAIL_DELETE_BUTTON = "plantDetailDeleteButton"
 
 @Composable
 fun PlantDetailScreen(
@@ -52,18 +60,24 @@ fun PlantDetailScreen(
             navigation.returnBack()
         },
         actions = {
-            IconButton(onClick = {
+            IconButton(
+                onClick = {
                 showDeleteDialog.value = true
-            }) {
+                },
+                modifier = Modifier.testTag(TAG_PLANT_DETAIL_DELETE_BUTTON)
+            ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_trash),
                     contentDescription = stringResource(id = R.string.delete),
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
-            IconButton(onClick = {
+            IconButton(
+                onClick = {
                 navigation.toPlantEditScreen(plantId = plantId)
-            }) {
+                },
+                modifier = Modifier.testTag(TAG_PLANT_DETAIL_EDIT_BUTTON)
+            ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = stringResource(id = R.string.edit),
@@ -152,7 +166,8 @@ fun PlantDetailForm(
                 photo = (PictureUtils.fromByteArrayToBitmap(plant.photo)?.asImageBitmap()
                     ?: PictureUtils.getBitmapFromVectorDrawable(
                         LocalContext.current, R.drawable.ic_error)!!.asImageBitmap()),
-                contentDescription = stringResource(id = R.string.plantImage)
+                contentDescription = stringResource(id = R.string.plantImage),
+                modifier = Modifier.testTag(TAG_PLANT_DETAIL_PLANT_IMAGE)
             )
         }
 
@@ -163,7 +178,9 @@ fun PlantDetailForm(
         ) {
             CustomDetailRow(
                 title = stringResource(id = R.string.name),
-                text = plant.name, iconId = R.drawable.ic_plant)
+                text = plant.name, iconId = R.drawable.ic_plant,
+                valueModifier = Modifier.testTag(TAG_PLANT_DETAIL_NAME)
+            )
 
             if (plant.originalCertainty > 0) {
                 CustomDetailRowWithAdditionalLabel(
@@ -176,7 +193,8 @@ fun PlantDetailForm(
             CustomDetailRow(
                 title = stringResource(id = R.string.placeDiscovered),
                 text = locationString.value,
-                iconId = R.drawable.ic_globe
+                iconId = R.drawable.ic_globe,
+                valueModifier = Modifier.testTag(TAG_PLANT_DETAIL_PLACE)
             )
             CustomDetailRowWithAdditionalButton(title = stringResource(id = R.string.queryString),
                 text = plant.imageQuery,
@@ -184,17 +202,23 @@ fun PlantDetailForm(
                 buttonText = stringResource(id = R.string.search),
                 onButtonClick = {
                     navigation.toPlantImagesScreen(plant.imageQuery)
-                })
+                },
+                valueModifier = Modifier.testTag(TAG_PLANT_DETAIL_QUERY),
+                buttonModifier = Modifier.testTag(TAG_PLANT_DETAIL_SEARCH_BUTTON)
+            )
             CustomDetailRow(
                 title = stringResource(id = R.string.dateDiscovered),
                 text = DateUtils.getDateString(plant.dateDiscovered),
-                iconId = R.drawable.ic_calendar)
+                iconId = R.drawable.ic_calendar,
+                valueModifier = Modifier.testTag(TAG_PLANT_DETAIL_DATE)
+            )
             CustomDetailRow(
                 title = stringResource(id = R.string.description),
                 text = plant.description ?: "",
                 iconId = R.drawable.ic_note,
                 modifier = Modifier
-                    .padding(bottom = 10.dp)
+                    .padding(bottom = 10.dp),
+                valueModifier = Modifier.testTag(TAG_PLANT_DETAIL_DESCRIPTION)
             )
         }
     }

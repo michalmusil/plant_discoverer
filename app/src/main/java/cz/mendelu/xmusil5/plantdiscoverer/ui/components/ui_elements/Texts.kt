@@ -1,6 +1,5 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.components
 
-import android.graphics.fonts.FontFamily
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.OutlinedTextField
@@ -13,47 +12,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
-@Composable
-fun TextWithShadow(
-    text: String,
-    color: Color = Color.Unspecified,
-    fontSize: TextUnit = TextUnit.Unspecified,
-    fontStyle: FontStyle? = null,
-    fontWeight: FontWeight? = null,
-    fontFamily: androidx.compose.ui.text.font.FontFamily? = null,
-    modifier: Modifier
-) {
-    Text(
-        text = text,
-        fontFamily = fontFamily,
-        fontSize = fontSize,
-        fontStyle = fontStyle,
-        fontWeight = fontWeight,
-        color = Color.DarkGray,
-        modifier = modifier
-            .offset(
-                x = 1.5.dp,
-                y = 1.5.dp
-            )
-            .alpha(0.75f)
-    )
-    Text(
-        text = text,
-        fontFamily = fontFamily,
-        fontSize = fontSize,
-        fontStyle = fontStyle,
-        fontWeight = fontWeight,
-        color = color,
-        modifier = modifier
-    )
-}
 
 @Composable
 fun CustomTextField(
@@ -64,7 +24,8 @@ fun CustomTextField(
     onTextChanged: (String) -> Unit = {},
     enabled: Boolean = true,
     singleLine: Boolean = true,
-    maxChars: Int = 10000
+    maxChars: Int = 10000,
+    modifierTextField: Modifier = Modifier
 ){
     Column(
         modifier = Modifier
@@ -105,7 +66,7 @@ fun CustomTextField(
                         Icon(Icons.Filled.Clear,"error", tint = MaterialTheme.colorScheme.error)
                     }
                 },
-                modifier = Modifier
+                modifier = modifierTextField
                     .weight(1f)
             )
         }

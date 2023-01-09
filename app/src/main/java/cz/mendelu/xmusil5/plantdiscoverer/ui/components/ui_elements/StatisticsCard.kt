@@ -26,7 +26,8 @@ fun StatisticsCard(
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     textColor: Color = MaterialTheme.colorScheme.onSurface,
     onClick: () -> Unit = {},
-    modifier: Modifier
+    modifierCard: Modifier = Modifier,
+    modifierValue: Modifier = Modifier
 ){
     val cornerRadius = 12.dp
     val textSize = when{
@@ -37,7 +38,7 @@ fun StatisticsCard(
 
     Box(
         contentAlignment = Alignment.TopCenter,
-        modifier = modifier
+        modifier = modifierCard
             .fillMaxHeight()
             .padding(horizontal = 10.dp)
             .customShadow(color = shadowColor,
@@ -75,7 +76,8 @@ fun StatisticsCard(
                 fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
                 fontSize = textSize,
                 textAlign = TextAlign.Center,
-                color = textColor
+                color = textColor,
+                modifier = modifierValue
             )
         }
     }

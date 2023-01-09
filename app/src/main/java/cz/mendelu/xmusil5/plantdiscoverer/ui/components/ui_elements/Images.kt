@@ -27,13 +27,14 @@ fun BigImage(
     aspectRatio: Float = 1f,
     contentDescription: String,
     onClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ){
     val cornerRadius = 20.dp
     Image(
         bitmap = photo,
         contentDescription = contentDescription,
         contentScale = ContentScale.Crop,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .aspectRatio(aspectRatio)
             .customShadow(
@@ -57,12 +58,13 @@ fun BigImageWithText(
     contentDescription: String,
     titleText: String,
     secondaryText: String? = null,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ){
     val cornerRadius = 20.dp
     Box(
         contentAlignment = Alignment.TopStart,
-        modifier = Modifier
+        modifier = modifier
             .clickable {
                 onClick()
             }

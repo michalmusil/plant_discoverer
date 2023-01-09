@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -78,9 +79,12 @@ fun MapScreen(
             BottomNavigationBar(
                 navController = navigation.getNavController(),
                 items = listOf(
-                    BottomNavItem(stringResource(id = R.string.plantsList), ImageVector.vectorResource(id = R.drawable.ic_grid), Destination.PlantsListScreen),
-                    BottomNavItem(stringResource(id = R.string.home), ImageVector.vectorResource(id = R.drawable.ic_hub), Destination.HomeScreen),
-                    BottomNavItem(stringResource(id = R.string.map), ImageVector.vectorResource(id = R.drawable.ic_globe), Destination.MapScreen)
+                    BottomNavItem(stringResource(id = R.string.plantsList), ImageVector.vectorResource(id = R.drawable.ic_grid), Destination.PlantsListScreen, Modifier.testTag(
+                        TAG_BOTTOM_NAV_PLANT_LIST)),
+                    BottomNavItem(stringResource(id = R.string.home), ImageVector.vectorResource(id = R.drawable.ic_hub), Destination.HomeScreen, Modifier.testTag(
+                        TAG_BOTTOM_NAV_HOME)),
+                    BottomNavItem(stringResource(id = R.string.map), ImageVector.vectorResource(id = R.drawable.ic_globe), Destination.MapScreen, Modifier.testTag(
+                        TAG_BOTTOM_NAV_MAP))
                 ),
                 onItemClick = {
                     navigation.getNavController().navigate(it.destination.route)

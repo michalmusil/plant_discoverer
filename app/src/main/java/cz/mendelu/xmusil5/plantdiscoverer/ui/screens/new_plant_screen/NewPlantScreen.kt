@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +40,13 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.grayCommon
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
+
+const val TAG_NEW_PLANT_IMAGE = "newPlantImage"
+const val TAG_NEW_PLANT_NAME_TEXT_FIELD = "newPlantNameTextField"
+const val TAG_NEW_PLANT_QUERY_TEXT_FIELD = "newPlantQueryTextField"
+const val TAG_NEW_PLANT_DESCRIPTION_TEXT_FIELD = "newPlantDescriptionTextField"
+const val TAG_NEW_PLANT_SAVE_BUTTON = "newPlantSaveButton"
+const val TAG_NEW_PLANT_DISCARD_BUTTON = "newPlantDiscardButton"
 
 @Composable
 fun NewPlantScreen(
@@ -172,7 +180,8 @@ fun NewPlantForm(
                 .padding(top = 16.dp)
         ) {
             BigImage(photo = photo.asImageBitmap(),
-                contentDescription = stringResource(id = R.string.plantImage)
+                contentDescription = stringResource(id = R.string.plantImage),
+                modifier = Modifier.testTag(TAG_NEW_PLANT_IMAGE)
             )
         }
 
@@ -209,7 +218,8 @@ fun NewPlantForm(
            errorMessage = stringResource(id = R.string.nameTooShort),
            onTextChanged = {
                nameError.value = it.isBlank()
-           }
+           },
+           modifierTextField = Modifier.testTag(TAG_NEW_PLANT_NAME_TEXT_FIELD)
         )
         CustomTextField(
            labelTitle = stringResource(id = R.string.queryString),
@@ -219,12 +229,14 @@ fun NewPlantForm(
            errorMessage = stringResource(id = R.string.imageQueryTooShort),
            onTextChanged = {
                imageQueryError.value = it.isBlank()
-           }
+           },
+           modifierTextField = Modifier.testTag(TAG_NEW_PLANT_QUERY_TEXT_FIELD)
         )
         CustomTextField(
             labelTitle = stringResource(id = R.string.description),
             value = description,
             singleLine = false,
+            modifierTextField = Modifier.testTag(TAG_NEW_PLANT_DESCRIPTION_TEXT_FIELD)
         )
 
 
@@ -241,7 +253,8 @@ fun NewPlantForm(
                textColor = MaterialTheme.colorScheme.onSecondary,
                modifier = Modifier
                    .weight(1f)
-                   .padding(horizontal = 5.dp),
+                   .padding(horizontal = 5.dp)
+                   .testTag(TAG_NEW_PLANT_DISCARD_BUTTON),
                onClick = {
                    navigation.returnBack()
                }
@@ -252,7 +265,8 @@ fun NewPlantForm(
                textColor = MaterialTheme.colorScheme.onSecondary,
                modifier = Modifier
                    .weight(1f)
-                   .padding(horizontal = 5.dp),
+                   .padding(horizontal = 5.dp)
+                   .testTag(TAG_NEW_PLANT_SAVE_BUTTON),
                onClick = {
                    nameError.value = name.value.isBlank()
                    imageQueryError.value = imageQuery.value.isBlank()

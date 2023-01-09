@@ -5,17 +5,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -27,13 +24,15 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.components.*
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.screens.NoDataScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ui_elements.MonthlyColumnChart
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.ui_elements.StatisticsCard
-import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plants_list_screen.PlantsListScreenContent
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
-import cz.mendelu.xmusil5.plantdiscoverer.utils.LanguageUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
 import java.util.Calendar
-import java.util.Locale
+
+const val TAG_NAVIGATION_SETTINGS = "navigationSettings"
+const val TAG_TOTAL_NUMBER_OF_PLANTS = "totalNumberOfDiscoveredPlants"
+const val TAG_LAST_DISCOVERY_DATE = "lastDiscoveryDate"
+const val TAG_LAST_DISCOVERY_CARD = "lastDiscoveryCard"
 
 @Composable
 fun HomeScreen(
@@ -44,9 +43,12 @@ fun HomeScreen(
         topBarText = stringResource(id = R.string.home),
         navigation = navigation,
         actions = {
-            IconButton(onClick = {
-                navigation.toSettingsScreen()
-            }) {
+            IconButton(
+                onClick = {
+                    navigation.toSettingsScreen()
+                },
+                modifier = Modifier.testTag(TAG_NAVIGATION_SETTINGS)
+            ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_settings),
                     contentDescription = stringResource(id = R.string.settings),
@@ -163,7 +165,8 @@ fun HomeDashBoard(
                     secondaryText = latestPlant.name,
                     onClick = {
                         navigation.toPlantDetailScreen(latestPlant.id!!)
-                    }
+                    },
+                    modifier = Modifier.testTag(TAG_LAST_DISCOVERY_CARD)
                 )
             }
         }
@@ -181,7 +184,8 @@ fun HomeDashBoard(
                 value = numberOfPlants.toString(),
                 backgroundColor = MaterialTheme.colorScheme.primary,
                 textColor = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.weight(1f)
+                modifierCard = Modifier.weight(1f),
+                modifierValue = Modifier.testTag(TAG_TOTAL_NUMBER_OF_PLANTS)
             )
             latestPlant?.let {
                 StatisticsCard(
@@ -190,7 +194,8 @@ fun HomeDashBoard(
                     backgroundColor = MaterialTheme.colorScheme.secondary,
                     textColor = MaterialTheme.colorScheme.onSecondary,
                     onClick = { navigation.toPlantDetailScreen(it.id!!) },
-                    modifier = Modifier.weight(1f)
+                    modifierCard = Modifier.weight(1f),
+                    modifierValue = Modifier.testTag(TAG_LAST_DISCOVERY_DATE)
                 )
             }
         }

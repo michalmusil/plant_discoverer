@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -25,7 +26,8 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.disabled
 data class BottomNavItem(
     val title: String,
     val icon: ImageVector,
-    val destination: Destination
+    val destination: Destination,
+    val modifier: Modifier = Modifier
 )
 
 
@@ -58,7 +60,8 @@ fun BottomNavigationBar(
                             )
                         }
                     }
-                }
+                },
+                modifier = navItem.modifier
             )
         }
     }

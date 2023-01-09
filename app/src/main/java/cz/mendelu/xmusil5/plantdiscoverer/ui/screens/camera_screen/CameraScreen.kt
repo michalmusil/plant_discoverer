@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -45,6 +46,8 @@ import java.util.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
+const val TAG_CAMERA_TAKE_PHOTO = "takePhotoButton"
+const val TAG_CAMERA_GO_BACK = "cameraGoBack"
 
 @Composable
 fun CameraScreen(
@@ -88,7 +91,8 @@ fun CameraScreen(
 
         IconButton(
             modifier = Modifier
-                .padding(bottom = 20.dp),
+                .padding(bottom = 20.dp)
+                .testTag(TAG_CAMERA_TAKE_PHOTO),
             onClick = {
                 takePhoto(
                     imageCapture = imageCapture,
@@ -137,6 +141,7 @@ fun CameraScreen(
                         .clip(CircleShape)
                         .background(color = MaterialTheme.colorScheme.background)
                         .padding(6.dp)
+                        .testTag(TAG_CAMERA_GO_BACK)
                 )
             }
         }

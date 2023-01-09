@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -16,6 +17,9 @@ import androidx.compose.ui.unit.sp
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.CustomOutlinedButton
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.grayCommon
+
+const val TAG_DELETE_DIALOG_OK = "deleteDialogOk"
+const val TAG_DELETE_DIALOG_CANCEL = "deleteDialogCancel"
 
 @Composable
 fun DeleteDialog(
@@ -48,7 +52,8 @@ fun DeleteDialog(
                 textColor = MaterialTheme.colorScheme.onSecondary,
                 modifier = Modifier
                     .padding(horizontal = 3.dp)
-                    .padding(bottom = 5.dp),
+                    .padding(bottom = 5.dp)
+                    .testTag(TAG_DELETE_DIALOG_OK),
                 onClick = {
                     showDialog.value = false
                     onConfirm()
@@ -63,7 +68,8 @@ fun DeleteDialog(
                 textColor = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier
                     .padding(horizontal = 3.dp)
-                    .padding(bottom = 5.dp),
+                    .padding(bottom = 5.dp)
+                    .testTag(TAG_DELETE_DIALOG_CANCEL),
                 onClick = {
                     showDialog.value = false
                     onCancel()

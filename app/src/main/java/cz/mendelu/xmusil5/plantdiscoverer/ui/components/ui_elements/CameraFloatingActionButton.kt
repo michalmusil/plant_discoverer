@@ -10,11 +10,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import cz.mendelu.xmusil5.plantdiscoverer.R
+
+const val TAG_CAMERA_FAB = "cameraFloatingActionButton"
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -36,7 +39,8 @@ fun CameraFloatingActionButton(
         containerColor = MaterialTheme.colorScheme.secondary,
         contentColor = MaterialTheme.colorScheme.onSecondary,
         shape = CircleShape,
-        modifier = modifier,
+        modifier = modifier
+            .testTag(TAG_CAMERA_FAB),
         onClick = {
             hasBeenClicked.value = true
             permissionState.permissions.forEach {
@@ -44,11 +48,9 @@ fun CameraFloatingActionButton(
                     when {
                         it.shouldShowRationale -> {
                             permissionState.launchMultiplePermissionRequest()
-                            // TODO - Show some kind of dialog that tells user, that camera permission is necessary
                         }
                         !it.hasPermission && !it.shouldShowRationale -> {
                             permissionState.launchMultiplePermissionRequest()
-                            // TODO - Show dialog telling user that he has to go to settings and enable camera permission
                         }
                     }
                 }

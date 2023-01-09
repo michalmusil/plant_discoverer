@@ -14,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,10 @@ import cz.mendelu.xmusil5.plantdiscoverer.utils.LanguageUtils
 import org.koin.androidx.compose.getViewModel
 import java.util.*
 import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
+
+const val TAG_SETTINGS_LANGUAGE_DROPDOWN = "settingsDropdown"
+const val TAG_SETTINGS_LANGUAGE_CZECH = "settingsLanguageCzech"
+const val TAG_SETTINGS_LANGUAGE_ENGLISH = "settingsLanguageEnglish"
 
 @Composable
 fun SettingsScreen(
@@ -218,6 +223,7 @@ fun LanguageOptions(
             },
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.outlinedButtonColors(MaterialTheme.colorScheme.surface),
+            modifier = Modifier.testTag(TAG_SETTINGS_LANGUAGE_DROPDOWN)
         ) {
             Text(
                 text = selectedItem.value.originName,
@@ -238,10 +244,19 @@ fun LanguageOptions(
                     expanded.value = false
                 }) {
                 items.forEach {
-                    DropdownMenuItem(onClick = {
+                    DropdownMenuItem(
+                        onClick = {
                         expanded.value = false
                         onItemClick(it)
-                    }) {
+                        },
+                        modifier = when(it) {
+                            LanguageUtils.Language.CZECH -> { Modifier.testTag(
+                                TAG_SETTINGS_LANGUAGE_CZECH) }
+                            LanguageUtils.Language.ENGLISH -> { Modifier.testTag(
+                                TAG_SETTINGS_LANGUAGE_ENGLISH) }
+                            else -> Modifier
+                        }
+                    ) {
                         Text(
                             text = it.originName,
                             color = MaterialTheme.colorScheme.onSurface
