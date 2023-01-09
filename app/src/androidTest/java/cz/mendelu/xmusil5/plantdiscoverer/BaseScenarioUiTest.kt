@@ -78,7 +78,7 @@ class BaseScenarioUiTest {
     private fun launchApplication(startDestination: Destination) {
         composeRule.setContent {
             PlantDiscovererTheme {
-                NavGraph(startDestination = startDestination.route)
+                NavGraph(startDestination = startDestination)
             }
         }
     }
@@ -110,7 +110,7 @@ class BaseScenarioUiTest {
             onNodeWithTag(TAG_CAMERA_GO_BACK).assertIsDisplayed()
             onNodeWithTag(TAG_CAMERA_TAKE_PHOTO).assertIsDisplayed()
             onNodeWithTag(TAG_CAMERA_TAKE_PHOTO).performClick()
-            asyncTimer(1000) // Waiting for image to be temporarily stored
+            asyncTimer(2000) // Waiting for image to be temporarily stored
             waitForIdle()
 
             // Now on new plant screen

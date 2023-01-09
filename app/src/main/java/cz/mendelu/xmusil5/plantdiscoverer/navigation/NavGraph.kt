@@ -27,10 +27,10 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Destination.SplashScreen.route
+        startDestination = startDestination.route
     ){
         composable(Destination.SplashScreen.route) {
-            SplashScreen(navigation = navigation, startDestination = startDestination)
+            SplashScreen(navigation = navigation, startDestination = Destination.HomeScreen)
         }
 
         composable(Destination.PlantsListScreen.route) {
