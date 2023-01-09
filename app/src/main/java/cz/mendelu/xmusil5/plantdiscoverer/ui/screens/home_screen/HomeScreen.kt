@@ -32,6 +32,7 @@ import java.util.Calendar
 const val TAG_NAVIGATION_SETTINGS = "navigationSettings"
 const val TAG_TOTAL_NUMBER_OF_PLANTS = "totalNumberOfDiscoveredPlants"
 const val TAG_LAST_DISCOVERY_DATE = "lastDiscoveryDate"
+
 const val TAG_LAST_DISCOVERY_CARD = "lastDiscoveryCard"
 
 @Composable

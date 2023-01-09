@@ -30,6 +30,7 @@ class PlantDiscovererMapRenderer(
                     MarkerUtils.createCustomMarkerFromLayout(context, item, false, markerBackgroundColor)
                 )
             )
+
         }
     }
 }

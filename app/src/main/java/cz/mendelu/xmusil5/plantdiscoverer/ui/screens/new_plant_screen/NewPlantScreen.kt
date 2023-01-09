@@ -339,7 +339,8 @@ fun NoMLMatches(){
         Column (verticalArrangement = Arrangement.Center) {
             Text(
                 text = stringResource(id = R.string.couldntReckognizePhoto),
-                fontSize = 15.sp
+                fontSize = 15.sp,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
     }
@@ -374,8 +375,8 @@ fun ImageReckognitionResults(
             Text(
                 text = stringResource(id = R.string.suggestions),
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Light
-
+                fontWeight = FontWeight.Light,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
         LazyRow(

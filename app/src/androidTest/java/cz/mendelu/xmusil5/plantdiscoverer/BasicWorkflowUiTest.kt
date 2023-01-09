@@ -2,6 +2,7 @@ package cz.mendelu.xmusil5.plantdiscoverer
 
 import android.content.Context
 import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -17,12 +18,20 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.components.TAG_NAVIGATION_SCREEN_NA
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.list_items.TAG_PLANT_GRID_LIST_ITEM
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.list_items.TAG_PLANT_IMAGE_GRID_LIST_ITEM
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.screens.TAG_NO_DATA_SCREEN_MESSAGE
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.TAG_DELETE_DIALOG_OK
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.camera_screen.TAG_CAMERA_GO_BACK
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.camera_screen.TAG_CAMERA_TAKE_PHOTO
+import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.home_screen.TAG_LAST_DISCOVERY_CARD
+import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.home_screen.TAG_LAST_DISCOVERY_DATE
+import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.home_screen.TAG_NAVIGATION_SETTINGS
+import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.home_screen.TAG_TOTAL_NUMBER_OF_PLANTS
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.new_plant_screen.*
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_detail_screen.*
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_edit_screen.*
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_images_screen.TAG_IMAGE_POPUP
+import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.settings_screen.TAG_SETTINGS_LANGUAGE_CZECH
+import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.settings_screen.TAG_SETTINGS_LANGUAGE_DROPDOWN
+import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.settings_screen.TAG_SETTINGS_LANGUAGE_ENGLISH
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.PlantDiscovererTheme
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.disabled
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
@@ -43,8 +52,8 @@ import kotlin.concurrent.schedule
  * PREREQUISITES:
  *      - Preinstall the app on the targeted device
  *      - Don't add any data
- *      - Give the app permissions for camera and location (since they can't be tested here)
- *      - Make sure default language of targeted device is ENGLISH
+ *      - Make sure the app and target device is in ENGLISH when starting the test
+ *      - Give the app permissions for camera (since they can't be tested here)
  *      - Make sure location servides and wifi are enabled
  */
 
@@ -102,14 +111,12 @@ class UITests {
             onNodeWithTag(TAG_NO_DATA_SCREEN_MESSAGE).assertIsDisplayed()
             onNodeWithTag(TAG_CAMERA_FAB).assertIsDisplayed()
             onNodeWithTag(TAG_CAMERA_FAB).performClick()
-            asyncTimer(1000) // Time for camera to attach to lifecycle
             waitForIdle()
 
             // Now on camera screen
+            asyncTimer(1500) // Time for camera to attach to lifecycle
             onNodeWithTag(TAG_CAMERA_GO_BACK).assertIsDisplayed()
-            onNodeWithTag(TAG_CAMERA_GO_BACK).performClick()
-            waitForIdle()
-            onNodeWithTag(TAG_CAMERA_FAB).performClick()
+            onNodeWithTag(TAG_CAMERA_GO_BACK).assertIsDisplayed()
             onNodeWithTag(TAG_CAMERA_TAKE_PHOTO).assertIsDisplayed()
             onNodeWithTag(TAG_CAMERA_TAKE_PHOTO).performClick()
             asyncTimer(1000) // Waiting for image to be temporarily stored
@@ -177,7 +184,7 @@ class UITests {
             waitForIdle()
             // Starting on plants list screen with one previously created plant
             onNodeWithTag(TAG_NO_DATA_SCREEN_MESSAGE).assertDoesNotExist()
-            onNodeWithTag(TAG_PLANT_GRID_LIST_ITEM).assertIsDisplayed().performClick()
+            onAllNodesWithTag(TAG_PLANT_GRID_LIST_ITEM).onFirst().performClick()
             waitForIdle()
 
             // Now in plant detail screen
@@ -209,6 +216,72 @@ class UITests {
         }
     }
 
+    @Test
+    fun D_homeScreenTest() {
+        val expectedLastDate = DateUtils.getDateString(DateUtils.getCurrentUnixTime())
+
+        launchApplication(startDestination = Destination.HomeScreen)
+        with(composeRule) {
+            waitForIdle()
+            // Home screen with statistics
+            asyncTimer(1000)// Waiting to load the statistics
+            onNodeWithText(expectedLastDate).assertIsDisplayed()
+
+            onNodeWithTag(TAG_LAST_DISCOVERY_CARD).assertIsDisplayed().performClick()
+            waitForIdle()
+
+            // Now on detail screen of plant
+            onNodeWithTag(TAG_PLANT_DETAIL_PLANT_IMAGE).assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun E_settingsTest() {
+        val config = targetContext.resources.configuration
+        config.setLocale(Locale("en"))
+        val settingsScreenNameEN = targetContext.createConfigurationContext(config).getString(R.string.settings)
+        config.setLocale(Locale("cs"))
+        val settingsScreenNameCZ = targetContext.createConfigurationContext(config).getString(R.string.settings)
+
+        launchApplication(startDestination = Destination.HomeScreen)
+        with(composeRule) {
+            waitForIdle()
+            // Home screen with statistics
+            onNodeWithTag(TAG_NAVIGATION_SETTINGS).assertIsDisplayed().performClick()
+            waitForIdle()
+
+            // Now on settings screen
+            onNodeWithTag(TAG_SETTINGS_LANGUAGE_DROPDOWN).assertIsDisplayed().performClick()
+            onNodeWithTag(TAG_SETTINGS_LANGUAGE_CZECH).assertIsDisplayed().performClick()
+            asyncTimer(500) // Leaving some time for recomposition of app language
+            onNodeWithTag(TAG_NAVIGATION_SCREEN_NAME).assertTextEquals(settingsScreenNameCZ)
+
+            onNodeWithTag(TAG_SETTINGS_LANGUAGE_DROPDOWN).assertIsDisplayed().performClick()
+            onNodeWithTag(TAG_SETTINGS_LANGUAGE_ENGLISH).assertIsDisplayed().performClick()
+            asyncTimer(500) // Leaving some time for recomposition of app language
+            onNodeWithTag(TAG_NAVIGATION_SCREEN_NAME).assertTextEquals(settingsScreenNameEN)
+        }
+    }
+
+    @Test
+    fun F_plantDeleteTest() {
+        launchApplication(startDestination = Destination.PlantsListScreen)
+        with(composeRule) {
+            waitForIdle()
+            // Plant list screen with one previously added plant
+            onAllNodesWithTag(TAG_PLANT_GRID_LIST_ITEM).onFirst().performClick()
+            waitForIdle()
+
+            // Plant detail screen
+            onNodeWithTag(TAG_PLANT_DETAIL_DELETE_BUTTON).assertIsDisplayed().performClick()
+            onNodeWithTag(TAG_DELETE_DIALOG_OK).assertIsDisplayed().performClick()
+            waitForIdle()
+
+            // Plant list screen with no plants
+            asyncTimer(500)// leaving some time for recomposition
+            onNodeWithTag(TAG_NO_DATA_SCREEN_MESSAGE).assertIsDisplayed()
+        }
+    }
 
 
 
