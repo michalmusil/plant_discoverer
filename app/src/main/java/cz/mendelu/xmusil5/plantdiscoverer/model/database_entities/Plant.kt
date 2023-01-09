@@ -54,7 +54,6 @@ data class Plant(
     }
 
     override fun getSnippet(): String? {
-        val language = LanguageUtils.Language.getByCodeDefaultEnglish(Locale.getDefault().language)
-        return DateUtils.getDateString(dateDiscovered, language)
+        return DateUtils.getDateString(dateDiscovered)
     }
 }

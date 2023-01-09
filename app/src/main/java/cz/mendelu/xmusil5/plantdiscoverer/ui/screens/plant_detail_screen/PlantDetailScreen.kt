@@ -54,7 +54,7 @@ fun PlantDetailScreen(
             }) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_trash),
-                    contentDescription = null,
+                    contentDescription = stringResource(id = R.string.delete),
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
@@ -63,7 +63,7 @@ fun PlantDetailScreen(
             }) {
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = null,
+                    contentDescription = stringResource(id = R.string.edit),
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
@@ -106,7 +106,6 @@ fun PlantDetailForm(
     navigation: INavigationRouter,
     plant: Plant
 ){
-    val language = LanguageUtils.Language.getByCodeDefaultEnglish(Locale.getDefault().language)
     val locationString = remember{
         mutableStateOf("-")
     }
@@ -173,7 +172,7 @@ fun PlantDetailForm(
                 })
             CustomDetailRow(
                 title = stringResource(id = R.string.dateDiscovered),
-                text = DateUtils.getDateString(plant.dateDiscovered, language),
+                text = DateUtils.getDateString(plant.dateDiscovered),
                 iconId = R.drawable.ic_calendar)
             CustomDetailRow(
                 title = stringResource(id = R.string.description),

@@ -19,7 +19,7 @@ class PlantDiscovererApplication: Application() {
             androidContext(this@PlantDiscovererApplication)
             modules(listOf(
                 databaseModule, daoModule, repositoryModule,
-                viewModelModule, retrofitModule, mlModule, apiModule, utilsModule
+                viewModelModule, retrofitModule, mlModule, apiModule
             ))
         }
     }

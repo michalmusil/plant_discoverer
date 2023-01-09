@@ -1,7 +1,5 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.settings_screen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -14,14 +12,10 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.LoadingScreen
@@ -30,32 +24,48 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
 import cz.mendelu.xmusil5.plantdiscoverer.utils.LanguageUtils
 import org.koin.androidx.compose.getViewModel
 import java.util.*
-import kotlin.math.exp
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 @Composable
 fun SettingsScreen(
     navigation: INavigationRouter,
     viewModel: SettingsViewModel = getViewModel()
 ) {
-    ScreenSkeleton(
-        topBarText = stringResource(id = R.string.settings),
-        navigation = navigation,
-        content = {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
-            ) {
-                SettingsScreenContent(navigation = navigation, viewModel = viewModel)
+
+    // IMPORTANT!!! - Defined here so that settings screen recomposes after language is changed
+    val appLanguage = remember{
+        mutableStateOf(LanguageUtils.Language.getByCodeDefaultEnglish(Locale.getDefault().language))
+    }
+    if (appLanguage.value != null) {
+        ScreenSkeleton(
+            topBarText = stringResource(id = R.string.settings),
+            navigation = navigation,
+            showBackArrow = true,
+            onBackClick = {
+                navigation.returnBack()
+            },
+            content = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    SettingsScreenContent(
+                        navigation = navigation,
+                        viewModel = viewModel,
+                        appLanguage = appLanguage
+                    )
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
 fun SettingsScreenContent(
     navigation: INavigationRouter,
-    viewModel: SettingsViewModel
+    viewModel: SettingsViewModel,
+    appLanguage: MutableState<LanguageUtils.Language>
 ){
     viewModel.settingsUiState.value.let {
         when(it){
@@ -68,7 +78,8 @@ fun SettingsScreenContent(
             is SettingsUiState.DataLoaded -> {
                 SettingsItems(
                     viewModel = viewModel,
-                    it.mlConfidenceTreshold
+                    it.mlConfidenceTreshold,
+                    appLanguage
                 )
             }
         }
@@ -78,25 +89,22 @@ fun SettingsScreenContent(
 @Composable
 fun SettingsItems(
     viewModel: SettingsViewModel,
-    currentConfidenceTreshold: Int
+    currentConfidenceTreshold: Int,
+    appLanguage: MutableState<LanguageUtils.Language>
 ){
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 10.dp)
     ) {
+        val context = LocalContext.current
 
-        val selectedLanguage = rememberSaveable {
-            mutableStateOf(
-                LanguageUtils.Language.getByCodeDefaultEnglish(Locale.getDefault().language)
-            )
-        }
         LanguageOptions(
             items = LanguageUtils.Language.values().toList(),
-            selectedItem = selectedLanguage,
+            selectedItem = appLanguage,
             onItemClick = {
-                viewModel.setAppLanguage(it){
-                    selectedLanguage.value = it
+                viewModel.setAppLanguage(context, it){
+                    appLanguage.value = it
                 }
             }
         )

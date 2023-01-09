@@ -16,10 +16,9 @@ object DateUtils {
         return calendar
     }
 
-    fun getDateString(
-        unixTime: Long,
-        language: LanguageUtils.Language
-    ): String{
+    fun getDateString(unixTime: Long): String{
+        val language = LanguageUtils.Language.getByCodeDefaultEnglish(Locale.getDefault().language)
+
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = unixTime
         val dateFormat = LanguageUtils.DateFormat.getByLanguage(language)

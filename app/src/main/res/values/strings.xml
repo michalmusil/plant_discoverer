@@ -2,11 +2,13 @@
     <string name="appName">Plant discoverer</string>
 
     <!-- Actions -->
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
     <string name="forward">Forward</string>
     <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
     <string name="search">Search</string>
     <string name="discard">Discard</string>
     <string name="takePhoto">Take photo</string>
@@ -21,7 +23,7 @@
 
     <string name="noInternet">You are not connected to any network.</string>
     <string name="locationForbidden">Location services are not available. Make sure location is on and Plant Discoverer has location permissions granted in your phone settings.</string>
-    <string name="noDataYet">It seems you have no plants to display. You can add new ones by taking pictures.</string>
+    <string name="noDataYet">It seems you haven\'t discovered any plants yet. You can add new ones by taking pictures.</string>
     <string name="clickCameraIcon">Click here to get started</string>
 
     <!-- Elements -->
@@ -66,7 +68,7 @@
     <string name="dateDiscovered">Date discovered</string>
     <string name="placeDiscovered">Place discovered</string>
     <string name="queryString">Query for image search</string>
-    <string name="originalMatch">Original match</string>
+    <string name="originalMatch">Original suggestion</string>
     <string name="description">Description</string>
     <string name="originalCertainty">Original certainty</string>
     <string name="photo">Photo</string>

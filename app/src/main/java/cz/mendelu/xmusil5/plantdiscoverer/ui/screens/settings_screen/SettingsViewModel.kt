@@ -13,7 +13,6 @@ import cz.mendelu.xmusil5.plantdiscoverer.utils.settingsDataStore
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val languageUtils: LanguageUtils,
     private val imageReckognizer: ImageReckognizer
     ): ViewModel() {
 
@@ -26,7 +25,8 @@ class SettingsViewModel(
         }
     }
 
-    fun setAppLanguage(language: LanguageUtils.Language, completion: () -> Unit){
+    fun setAppLanguage(context: Context, language: LanguageUtils.Language, completion: () -> Unit){
+        val languageUtils = LanguageUtils(context)
         viewModelScope.launch {
             languageUtils.setAppLanguage(language)
         }.invokeOnCompletion {

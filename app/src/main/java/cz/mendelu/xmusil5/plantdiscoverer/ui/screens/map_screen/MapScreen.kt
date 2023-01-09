@@ -59,6 +59,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.BottomNavItem
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.BottomNavigationBar
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.grayCommon
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
+import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.customShadow
 import cz.mendelu.xmusil5.plantdiscoverer.utils.isGpsOn
@@ -79,8 +80,7 @@ fun MapScreen(
                 items = listOf(
                     BottomNavItem(stringResource(id = R.string.plantsList), ImageVector.vectorResource(id = R.drawable.ic_grid), Destination.PlantsListScreen),
                     BottomNavItem(stringResource(id = R.string.home), ImageVector.vectorResource(id = R.drawable.ic_hub), Destination.HomeScreen),
-                    BottomNavItem(stringResource(id = R.string.map), ImageVector.vectorResource(id = R.drawable.ic_globe), Destination.MapScreen),
-                    BottomNavItem(stringResource(id = R.string.settings), ImageVector.vectorResource(id = R.drawable.ic_settings), Destination.SettingsScreen)
+                    BottomNavItem(stringResource(id = R.string.map), ImageVector.vectorResource(id = R.drawable.ic_globe), Destination.MapScreen)
                 ),
                 onItemClick = {
                     navigation.getNavController().navigate(it.destination.route)
@@ -364,7 +364,13 @@ fun PlantMapPopup(
                             ) {
                                 Text(
                                     text = plant.name,
-                                    fontSize = 20.sp,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                Text(
+                                    text = DateUtils.getDateString(plant.dateDiscovered),
+                                    style = MaterialTheme.typography.labelSmall,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )

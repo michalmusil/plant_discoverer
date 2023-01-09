@@ -3,15 +3,21 @@ package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.home_screen
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.code_models.Month
@@ -35,8 +41,19 @@ fun HomeScreen(
     viewModel: HomeViewModel = getViewModel()
 ) {
     ScreenSkeleton(
-        topBarText = "Home",
+        topBarText = stringResource(id = R.string.home),
         navigation = navigation,
+        actions = {
+            IconButton(onClick = {
+                navigation.toSettingsScreen()
+            }) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_settings),
+                    contentDescription = stringResource(id = R.string.settings),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        },
         content = {
             Box(modifier = Modifier.fillMaxSize()) {
                 HomeScreenContent(navigation = navigation, viewModel = viewModel)
@@ -122,8 +139,6 @@ fun HomeDashBoard(
     monthlyValues: HashMap<Month, Double>,
     activeYears: List<Int>
 ){
-    val language = LanguageUtils.Language.getByCodeDefaultEnglish(Locale.getDefault().language)
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -171,7 +186,7 @@ fun HomeDashBoard(
             latestPlant?.let {
                 StatisticsCard(
                     label = stringResource(id = R.string.lastDateDiscovered),
-                    value = DateUtils.getDateString(it.dateDiscovered, language),
+                    value = DateUtils.getDateString(it.dateDiscovered),
                     backgroundColor = MaterialTheme.colorScheme.secondary,
                     textColor = MaterialTheme.colorScheme.onSecondary,
                     onClick = { navigation.toPlantDetailScreen(it.id!!) },

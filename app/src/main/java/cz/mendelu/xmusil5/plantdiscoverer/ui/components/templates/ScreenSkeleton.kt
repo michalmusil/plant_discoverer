@@ -77,8 +77,7 @@ fun ScreenSkeleton(
                 items = listOf(
                     BottomNavItem(stringResource(id = R.string.plantsList), ImageVector.vectorResource(id = R.drawable.ic_grid), Destination.PlantsListScreen),
                     BottomNavItem(stringResource(id = R.string.home), ImageVector.vectorResource(id = R.drawable.ic_hub), Destination.HomeScreen),
-                    BottomNavItem(stringResource(id = R.string.map), ImageVector.vectorResource(id = R.drawable.ic_globe), Destination.MapScreen),
-                    BottomNavItem(stringResource(id = R.string.settings), ImageVector.vectorResource(id = R.drawable.ic_settings), Destination.SettingsScreen)
+                    BottomNavItem(stringResource(id = R.string.map), ImageVector.vectorResource(id = R.drawable.ic_globe), Destination.MapScreen)
                 ),
                 onItemClick = {
                     navigation.getNavController().navigate(it.destination.route)

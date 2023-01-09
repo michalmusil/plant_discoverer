@@ -48,7 +48,7 @@ fun PlantEditScreen(
             }) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_trash),
-                    contentDescription = null,
+                    contentDescription = stringResource(id = R.string.delete),
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }

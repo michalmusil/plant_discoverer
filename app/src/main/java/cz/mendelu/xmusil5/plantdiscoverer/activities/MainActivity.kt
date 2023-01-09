@@ -20,7 +20,7 @@ import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
-    private val languageUtils: LanguageUtils by inject()
+    private val languageUtils: LanguageUtils = LanguageUtils(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NavGraph(startDestination = Destination.PlantsListScreen.route)
+                    NavGraph(startDestination = Destination.HomeScreen.route)
                 }
             }
         }
