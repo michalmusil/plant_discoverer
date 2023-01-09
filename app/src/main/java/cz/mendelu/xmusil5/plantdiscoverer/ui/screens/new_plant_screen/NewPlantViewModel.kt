@@ -4,18 +4,15 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.location.Location
+import android.media.ExifInterface
 import android.net.Uri
-import android.os.Looper
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationToken
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.database.repositories.IPlantsDbRepository
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
@@ -35,11 +32,27 @@ class NewPlantViewModel(
         try {
             val uri = Uri.parse(uriString)
             val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+            var bitmapRotated: Bitmap? = null
 
-            val rotationMatrix = Matrix()
-            rotationMatrix.postRotate(90f)
-            val rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotationMatrix, true);
-            newPlantUiState.value = NewPlantUiState.PhotoLoaded(rotatedBitmap)
+            // Rotating the image to be upright
+            // based on how it's stored in file system - orientation stored in exif tag
+            val exif = ExifInterface(uri.path.toString())
+            val photoOrientation: Int = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1)
+            val rotationDegrees: Float = when(photoOrientation){
+                3 -> 180.0f
+                4 -> 180.0f
+                5 -> 90.0f
+                6 -> 90.0f
+                7 -> 270.0f
+                8 -> 270.0f
+                else -> 0.0f
+            }
+            val matrix = Matrix().apply {
+                postRotate(rotationDegrees)
+            }
+            bitmapRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+
+            newPlantUiState.value = NewPlantUiState.PhotoLoaded(bitmapRotated)
 
             val photoToDelete = File(uri.path)
             if (photoToDelete.exists()){

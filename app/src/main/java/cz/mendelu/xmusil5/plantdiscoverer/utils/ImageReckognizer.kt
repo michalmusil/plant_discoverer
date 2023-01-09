@@ -49,10 +49,12 @@ class ImageReckognizer(
                 detected.labels.forEach {
                     if (it.text == "None"){
                         // FOR TESTING
+                        /*
                         detected.labels.add(DetectedObject.Label("Aloe vera", 0.95f, 2))
                         detected.labels.add(DetectedObject.Label("Buxus branti", 0.71f, 3))
                         detected.labels.add(DetectedObject.Label("Cofilae venti", 0.48f, 4))
                         detected.labels.add(DetectedObject.Label("Pampolabea maxima", 0.18f, 5))
+                         */
 
                         detected.labels.remove(it)
                     }

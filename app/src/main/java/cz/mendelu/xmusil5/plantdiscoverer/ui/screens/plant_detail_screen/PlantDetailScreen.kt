@@ -127,7 +127,7 @@ fun PlantDetailForm(
 
     val context = LocalContext.current
     LaunchedEffect(plant){
-        val geocoder = Geocoder(context, java.util.Locale.getDefault())
+        val geocoder = Geocoder(context, Locale.getDefault())
         if (plant.latitude != null && plant.longitude != null){
             geocoder.getFromLocation(plant.latitude!!, plant.longitude!!, 1) {
                 it.firstOrNull()?.let {
