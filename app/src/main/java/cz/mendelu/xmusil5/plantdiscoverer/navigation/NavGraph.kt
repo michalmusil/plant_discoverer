@@ -17,17 +17,22 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_edit_screen.PlantEdit
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_images_screen.PlantImagesScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plants_list_screen.PlantsListScreen
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.settings_screen.SettingsScreen
+import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.splash_screen.SplashScreen
 
 @Composable
 fun NavGraph(
     navController: NavHostController = rememberNavController(),
     navigation: INavigationRouter = remember { NavigationRouterImpl(navController) },
-    startDestination: String
+    startDestination: Destination
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = Destination.SplashScreen.route
     ){
+        composable(Destination.SplashScreen.route) {
+            SplashScreen(navigation = navigation, startDestination = startDestination)
+        }
+
         composable(Destination.PlantsListScreen.route) {
             PlantsListScreen(navigation)
         }

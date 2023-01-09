@@ -1,6 +1,7 @@
 package cz.mendelu.xmusil5.plantdiscoverer.navigation
 
 sealed class Destination(val route: String){
+    object SplashScreen: Destination("splash_screen")
     object PlantsListScreen: Destination("plants_list")
     object HomeScreen: Destination("home")
     object NewPlantScreen: Destination("new_plant")

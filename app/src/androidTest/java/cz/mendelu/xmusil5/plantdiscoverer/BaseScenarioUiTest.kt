@@ -1,13 +1,8 @@
 package cz.mendelu.xmusil5.plantdiscoverer
 
 import android.content.Context
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.currentCompositionLocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.navigation.NavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import cz.mendelu.xmusil5.plantdiscoverer.activities.MainActivity
@@ -22,9 +17,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.TAG_DELETE_DIA
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.camera_screen.TAG_CAMERA_GO_BACK
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.camera_screen.TAG_CAMERA_TAKE_PHOTO
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.home_screen.TAG_LAST_DISCOVERY_CARD
-import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.home_screen.TAG_LAST_DISCOVERY_DATE
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.home_screen.TAG_NAVIGATION_SETTINGS
-import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.home_screen.TAG_TOTAL_NUMBER_OF_PLANTS
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.new_plant_screen.*
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_detail_screen.*
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_edit_screen.*
@@ -33,9 +26,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.settings_screen.TAG_SETTING
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.settings_screen.TAG_SETTINGS_LANGUAGE_DROPDOWN
 import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.settings_screen.TAG_SETTINGS_LANGUAGE_ENGLISH
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.PlantDiscovererTheme
-import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.disabled
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
-import okhttp3.internal.wait
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Rule
@@ -59,7 +50,7 @@ import kotlin.concurrent.schedule
 
 @RunWith(AndroidJUnit4::class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class UITests {
+class BaseScenarioUiTest {
 
     private val targetContext: Context = InstrumentationRegistry.getInstrumentation().targetContext
 
