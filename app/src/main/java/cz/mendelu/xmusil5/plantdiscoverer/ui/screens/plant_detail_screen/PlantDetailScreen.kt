@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -27,6 +28,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.*
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.DeleteDialog
 import cz.mendelu.xmusil5.plantdiscoverer.utils.DateUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.LanguageUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
@@ -39,6 +41,9 @@ fun PlantDetailScreen(
     plantId: Long,
     viewModel: PlantDetailViewModel = getViewModel()
 ) {
+    val showDeleteDialog = rememberSaveable{
+        mutableStateOf(false)
+    }
     ScreenSkeleton(
         topBarText = stringResource(id = R.string.plantDetail),
         navigation = navigation,
@@ -48,9 +53,7 @@ fun PlantDetailScreen(
         },
         actions = {
             IconButton(onClick = {
-                viewModel.deletePlant(plantId){
-                    navigation.returnBack()
-                }
+                showDeleteDialog.value = true
             }) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_trash),
@@ -69,6 +72,18 @@ fun PlantDetailScreen(
             }
         },
         content = {
+            if (showDeleteDialog.value) {
+                DeleteDialog(
+                    showDialog = showDeleteDialog,
+                    title = stringResource(id = R.string.areYouSureToDelete),
+                    text = stringResource(id = R.string.actionIrreversible),
+                    onConfirm = {
+                        viewModel.deletePlant(plantId){
+                            navigation.toPlantsListScreen()
+                        }
+                    }
+                )
+            }
             PlantDetailScreenContent(navigation = navigation, viewModel = viewModel, plantId = plantId)
         }
     )

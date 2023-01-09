@@ -31,7 +31,7 @@ fun CustomOutlinedButton(
     textSize: TextUnit = 17.sp,
     onClick: () -> Unit,
     cornerRadius: Dp = 10.dp,
-    modifier: Modifier = Modifier.fillMaxSize()
+    modifier: Modifier = Modifier.fillMaxWidth()
 ){
     OutlinedButton(
         content = {

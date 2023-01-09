@@ -63,4 +63,6 @@
     <string name="december">december</string>
     <string name="delete">Zmazať</string>
     <string name="edit">Upraviť</string>
+    <string name="areYouSureToDelete">Naozaj chcete odstrániť túto rastlinu?</string>
+    <string name="actionIrreversible">Táto akcia je nezvratná.</string>
 </resources>

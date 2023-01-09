@@ -13,7 +13,7 @@
     <string name="discard">Discard</string>
     <string name="takePhoto">Take photo</string>
 
-    <!-- Errors -->
+    <!-- Errors and prompts-->
     <string name="errorIcon">Error icon</string>
     <string name="somethingWentWrong">Something went wrong</string>
     <string name="plantNotFound">Plant not found</string>
@@ -25,6 +25,9 @@
     <string name="locationForbidden">Location services are not available. Make sure location is on and Plant Discoverer has location permissions granted in your phone settings.</string>
     <string name="noDataYet">It seems you haven\'t discovered any plants yet. You can add new ones by taking pictures.</string>
     <string name="clickCameraIcon">Click here to get started</string>
+
+    <string name="areYouSureToDelete">Are you sure you want to delete this plant?</string>
+    <string name="actionIrreversible">This action is not reversible</string>
 
     <!-- Elements -->
     <string name="plantImage">Plant image</string>

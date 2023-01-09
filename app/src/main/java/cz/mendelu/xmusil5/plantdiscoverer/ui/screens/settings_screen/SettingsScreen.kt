@@ -1,5 +1,6 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.settings_screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -231,6 +232,8 @@ fun LanguageOptions(
             )
             DropdownMenu(
                 expanded = expanded.value,
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.surface),
                 onDismissRequest = {
                     expanded.value = false
                 }) {
@@ -239,7 +242,10 @@ fun LanguageOptions(
                         expanded.value = false
                         onItemClick(it)
                     }) {
-                        Text(text = it.originName)
+                        Text(
+                            text = it.originName,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
             }

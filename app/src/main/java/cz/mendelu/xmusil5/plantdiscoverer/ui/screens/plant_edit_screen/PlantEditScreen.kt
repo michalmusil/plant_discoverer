@@ -1,6 +1,5 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_edit_screen
 
-import android.graphics.BitmapFactory
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,6 +21,7 @@ import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.navigation.INavigationRouter
 import cz.mendelu.xmusil5.plantdiscoverer.ui.components.*
+import cz.mendelu.xmusil5.plantdiscoverer.ui.components.templates.DeleteDialog
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.grayCommon
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import org.koin.androidx.compose.getViewModel
@@ -33,6 +33,10 @@ fun PlantEditScreen(
     plantId: Long,
     viewModel: PlantEditViewModel = getViewModel()
 ){
+    val showDeleteDialog = rememberSaveable{
+        mutableStateOf(false)
+    }
+
     ScreenSkeleton(
         topBarText = stringResource(id = R.string.editPlant),
         navigation = navigation,
@@ -42,9 +46,7 @@ fun PlantEditScreen(
         },
         actions = {
             IconButton(onClick = {
-                viewModel.deletePlant(plantId){
-                    navigation.toPlantsListScreen()
-                }
+                showDeleteDialog.value = true
             }) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_trash),
@@ -54,6 +56,18 @@ fun PlantEditScreen(
             }
         },
         content = {
+            if (showDeleteDialog.value) {
+                DeleteDialog(
+                    showDialog = showDeleteDialog, 
+                    title = stringResource(id = R.string.areYouSureToDelete),
+                    text = stringResource(id = R.string.actionIrreversible),
+                    onConfirm = {
+                        viewModel.deletePlant(plantId){
+                            navigation.toPlantsListScreen()
+                        }
+                    }
+                )
+            }
             PlantEditScreenContent(
                 plantId = plantId,
                 navigation = navigation,

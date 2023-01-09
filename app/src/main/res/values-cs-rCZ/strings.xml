@@ -63,4 +63,6 @@
     <string name="december">prosinec</string>
     <string name="delete">Smazat</string>
     <string name="edit">Upravit</string>
+    <string name="areYouSureToDelete">Opravdu chcete odstranit tuto rostlinu?</string>
+    <string name="actionIrreversible">Tato akce je nezvratná.</string>
 </resources>
