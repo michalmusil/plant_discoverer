@@ -65,4 +65,5 @@
     <string name="edit">Upraviť</string>
     <string name="areYouSureToDelete">Naozaj chcete odstrániť túto rastlinu?</string>
     <string name="actionIrreversible">Táto akcia je nezvratná.</string>
+    <string name="appLogo">Logo aplikácie</string>
 </resources>
