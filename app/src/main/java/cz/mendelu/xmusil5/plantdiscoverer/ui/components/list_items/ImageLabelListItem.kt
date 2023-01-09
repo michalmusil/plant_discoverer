@@ -14,12 +14,15 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.mlkit.vision.objects.DetectedObject
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
 import cz.mendelu.xmusil5.plantdiscoverer.utils.customShadow
+
+const val TAG_IMAGE_LABEL = "imageLabel"
 
 @Composable
 fun ImageLabelListItem(
@@ -58,7 +61,8 @@ fun ImageLabelListItem(
             Text(
                 text = name,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.testTag(TAG_IMAGE_LABEL)
             )
             Text(
                 text = "${confidence}%",

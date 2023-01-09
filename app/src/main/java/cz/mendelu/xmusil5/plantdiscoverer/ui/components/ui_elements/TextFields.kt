@@ -2,6 +2,7 @@ package cz.mendelu.xmusil5.plantdiscoverer.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
@@ -12,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 
 
@@ -27,6 +29,7 @@ fun CustomTextField(
     maxChars: Int = 10000,
     modifierTextField: Modifier = Modifier
 ){
+    val localFocusManager = LocalFocusManager.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -56,6 +59,11 @@ fun CustomTextField(
                     errorBorderColor = MaterialTheme.colorScheme.error,
                     errorLabelColor = MaterialTheme.colorScheme.error,
                     textColor = MaterialTheme.colorScheme.onBackground
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        localFocusManager.clearFocus()
+                    },
                 ),
                 shape = RoundedCornerShape(12.dp),
                 isError = isError,

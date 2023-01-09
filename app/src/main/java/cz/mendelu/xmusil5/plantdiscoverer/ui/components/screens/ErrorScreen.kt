@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -21,6 +22,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cz.mendelu.xmusil5.plantdiscoverer.R
+
+const val TAG_ERROR_SCREEN_ERROR = "errorScreenError"
 
 @Composable
 fun ErrorScreen(
@@ -65,6 +68,8 @@ fun ErrorScreen(
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .testTag(TAG_ERROR_SCREEN_ERROR)
             )
         }
     }

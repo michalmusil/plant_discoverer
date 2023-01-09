@@ -246,6 +246,7 @@ fun CustomDetailRowWithAdditionalButton(
                         onButtonClick()
                     },
                     modifier = buttonModifier
+                        .fillMaxWidth()
                 )
             }
         }

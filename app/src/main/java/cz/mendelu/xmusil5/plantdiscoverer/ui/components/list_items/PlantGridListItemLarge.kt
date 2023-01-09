@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -28,6 +29,8 @@ import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
 import cz.mendelu.xmusil5.plantdiscoverer.utils.PictureUtils
 import cz.mendelu.xmusil5.plantdiscoverer.utils.customShadow
+
+const val TAG_PLANT_GRID_LIST_ITEM = "plantGridListItem"
 
 @Composable
 fun PlantGridListItemLarge(
@@ -53,6 +56,7 @@ fun PlantGridListItemLarge(
             .clickable {
                 onItemClick(plant)
             }
+            .testTag(TAG_PLANT_GRID_LIST_ITEM)
     ){
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -80,7 +84,7 @@ fun PlantGridListItemLarge(
                     fontSize = 14.sp,
                     maxLines = 2,
                     textAlign = TextAlign.Start,
-                    color = MaterialTheme.colorScheme.onTertiary,
+                    color = MaterialTheme.colorScheme.onSurface,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 18.sp
@@ -91,7 +95,7 @@ fun PlantGridListItemLarge(
                     maxLines = 2,
                     lineHeight = 17.sp,
                     textAlign = TextAlign.Start,
-                    color = MaterialTheme.colorScheme.onTertiary,
+                    color = MaterialTheme.colorScheme.onSurface,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Light
                 )

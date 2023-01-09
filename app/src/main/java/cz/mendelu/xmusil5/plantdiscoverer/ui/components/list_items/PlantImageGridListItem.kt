@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -17,12 +18,15 @@ import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.ui.theme.shadowColor
 import cz.mendelu.xmusil5.plantdiscoverer.utils.customShadow
 
+const val TAG_PLANT_IMAGE_GRID_LIST_ITEM = "plantImageGridListItem"
+
 @Composable
 fun PlantImageGridListItem(imageAddress: String, onClick: () -> Unit){
     val context = LocalContext.current
     val cornerRadius = 8.dp
     Box(
         modifier = Modifier
+            .testTag(TAG_PLANT_IMAGE_GRID_LIST_ITEM)
             .width(145.dp)
             .aspectRatio(1f)
             .padding(5.dp)

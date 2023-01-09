@@ -1,8 +1,10 @@
 package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.plant_edit_screen
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -11,9 +13,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -34,6 +39,8 @@ const val TAG_PLANT_EDIT_DESCRIPTION_TEXT_FIELD = "plantEditDescriptionTextField
 
 const val TAG_PLANT_EDIT_SAVE_BUTTON = "plantEditSaveButton"
 const val TAG_PLANT_EDIT_CANCEL_BUTTON = "plantEditCancelButton"
+
+const val TAG_PLANT_EDIT_EMPTY_SPOT = "plantEditEmptySpot"
 
 @Composable
 fun PlantEditScreen(
@@ -117,6 +124,7 @@ fun PlantEditForm(
     viewModel: PlantEditViewModel,
     navigation: INavigationRouter
 ){
+    val localFocusManager = LocalFocusManager.current
     val plantPhoto = PictureUtils.fromByteArrayToBitmap(plant.photo)
 
     val name = rememberSaveable {
@@ -142,6 +150,13 @@ fun PlantEditForm(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = {
+                        localFocusManager.clearFocus()
+                    }
+                )
+            }
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -155,6 +170,14 @@ fun PlantEditForm(
                 modifier = Modifier.testTag(TAG_PLANT_EDIT_PLANT_IMAGE)
             )
         }
+
+        Divider(
+            color = Color.Transparent,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(16.dp)
+                .testTag(TAG_PLANT_EDIT_EMPTY_SPOT)
+        )
 
         //TEXT FIELDS
         CustomTextField(

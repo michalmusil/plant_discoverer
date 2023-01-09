@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
@@ -37,6 +38,8 @@ import cz.mendelu.xmusil5.plantdiscoverer.utils.isConnectedToInternet
 import cz.mendelu.xmusil5.plantdiscoverer.utils.onLastReached
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
+
+const val TAG_IMAGE_POPUP = "imagePopup"
 
 @Composable
 fun PlantImagesScreen(
@@ -191,6 +194,7 @@ fun ImageInDetailPopup(
                     .clickable {
                         onDismiss()
                     }
+                    .testTag(TAG_IMAGE_POPUP)
             ){
                 imageUrl?.let {
                     AsyncImage(

@@ -4,6 +4,7 @@ import android.Manifest
 import android.graphics.Bitmap
 import android.location.Location
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -18,7 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -47,6 +50,8 @@ const val TAG_NEW_PLANT_QUERY_TEXT_FIELD = "newPlantQueryTextField"
 const val TAG_NEW_PLANT_DESCRIPTION_TEXT_FIELD = "newPlantDescriptionTextField"
 const val TAG_NEW_PLANT_SAVE_BUTTON = "newPlantSaveButton"
 const val TAG_NEW_PLANT_DISCARD_BUTTON = "newPlantDiscardButton"
+
+const val TAG_NEW_PLANT_EMPTY_SPOT = "newPlantEmptySpot"
 
 @Composable
 fun NewPlantScreen(
@@ -140,6 +145,7 @@ fun NewPlantForm(
     detectedObject: DetectedObject?,
     location: MutableState<Location?>
 ){
+    val localFocusManager = LocalFocusManager.current
     val selectedDetectedObjectLabel = remember{
         mutableStateOf<DetectedObject.Label?>(null)
     }
@@ -171,6 +177,13 @@ fun NewPlantForm(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = {
+                        localFocusManager.clearFocus()
+                    }
+                )
+            }
     ) {
 
         // PHOTO
@@ -318,6 +331,7 @@ fun NoMLMatches(){
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary)
                 .padding(5.dp)
+                .testTag(TAG_NEW_PLANT_EMPTY_SPOT)
         )
 
         Spacer(modifier = Modifier.width(20.dp))
@@ -355,6 +369,7 @@ fun ImageReckognitionResults(
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primary)
                     .padding(5.dp)
+                    .testTag(TAG_NEW_PLANT_EMPTY_SPOT)
             )
             Text(
                 text = stringResource(id = R.string.suggestions),

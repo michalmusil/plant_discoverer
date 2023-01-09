@@ -28,6 +28,8 @@ const val TAG_BOTTOM_NAV_HOME = "bottomNavHome"
 const val TAG_BOTTOM_NAV_MAP = "bottomNavMap"
 const val TAG_NAVIGATION_BACK_ARROW = "navigationBackArrow"
 
+const val TAG_NAVIGATION_SCREEN_NAME = "navigationScreenName"
+
 
 
 @Composable
@@ -58,6 +60,7 @@ fun ScreenSkeleton(
                             modifier = Modifier
                                 .padding(start = 0.dp)
                                 .weight(1.5f)
+                                .testTag(TAG_NAVIGATION_SCREEN_NAME)
                         )
                     }
                 },

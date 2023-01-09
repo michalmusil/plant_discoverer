@@ -129,7 +129,13 @@ fun CameraScreen(
             modifier = Modifier
                 .fillMaxSize()
         ){
-            IconButton(onClick = { navigation.returnBack() } ) {
+            IconButton(
+                onClick = {
+                    navigation.returnBack()
+                },
+                modifier = Modifier
+                    .testTag(TAG_CAMERA_GO_BACK)
+            ) {
                 androidx.compose.material.Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = stringResource(R.string.back),
@@ -141,7 +147,6 @@ fun CameraScreen(
                         .clip(CircleShape)
                         .background(color = MaterialTheme.colorScheme.background)
                         .padding(6.dp)
-                        .testTag(TAG_CAMERA_GO_BACK)
                 )
             }
         }
