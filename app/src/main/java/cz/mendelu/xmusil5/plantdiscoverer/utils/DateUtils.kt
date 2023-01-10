@@ -27,7 +27,8 @@ object DateUtils {
 
     fun getUnixTime(year: Int, month: Int, day: Int): Long {
         val calendar = Calendar.getInstance()
-        calendar.set(year, month, day)
+        calendar.set(Calendar.MILLISECOND, 0)
+        calendar.set(year, month-1, day, 0, 0, 0)
         return calendar.timeInMillis
     }
 
