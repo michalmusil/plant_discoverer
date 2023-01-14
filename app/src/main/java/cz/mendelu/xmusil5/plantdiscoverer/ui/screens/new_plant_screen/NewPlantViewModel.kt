@@ -2,11 +2,7 @@ package cz.mendelu.xmusil5.plantdiscoverer.ui.screens.new_plant_screen
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Matrix
 import android.location.Location
-import android.media.ExifInterface
-import android.net.Uri
-import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -16,49 +12,23 @@ import com.google.android.gms.location.Priority
 import cz.mendelu.xmusil5.plantdiscoverer.R
 import cz.mendelu.xmusil5.plantdiscoverer.database.repositories.IPlantsDbRepository
 import cz.mendelu.xmusil5.plantdiscoverer.model.database_entities.Plant
-import cz.mendelu.xmusil5.plantdiscoverer.utils.ImageReckognizer
+import cz.mendelu.xmusil5.plantdiscoverer.ml.ImageRecognizer
+import cz.mendelu.xmusil5.plantdiscoverer.ml.ImageRecognizing
 import kotlinx.coroutines.launch
-import java.io.File
 
 
 class NewPlantViewModel(
     private val plantsDbRepository: IPlantsDbRepository,
-    private val imageReckognizer: ImageReckognizer
+    private val imageReckognizer: ImageRecognizing
     ): ViewModel() {
 
     val newPlantUiState: MutableState<NewPlantUiState> = mutableStateOf(NewPlantUiState.Start())
 
     fun getImageFromUri(context: Context, uriString: String){
-        try {
-            val uri = Uri.parse(uriString)
-            val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
-            var bitmapRotated: Bitmap? = null
-
-            // Rotating the image to be upright
-            // based on how it's stored in file system - orientation stored in exif tag
-            val exif = ExifInterface(uri.path.toString())
-            val photoOrientation: Int = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1)
-            val rotationDegrees: Float = when(photoOrientation){
-                3 -> 180.0f
-                4 -> 180.0f
-                5 -> 90.0f
-                6 -> 90.0f
-                7 -> 270.0f
-                8 -> 270.0f
-                else -> 0.0f
-            }
-            val matrix = Matrix().apply {
-                postRotate(rotationDegrees)
-            }
-            bitmapRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-
-            newPlantUiState.value = NewPlantUiState.PhotoLoaded(bitmapRotated)
-
-            val photoToDelete = File(uri.path)
-            if (photoToDelete.exists()){
-                photoToDelete.delete()
-            }
-        } catch (ex: java.lang.Exception){
+        val image = imageReckognizer.retriveImageFromUri(context, uriString)
+        if (image != null){
+            newPlantUiState.value = NewPlantUiState.PhotoLoaded(image)
+        } else{
             newPlantUiState.value = NewPlantUiState.Error(R.string.somethingWentWrong)
         }
     }

@@ -2,7 +2,8 @@ package cz.mendelu.xmusil5.plantdiscoverer.di
 
 import android.content.Context
 import cz.mendelu.xmusil5.plantdiscoverer.utils.Constants
-import cz.mendelu.xmusil5.plantdiscoverer.utils.ImageReckognizer
+import cz.mendelu.xmusil5.plantdiscoverer.ml.ImageRecognizer
+import cz.mendelu.xmusil5.plantdiscoverer.ml.ImageRecognizing
 import org.koin.dsl.module
 
 val mlModule = module {
@@ -11,6 +12,6 @@ val mlModule = module {
     }
 }
 
-fun provideImageReckognizer(context: Context): ImageReckognizer{
-    return ImageReckognizer(Constants.ML_MODEL_PATH, context)
+fun provideImageReckognizer(context: Context): ImageRecognizing {
+    return ImageRecognizer(Constants.ML_MODEL_PATH, context)
 }

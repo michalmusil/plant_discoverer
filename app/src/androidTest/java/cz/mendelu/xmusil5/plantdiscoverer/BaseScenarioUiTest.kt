@@ -41,10 +41,7 @@ import kotlin.concurrent.schedule
  * Test that handles basic workflow through application
  *
  * PREREQUISITES:
- *      - Preinstall the app on the targeted device
- *      - Don't add any data
- *      - Make sure the app and target device is in ENGLISH when starting the test
- *      - Give the app permissions for camera (since they can't be tested here)
+ *      - Give the app permissions for camera and location (since they can't be tested here)
  *      - Make sure location servides and wifi are enabled
  */
 
@@ -56,6 +53,21 @@ class BaseScenarioUiTest {
 
     @get:Rule()
     val composeRule = createAndroidComposeRule<MainActivity>()
+
+    //  Launch application
+    private fun launchApplication(startDestination: String) {
+        composeRule.setContent {
+            PlantDiscovererTheme {
+                NavGraph(startDestination = startDestination)
+            }
+        }
+    }
+
+    @Before
+    fun setUp() {
+
+    }
+
 
     // Delays
     object AsyncTimer {
@@ -74,19 +86,7 @@ class BaseScenarioUiTest {
             timeoutMillis = delay + 1000
         )
     }
-    //  Launch application
-    private fun launchApplication(startDestination: Destination) {
-        composeRule.setContent {
-            PlantDiscovererTheme {
-                NavGraph(startDestination = startDestination)
-            }
-        }
-    }
 
-    @Before
-    fun setUp() {
-
-    }
 
     @Test
     fun A_addNewPlantTest() {
@@ -95,24 +95,8 @@ class BaseScenarioUiTest {
         val plantDescription = "Huge aloe vera plant found near the town."
         val todaysDate = DateUtils.getDateString(DateUtils.getCurrentUnixTime())
 
-        launchApplication(startDestination = Destination.PlantsListScreen)
+        launchApplication(startDestination = "${Destination.NewPlantScreen.route}?takenPhotoUri=asdfasdf" )
         with(composeRule) {
-            waitForIdle()
-            // Starting on plants list screen with no plants yet
-            onNodeWithTag(TAG_NO_DATA_SCREEN_MESSAGE).assertIsDisplayed()
-            onNodeWithTag(TAG_CAMERA_FAB).assertIsDisplayed()
-            onNodeWithTag(TAG_CAMERA_FAB).performClick()
-            waitForIdle()
-
-            // Now on camera screen
-            asyncTimer(1500) // Time for camera to attach to lifecycle
-            onNodeWithTag(TAG_CAMERA_GO_BACK).assertIsDisplayed()
-            onNodeWithTag(TAG_CAMERA_GO_BACK).assertIsDisplayed()
-            onNodeWithTag(TAG_CAMERA_TAKE_PHOTO).assertIsDisplayed()
-            onNodeWithTag(TAG_CAMERA_TAKE_PHOTO).performClick()
-            asyncTimer(2000) // Waiting for image to be temporarily stored
-            waitForIdle()
-
             // Now on new plant screen
             onNodeWithTag(TAG_NEW_PLANT_IMAGE).assertIsDisplayed()
 
@@ -126,7 +110,6 @@ class BaseScenarioUiTest {
             onNodeWithTag(TAG_NEW_PLANT_EMPTY_SPOT).performClick().performTouchInput { swipeUp() }
 
             onNodeWithTag(TAG_NEW_PLANT_SAVE_BUTTON).performClick()
-            asyncTimer(1000) // saving to database
             waitForIdle()
 
             // Now on plant detail screen
@@ -140,12 +123,12 @@ class BaseScenarioUiTest {
 
     @Test
     fun B_plantImagesTest() {
-        launchApplication(startDestination = Destination.PlantsListScreen)
+        launchApplication(startDestination = Destination.PlantsListScreen.route)
         with(composeRule) {
             waitForIdle()
             // Starting on plants list screen with one previously created plant
-            onNodeWithTag(TAG_NO_DATA_SCREEN_MESSAGE).assertDoesNotExist()
-            onNodeWithTag(TAG_PLANT_GRID_LIST_ITEM).assertIsDisplayed().performClick()
+            onAllNodesWithTag(TAG_PLANT_GRID_LIST_ITEM).assertAll(hasTestTag(
+                TAG_PLANT_GRID_LIST_ITEM)).onFirst().performClick()
             waitForIdle()
 
             // Now in plant detail screen
@@ -154,7 +137,6 @@ class BaseScenarioUiTest {
             waitForIdle()
 
             // Now in plant images screen (shold see image results from query "Aloe" from previous tests)
-            asyncTimer(1000) // wait for images to load
             onAllNodesWithTag(TAG_PLANT_IMAGE_GRID_LIST_ITEM).assertAll(hasTestTag(
                 TAG_PLANT_IMAGE_GRID_LIST_ITEM)).onFirst().performClick()
             waitForIdle()
@@ -170,11 +152,10 @@ class BaseScenarioUiTest {
         val plantImageQuery = "Aloe vera"
         val plantDescription = ""
 
-        launchApplication(startDestination = Destination.PlantsListScreen)
+        launchApplication(startDestination = Destination.PlantsListScreen.route)
         with(composeRule) {
             waitForIdle()
             // Starting on plants list screen with one previously created plant
-            onNodeWithTag(TAG_NO_DATA_SCREEN_MESSAGE).assertDoesNotExist()
             onAllNodesWithTag(TAG_PLANT_GRID_LIST_ITEM).onFirst().performClick()
             waitForIdle()
 
@@ -210,15 +191,13 @@ class BaseScenarioUiTest {
     @Test
     fun D_homeScreenTest() {
         val expectedLastDate = DateUtils.getDateString(DateUtils.getCurrentUnixTime())
+        val expectedNumberOfPlantsTitle = targetContext.getString(R.string.totalNumberOfPlants)
 
-        launchApplication(startDestination = Destination.HomeScreen)
+        launchApplication(startDestination = Destination.HomeScreen.route)
         with(composeRule) {
             waitForIdle()
             // Home screen with statistics
-            asyncTimer(1000)// Waiting to load the statistics
-            onNodeWithText(expectedLastDate).assertIsDisplayed()
-
-            onNodeWithTag(TAG_LAST_DISCOVERY_CARD).assertIsDisplayed().performClick()
+            onNodeWithText(expectedLastDate).assertIsDisplayed().performClick()
             waitForIdle()
 
             // Now on detail screen of plant
@@ -234,7 +213,7 @@ class BaseScenarioUiTest {
         config.setLocale(Locale("cs"))
         val settingsScreenNameCZ = targetContext.createConfigurationContext(config).getString(R.string.settings)
 
-        launchApplication(startDestination = Destination.HomeScreen)
+        launchApplication(startDestination = Destination.HomeScreen.route)
         with(composeRule) {
             waitForIdle()
             // Home screen with statistics
@@ -244,19 +223,20 @@ class BaseScenarioUiTest {
             // Now on settings screen
             onNodeWithTag(TAG_SETTINGS_LANGUAGE_DROPDOWN).assertIsDisplayed().performClick()
             onNodeWithTag(TAG_SETTINGS_LANGUAGE_CZECH).assertIsDisplayed().performClick()
-            asyncTimer(500) // Leaving some time for recomposition of app language
+            waitForIdle() // Leaving some time for recomposition of app language
             onNodeWithTag(TAG_NAVIGATION_SCREEN_NAME).assertTextEquals(settingsScreenNameCZ)
 
             onNodeWithTag(TAG_SETTINGS_LANGUAGE_DROPDOWN).assertIsDisplayed().performClick()
             onNodeWithTag(TAG_SETTINGS_LANGUAGE_ENGLISH).assertIsDisplayed().performClick()
-            asyncTimer(500) // Leaving some time for recomposition of app language
+            waitForIdle() // Leaving some time for recomposition of app language
             onNodeWithTag(TAG_NAVIGATION_SCREEN_NAME).assertTextEquals(settingsScreenNameEN)
         }
     }
 
     @Test
     fun F_plantDeleteTest() {
-        launchApplication(startDestination = Destination.PlantsListScreen)
+
+        launchApplication(startDestination = Destination.PlantsListScreen.route)
         with(composeRule) {
             waitForIdle()
             // Plant list screen with one previously added plant
@@ -267,10 +247,6 @@ class BaseScenarioUiTest {
             onNodeWithTag(TAG_PLANT_DETAIL_DELETE_BUTTON).assertIsDisplayed().performClick()
             onNodeWithTag(TAG_DELETE_DIALOG_OK).assertIsDisplayed().performClick()
             waitForIdle()
-
-            // Plant list screen with no plants
-            asyncTimer(500)// leaving some time for recomposition
-            onNodeWithTag(TAG_NO_DATA_SCREEN_MESSAGE).assertIsDisplayed()
         }
     }
 

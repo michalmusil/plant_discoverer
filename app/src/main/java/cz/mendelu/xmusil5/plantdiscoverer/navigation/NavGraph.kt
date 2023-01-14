@@ -23,11 +23,11 @@ import cz.mendelu.xmusil5.plantdiscoverer.ui.screens.splash_screen.SplashScreen
 fun NavGraph(
     navController: NavHostController = rememberNavController(),
     navigation: INavigationRouter = remember { NavigationRouterImpl(navController) },
-    startDestination: Destination
+    startDestination: String
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination.route
+        startDestination = startDestination
     ){
         composable(Destination.SplashScreen.route) {
             SplashScreen(navigation = navigation, startDestination = Destination.HomeScreen)
