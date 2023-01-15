@@ -21,7 +21,12 @@ import kotlinx.coroutines.flow.first
 class ImageRecognizerMock(): ImageRecognizing {
 
     override fun retriveImageFromUri(context: Context, uri: String): Bitmap?{
-        return BitmapFactory.decodeResource(context.resources, R.drawable.ic_plant)
+        val bitmap = Bitmap.createBitmap(
+            200,
+            200,
+            Bitmap.Config.ARGB_8888
+        )
+        return bitmap
     }
 
     override suspend fun processImage(imageBitmap: Bitmap, onFinishedListener: (DetectedObject?) -> Unit) {

@@ -143,10 +143,13 @@ fun PlantDetailForm(
     LaunchedEffect(plant){
         val geocoder = Geocoder(context, Locale.getDefault())
         if (plant.latitude != null && plant.longitude != null){
-            geocoder.getFromLocation(plant.latitude!!, plant.longitude!!, 1) {
-                it.firstOrNull()?.let {
+            try {
+                val results = geocoder.getFromLocation(plant.latitude!!, plant.longitude!!, 1)
+                results?.firstOrNull()?.let {
                     locationString.value = "${it.subAdminArea}, ${it.countryCode}"
                 }
+            } catch (ex: java.lang.Exception){
+                ex.printStackTrace()
             }
         }
     }

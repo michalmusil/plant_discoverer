@@ -42,7 +42,7 @@ fun PlantGridListItemLarge(
     Box(
         modifier = Modifier
             .width(120.dp)
-            .height(200.dp)
+            .fillMaxHeight()
             .padding(5.dp)
             .padding(top = 8.dp)
             .customShadow(color = shadowColor,
@@ -82,17 +82,19 @@ fun PlantGridListItemLarge(
                 Text(
                     text = plant.name,
                     fontSize = 14.sp,
-                    maxLines = 2,
+                    maxLines = 1,
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colorScheme.onSurface,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Bold,
-                    lineHeight = 18.sp
+                    lineHeight = 18.sp,
+                    modifier = Modifier
+                        .padding(bottom = 4.dp)
                 )
                 Text(
                     text = plant.description ?: "",
                     fontSize = 12.sp,
-                    maxLines = 2,
+                    maxLines = 1,
                     lineHeight = 17.sp,
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colorScheme.onSurface,

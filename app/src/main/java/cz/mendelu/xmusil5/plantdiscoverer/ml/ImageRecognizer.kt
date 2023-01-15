@@ -48,11 +48,15 @@ class ImageRecognizer(
         val input = InputImage.fromBitmap(imageBitmap, 0)
         imageDetector.process(input).addOnSuccessListener {
             val detected = it.firstOrNull()
-            detected?.let{ det ->
+            if (detected != null){
                 detected.labels.removeIf { it.text == "None" }
-                onFinishedListener(det)
+                onFinishedListener(detected)
+            } else {
+                onFinishedListener(null)
             }
         }.addOnFailureListener{
+            onFinishedListener(null)
+        }.addOnCanceledListener {
             onFinishedListener(null)
         }
     }

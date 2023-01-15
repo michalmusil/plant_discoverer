@@ -107,6 +107,7 @@ fun PlantImagesList(
     startingImagePage: Int,
     viewModel: PlantImagesViewModel
 ){
+    val context = LocalContext.current
 
     val images = remember {
         mutableStateListOf<UnsplashImage>()
@@ -150,10 +151,12 @@ fun PlantImagesList(
 
     gridListState.onLastReached {
         coroutineScope.launch {
-            val newImages = viewModel.fetchAdditionalImages(query, imagePage.value + 1)
-            if (newImages is CommunicationResult.Success) {
-                imagePage.value += 1
-                images.addAll(newImages.data.results)
+            if (isConnectedToInternet(context)) {
+                val newImages = viewModel.fetchAdditionalImages(query, imagePage.value + 1)
+                if (newImages is CommunicationResult.Success) {
+                    imagePage.value += 1
+                    images.addAll(newImages.data.results)
+                }
             }
         }
     }

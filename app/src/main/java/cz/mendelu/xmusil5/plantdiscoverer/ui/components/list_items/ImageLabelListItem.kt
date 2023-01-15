@@ -62,11 +62,13 @@ fun ImageLabelListItem(
                 text = name,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.testTag(TAG_IMAGE_LABEL)
             )
             Text(
                 text = "${confidence}%",
                 fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Light
             )
         }

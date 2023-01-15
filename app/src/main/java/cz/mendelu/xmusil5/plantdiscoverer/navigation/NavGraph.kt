@@ -63,6 +63,10 @@ fun NavGraph(
             PlantEditScreen(navigation = navigation, plantId = plantId!!)
         }
 
+        composable(Destination.NewPlantScreen.route){
+            NewPlantScreen(navigation = navigation, takenPhotoUri = "")
+        }
+
         composable(Destination.NewPlantScreen.route + "?takenPhotoUri={takenPhotoUri}",
             arguments = listOf(
                 navArgument("takenPhotoUri"){

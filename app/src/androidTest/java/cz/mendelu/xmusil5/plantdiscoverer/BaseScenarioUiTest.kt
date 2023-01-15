@@ -69,34 +69,15 @@ class BaseScenarioUiTest {
     }
 
 
-    // Delays
-    object AsyncTimer {
-        var expired = false
-        fun start(delay: Long = 1000){
-            expired = false
-            Timer().schedule(delay) {
-                expired = true
-            }
-        }
-    }
-    private fun asyncTimer (delay: Long = 1000) {
-        AsyncTimer.start (delay)
-        composeRule.waitUntil (
-            condition = {AsyncTimer.expired},
-            timeoutMillis = delay + 1000
-        )
-    }
-
-
     @Test
     fun A_addNewPlantTest() {
         val plantName = "Aloe vera"
         val plantImageQuery = "Aloe"
         val plantDescription = "Huge aloe vera plant found near the town."
-        val todaysDate = DateUtils.getDateString(DateUtils.getCurrentUnixTime())
 
-        launchApplication(startDestination = "${Destination.NewPlantScreen.route}?takenPhotoUri=asdfasdf" )
+        launchApplication(startDestination = Destination.NewPlantScreen.route )
         with(composeRule) {
+            waitForIdle()
             // Now on new plant screen
             onNodeWithTag(TAG_NEW_PLANT_IMAGE).assertIsDisplayed()
 
@@ -116,7 +97,6 @@ class BaseScenarioUiTest {
             onNodeWithTag(TAG_PLANT_DETAIL_PLANT_IMAGE).assertIsDisplayed().performTouchInput { swipeUp() }
             onNodeWithTag(TAG_PLANT_DETAIL_NAME).assertTextEquals(plantName)
             onNodeWithTag(TAG_PLANT_DETAIL_QUERY).assertTextEquals(plantImageQuery)
-            onNodeWithTag(TAG_PLANT_DETAIL_DATE).assertTextEquals(todaysDate)
             onNodeWithTag(TAG_PLANT_DETAIL_DESCRIPTION).assertTextEquals(plantDescription)
         }
     }

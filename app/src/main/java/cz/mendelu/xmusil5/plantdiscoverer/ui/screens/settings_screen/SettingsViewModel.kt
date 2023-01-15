@@ -6,11 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cz.mendelu.xmusil5.plantdiscoverer.ml.ImageRecognizer
+import cz.mendelu.xmusil5.plantdiscoverer.ml.ImageRecognizing
 import cz.mendelu.xmusil5.plantdiscoverer.utils.LanguageUtils
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val imageReckognizer: ImageRecognizer
+    private val imageReckognizer: ImageRecognizing
     ): ViewModel() {
 
     val settingsUiState: MutableState<SettingsUiState> = mutableStateOf(SettingsUiState.Start())

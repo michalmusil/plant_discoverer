@@ -20,7 +20,8 @@ class NavigationRouterImpl(private val navController: NavController): INavigatio
     }
 
     override fun toNewPlantScreen(takenPhotoUri: String) {
-        navController.navigate("${Destination.NewPlantScreen.route}?takenPhotoUri=${takenPhotoUri}")
+        val route = "${Destination.NewPlantScreen.route}?takenPhotoUri=${takenPhotoUri}"
+        navController.navigate(route)
     }
 
     override fun toPlantDetailScreen(plantId: Long) {
